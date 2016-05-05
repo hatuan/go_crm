@@ -1,0 +1,14 @@
+{
+	"listen_url":"0.0.0.0:80",
+	"privatekey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\crm\\settings\\keys\\private_key",
+	"publickey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\crm\\settings\\keys\\public_key.pub",
+	"jwt_expiration_delta": 72,
+	"database" : {
+		"driver_name":"postgres",
+		"user":"postgres",
+		"password":"postgres",
+		"name":"myerp",
+		"port":"5432",
+		"host":"127.0.0.1"
+	}
+}

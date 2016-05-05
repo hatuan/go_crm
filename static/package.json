@@ -1,0 +1,24 @@
+{
+  "name": "MyERP-CRM",
+  "version": "1.0.0",
+  "description": "MyERP CRM",
+  "main": "index.html",
+  "dependencies": {
+    "angular": "^1.4.10",
+    "angular-messages": "^1.5.5",
+    "angular-translate": "^2.11.0",
+    "angular-ui-router": "^0.2.18",
+    "angular-websocket": "^1.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "CRM",
+    "ERP"
+  ],
+  "author": "Hoang Anh Tuan",
+  "private": true,
+  "license": "Commercial"
+}
