@@ -9,15 +9,16 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
+	"time"
 )
 
 // User represents the user model
 type User struct {
 	ID                  string        `json:"id"`
-	Name                string        `json:"name"`
-	Password            string        `json:"-"`
-	Comment             string        `json:"comment"`
-	FullName            string        `json:"full_name"`
+	Name                string        `json:"name" db:"name"`
+	Password            string        `json:"-" db:"password"`
+	Comment             string        `json:"comment"  db:"comment"`
+	FullName            string        `json:"full_name" db:"full_name"`
 	PasswordAnswer      string        `json:"-" db:"password_answer"`
 	PasswordQuestion    string        `json:"-" db:"password_question"`
 	Email               string        `json:"email"`
@@ -33,7 +34,7 @@ type User struct {
 	Client              *Client       `json:"client" db:"-"`
 	OrganizationID      string        `json:"organization_id" db:"organization_id"`
 	Organization        *Organization `json:"organization" db:"-"`
-	CultureUIId         string        `json:"culture_ui_id" db:"culture_ui_id"`
+	CultureUIID         string        `json:"culture_ui_id" db:"culture_ui_id"`
 	Roles               []Role        `json:"roles" db:"-"`
 }
 
@@ -50,7 +51,7 @@ func GetUser(id string) (User, error) {
 	defer db.Close()
 
 	u := User{}
-	err = db.Select(&u, "SELECT * FROM user WHERE id=$1::uuid", id)
+	err = db.Get(&u, "SELECT * FROM \"user\" WHERE id=$1::uuid", id)
 	if err != nil {
 		return u, err
 	}
@@ -59,7 +60,7 @@ func GetUser(id string) (User, error) {
 
 // GetUserByUsername returns the user that the given username corresponds to. If no user is found, an
 // error is thrown.
-func GetUserByUsername(username string) (User, error) {
+func GetUserByUsername(name string) (User, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)
@@ -67,7 +68,7 @@ func GetUserByUsername(username string) (User, error) {
 	defer db.Close()
 
 	u := User{}
-	err = db.Select(&u, "SELECT * FROM user WHERE username=$1", username)
+	err = db.Get(&u, "SELECT * FROM \"user\" WHERE name=$1", name)
 	// No issue if we don't find a record
 	if err == sql.ErrNoRows {
 		return u, nil
@@ -75,4 +76,31 @@ func GetUserByUsername(username string) (User, error) {
 		return u, ErrUsernameTaken
 	}
 	return u, err
+}
+
+type PreferenceDTO struct {
+	Organization     Organization           `json:"organization"`
+	CultureUIID        string                 `json:"culture_ui"`
+	WorkingDate      *Timestamp              `json:"working_date"`
+}
+
+func (u User)GetPreference() (PreferenceDTO, error) {
+	preference := PreferenceDTO{}
+
+	err := preference.Organization.Get(u.OrganizationID)
+
+	if err != nil {
+		return preference, err
+	}
+	preference.WorkingDate = time.Now()
+	if u.CultureUIID == "" {
+		u.CultureUIID = "vi-VN"
+	}
+	preference.CultureUIID = u.CultureUIID
+
+	return preference, nil
+}
+
+func (u * User)SetPreference(preference PreferenceDTO) {
+
 }

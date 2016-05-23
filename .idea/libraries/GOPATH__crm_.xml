@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="GOPATH &lt;crm&gt;">
     <CLASSES>
-      <root url="file://$PROJECT_DIR$/../../sourcegraph.com" />
-      <root url="file://$PROJECT_DIR$/.." />
-      <root url="file://$PROJECT_DIR$/../../myerp" />
       <root url="file://$PROJECT_DIR$/../../bitbucket.org" />
       <root url="file://$PROJECT_DIR$/../../github.com" />
       <root url="file://$PROJECT_DIR$/../../golang.org" />
       <root url="file://$PROJECT_DIR$/../../9fans.net" />
+      <root url="file://$PROJECT_DIR$/.." />
+      <root url="file://$PROJECT_DIR$/../../sourcegraph.com" />
+      <root url="file://$PROJECT_DIR$/../../myerp" />
     </CLASSES>
     <SOURCES />
     <excluded>

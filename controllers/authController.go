@@ -5,22 +5,29 @@ import (
 	"erpvietnam/crm/auth"
 	"erpvietnam/crm/models"
 	"net/http"
+	ctx "github.com/gorilla/context"
 )
 
-func Login(w http.ResponseWriter, r *http.Request) {
-	requestLogin := new(models.LoginDTO)
-	json.NewDecoder(r.Body).Decode(&requestLogin)
+func TokenAuth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	switch {
+	case r.Method == "POST": //login by token
+		requestLogin := new(models.LoginDTO)
+		json.NewDecoder(r.Body).Decode(&requestLogin)
 
-	responseStatus, token := auth.Login(requestLogin)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(responseStatus)
-	w.Write(token)
+		responseStatus, token := auth.TokenLogin(requestLogin)
+
+		JSONResponse(w, token, responseStatus)
+	case r.Method == "GET": //get user from token
+		requestUser := ctx.Get(r, "user").(models.User)
+		JSONResponse(w, requestUser, http.StatusOK)
+	}
+
 }
 
-func RefreshToken(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
-	requestUser := new(models.LoginDTO)
-	json.NewDecoder(r.Body).Decode(&requestUser)
+func TokenRefresh(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	requestUser := ctx.Get(r, "user").(models.User)
 
-	w.Header().Set("Content-Type", "application/json")
-	w.Write(auth.RefreshToken(requestUser))
+	responseStatus, token := auth.TokenRefresh(requestUser.Name)
+
+	JSONResponse(w, token, responseStatus)
 }
