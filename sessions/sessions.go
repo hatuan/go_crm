@@ -5,7 +5,6 @@ import (
 	"erpvietnam/crm/models"
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
-
 )
 
 //init registers the necessary models to be saved in the session later

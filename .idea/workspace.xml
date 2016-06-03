@@ -2,133 +2,42 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac1bd661-dc60-47e8-bf73-bb1d6137e015" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/controllers/mainController.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/app/application-configuration.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/app/common/config/stateConfig.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/app/main/homeController.js" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/angular-messages.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/angular-messages.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/angular-messages.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-messages/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/.npmignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/.nvmrc" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/CHANGELOG.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/ISSUE_TEMPLATE.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/PULL_REQUEST_TEMPLATE.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-handler-log/angular-translate-handler-log.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-handler-log/angular-translate-handler-log.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-interpolation-messageformat/angular-translate-interpolation-messageformat.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-loader-partial/angular-translate-loader-partial.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-loader-partial/angular-translate-loader-partial.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-loader-static-files/angular-translate-loader-static-files.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-loader-url/angular-translate-loader-url.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-loader-url/angular-translate-loader-url.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-storage-cookie/angular-translate-storage-cookie.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-storage-cookie/angular-translate-storage-cookie.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-storage-local/angular-translate-storage-local.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate-storage-local/angular-translate-storage-local.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/dist/angular-translate.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-translate/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/CHANGELOG.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/CONTRIBUTING.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/release/angular-ui-router.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/release/angular-ui-router.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/common.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/resolve.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/state.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/stateDirectives.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/stateFilters.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/templateFactory.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/urlMatcherFactory.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/urlRouter.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/view.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/viewDirective.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/src/viewScroll.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/ui-router2.iml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/ui-router2.ipr" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-ui-router/ui-router2.iws" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/CHANGELOG.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/angular-websocket-mock.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/angular-websocket.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/angular-websocket.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/angular-websocket.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/dist/angular-websocket-mock.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/dist/angular-websocket.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/dist/angular-websocket.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/dist/angular-websocket.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/.npmignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/.travis.yml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/Makefile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/SECURITY.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/BufferPool.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/BufferUtil.fallback.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/BufferUtil.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/ErrorCodes.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Extensions.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/PerMessageDeflate.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Receiver.hixie.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Receiver.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Sender.hixie.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Sender.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Validation.fallback.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/Validation.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/WebSocket.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/lib/WebSocketServer.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/options/.npmignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/options/Makefile" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/options/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/options/lib/options.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/options/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/.npmignore" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/.travis.yml" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/LICENSE" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/node_modules/ultron/test.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/node_modules/ws/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular-websocket/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/README.md" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/angular-csp.css" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/angular.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/angular.min.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/angular.min.js.gzip" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/angular.min.js.map" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/bower.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/index.js" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/node_modules/angular/package.json" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/static/package.json" afterPath="" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/controllers/organizationController.go" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/app/organization/organizationsService.js" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/l10n/en.json" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/l10n/vi.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug" afterPath="$PROJECT_DIR$/debug" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/GOPATH__crm_.xml" afterPath="$PROJECT_DIR$/.idea/libraries/GOPATH__crm_.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth/auth.go" afterPath="$PROJECT_DIR$/auth/auth.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth/doc.go" afterPath="$PROJECT_DIR$/auth/doc.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth/jwt_backend.go" afterPath="$PROJECT_DIR$/auth/jwt_backend.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/authController.go" afterPath="$PROJECT_DIR$/controllers/authController.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/mainController.go" afterPath="$PROJECT_DIR$/controllers/mainController.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/userController.go" afterPath="$PROJECT_DIR$/controllers/userController.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middleware/doc.go" afterPath="$PROJECT_DIR$/middleware/doc.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middleware/middleware.go" afterPath="$PROJECT_DIR$/middleware/middleware.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/client.go" afterPath="$PROJECT_DIR$/models/client.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/currency.go" afterPath="$PROJECT_DIR$/models/currency.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/doc.go" afterPath="$PROJECT_DIR$/models/doc.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/models.go" afterPath="$PROJECT_DIR$/models/models.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/organization.go" afterPath="$PROJECT_DIR$/models/organization.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/role.go" afterPath="$PROJECT_DIR$/models/role.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/timestamp.go" afterPath="$PROJECT_DIR$/models/timestamp.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user.go" afterPath="$PROJECT_DIR$/models/user.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user_in_role.go" afterPath="$PROJECT_DIR$/models/user_in_role.go" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routers/router.go" afterPath="$PROJECT_DIR$/routers/router.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings/pre.json" afterPath="$PROJECT_DIR$/settings/pre.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings/prod.json" afterPath="$PROJECT_DIR$/settings/prod.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings/test.json" afterPath="$PROJECT_DIR$/settings/test.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sessions/sessions.go" afterPath="$PROJECT_DIR$/sessions/sessions.go" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/application-configuration.js" afterPath="$PROJECT_DIR$/static/app/application-configuration.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/common/config/stateConfig.js" afterPath="$PROJECT_DIR$/static/app/common/config/stateConfig.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/common/services/AjaxServices.js" afterPath="$PROJECT_DIR$/static/app/common/services/AjaxServices.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/main/home.html" afterPath="$PROJECT_DIR$/static/app/main/home.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/user/loginController.js" afterPath="$PROJECT_DIR$/static/app/user/loginController.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/bower.json" afterPath="$PROJECT_DIR$/static/bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/bower_components/jquery/.bower.json" afterPath="$PROJECT_DIR$/static/bower_components/jquery/.bower.json" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/index.html" afterPath="$PROJECT_DIR$/static/index.html" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/main.js" afterPath="$PROJECT_DIR$/static/main.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/styles/site.css" afterPath="$PROJECT_DIR$/static/styles/site.css" />
     </list>
     <ignored path="crm.iws" />
@@ -145,115 +54,81 @@
   <component name="CreatePatchCommitExecutor">
     <option name="PATCH_PATH" value="" />
   </component>
+  <component name="DatabaseView">
+    <option name="GROUP_SCHEMA" value="true" />
+    <option name="GROUP_CONTENTS" value="false" />
+    <option name="SORT_POSITIONED" value="false" />
+    <option name="SHOW_TABLE_DETAILS" value="true" />
+    <option name="SHOW_EMPTY_GROUPS" value="false" />
+  </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FavoritesManager">
     <favorites_list name="crm" />
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="auth.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/auth/auth.go">
+      <file leaf-file-name="preferenceController.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/app/user/preferenceController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
+            <state relative-caret-position="1513">
+              <caret line="128" column="29" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="28" />
               <folding>
-                <element signature="e#14#93#0" expanded="true" />
+                <element signature="e#0#45#0" expanded="false" />
+                <marker date="1464886297343" expanded="true" signature="4962:5982" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="jwt_backend.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/auth/jwt_backend.go">
+      <file leaf-file-name="preference.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/app/user/preference.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="663">
-              <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
+            <state relative-caret-position="170">
+              <caret line="26" column="64" selection-start-line="26" selection-start-column="55" selection-end-line="26" selection-end-column="64" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="user.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/user.go">
+      <file leaf-file-name="index.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/index.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="264">
-              <caret line="86" column="40" selection-start-line="86" selection-start-column="30" selection-end-line="86" selection-end-column="40" />
+            <state relative-caret-position="629">
+              <caret line="37" column="18" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="main.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/main.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="374">
+              <caret line="22" column="72" selection-start-line="22" selection-start-column="72" selection-end-line="22" selection-end-column="72" />
               <folding>
-                <element signature="e#16#161#0" expanded="true" />
+                <marker date="1464886388142" expanded="true" signature="61:3306" placeholder="{&quot;baseUrl&quot;: &quot;&quot;...}" />
+                <marker date="1464886388142" expanded="true" signature="122:397" placeholder="{&quot;application-configuration&quot;: 'app/application-configuration'...}" />
+                <marker date="1464886388142" expanded="true" signature="2910:3232" placeholder="{...}" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="router.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routers/router.go">
+      <file leaf-file-name="application-configuration.js" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/static/app/application-configuration.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="544">
-              <caret line="45" column="38" selection-start-line="45" selection-start-column="38" selection-end-line="45" selection-end-column="38" />
+            <state relative-caret-position="306">
+              <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="dbconf.yml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/db/dbconf.yml">
+      <file leaf-file-name="navBar.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/static/app/main/navBar.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="34">
-              <caret line="2" column="30" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="organization.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/organization.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="349">
-              <caret line="53" column="26" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="26" />
-              <folding>
-                <element signature="e#16#151#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="client.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/client.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="484">
-              <caret line="51" column="61" selection-start-line="51" selection-start-column="61" selection-end-line="51" selection-end-column="61" />
-              <folding>
-                <element signature="e#16#185#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="currency.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/currency.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="13" column="55" selection-start-line="13" selection-start-column="55" selection-end-line="13" selection-end-column="55" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="userController.go" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/controllers/userController.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="451">
-              <caret line="35" column="24" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="24" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="timestamp.go" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/models/timestamp.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="17" column="33" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="33" />
+            <state relative-caret-position="799">
+              <caret line="47" column="50" selection-start-line="47" selection-start-column="50" selection-end-line="47" selection-end-column="50" />
               <folding />
             </state>
           </provider>
@@ -265,8 +140,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="HTML File" />
-        <option value="JavaScript File" />
         <option value="Go File" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -276,51 +151,57 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/static/package.json" />
-        <option value="$PROJECT_DIR$/setting/pre.json" />
-        <option value="$PROJECT_DIR$/setting/prod.json" />
-        <option value="$PROJECT_DIR$/setting/test.json" />
-        <option value="$PROJECT_DIR$/setting/settings.go" />
-        <option value="$PROJECT_DIR$/log/log.go" />
-        <option value="$PROJECT_DIR$/settings/settings.go" />
-        <option value="$PROJECT_DIR$/controllers/router.go" />
-        <option value="$PROJECT_DIR$/controllers/route.go" />
-        <option value="$PROJECT_DIR$/session/session.go" />
-        <option value="$PROJECT_DIR$/db/dbconf.yml" />
-        <option value="$PROJECT_DIR$/models/main.go" />
-        <option value="vm:65" />
         <option value="$PROJECT_DIR$/static/app/app.js" />
         <option value="$PROJECT_DIR$/settings/pre.json" />
         <option value="$PROJECT_DIR$/settings/prod.json" />
         <option value="$PROJECT_DIR$/settings/test.json" />
-        <option value="$PROJECT_DIR$/static/app/common/services/AjaxServices.js" />
         <option value="$PROJECT_DIR$/static/app/common/services/AlertsServices.js" />
         <option value="$PROJECT_DIR$/static/app/common/config/state.js" />
         <option value="$PROJECT_DIR$/static/app/common/config/stateProvider.js" />
         <option value="$PROJECT_DIR$/static/app/common/config/config.js" />
-        <option value="$PROJECT_DIR$/static/bower.json" />
-        <option value="$PROJECT_DIR$/static/index.html" />
-        <option value="$PROJECT_DIR$/static/styles/site.css" />
-        <option value="$PROJECT_DIR$/static/main.js" />
-        <option value="$PROJECT_DIR$/static/app/application-configuration.js" />
         <option value="$PROJECT_DIR$/static/app/user/login.html" />
-        <option value="$PROJECT_DIR$/static/app/common/config/stateConfig.js" />
         <option value="$PROJECT_DIR$/controllers/main.go" />
-        <option value="$PROJECT_DIR$/models/models.go" />
         <option value="$PROJECT_DIR$/main.go" />
-        <option value="$PROJECT_DIR$/auth/auth.go" />
-        <option value="$PROJECT_DIR$/controllers/authController.go" />
         <option value="$PROJECT_DIR$/auth/jwt_backend.go" />
-        <option value="$PROJECT_DIR$/middleware/middleware.go" />
-        <option value="$PROJECT_DIR$/static/app/user/loginController.js" />
         <option value="$PROJECT_DIR$/static/app/main/homeController.js" />
-        <option value="$PROJECT_DIR$/static/app/main/home.html" />
         <option value="$PROJECT_DIR$/models/currency.go" />
-        <option value="$PROJECT_DIR$/models/client.go" />
-        <option value="$PROJECT_DIR$/models/organization.go" />
-        <option value="$PROJECT_DIR$/models/user.go" />
-        <option value="$PROJECT_DIR$/controllers/userController.go" />
+        <option value="$PROJECT_DIR$/static/app/common/services/AjaxServices.js" />
+        <option value="$PROJECT_DIR$/static/app/main/navbarController.js" />
+        <option value="$PROJECT_DIR$/static/app/main/navbar.html" />
+        <option value="$PROJECT_DIR$/static/app/main/home.html" />
+        <option value="$PROJECT_DIR$/static/app/main/navBar.html" />
+        <option value="$PROJECT_DIR$/static/styles/site.css" />
+        <option value="$PROJECT_DIR$/static/app/common/config/kendoModule.js" />
+        <option value="$PROJECT_DIR$/static/bower.json" />
+        <option value="$PROJECT_DIR$/controllers/client.go" />
+        <option value="$PROJECT_DIR$/static/app/organization/organizationService.js" />
         <option value="$PROJECT_DIR$/routers/router.go" />
+        <option value="$PROJECT_DIR$/static/app/common/config/stateConfig.js" />
+        <option value="$PROJECT_DIR$/auth/auth.go" />
+        <option value="$PROJECT_DIR$/static/app/organization/organizationsService.js" />
+        <option value="$PROJECT_DIR$/middleware/middleware.go" />
+        <option value="$PROJECT_DIR$/db/dbconf.yml" />
+        <option value="$PROJECT_DIR$/models/models.go" />
+        <option value="$PROJECT_DIR$/controllers/organizationController.go" />
+        <option value="$PROJECT_DIR$/models/organization.go" />
+        <option value="$PROJECT_DIR$/static/app/user/usersService.js" />
+        <option value="$PROJECT_DIR$/models/user.go" />
+        <option value="$PROJECT_DIR$/controllers/authController.go" />
+        <option value="$PROJECT_DIR$/models/timestamp.go" />
+        <option value="$PROJECT_DIR$/static/app/common/config/moment.js" />
+        <option value="$PROJECT_DIR$/models/client.go" />
+        <option value="$PROJECT_DIR$/controllers/userController.go" />
+        <option value="$PROJECT_DIR$/static/app/user/loginController.js" />
+        <option value="$PROJECT_DIR$/static/app/main/navBarController.js" />
+        <option value="$PROJECT_DIR$/static/.bowerrc.js" />
+        <option value="$PROJECT_DIR$/static/.bowerrc" />
+        <option value="$PROJECT_DIR$/static/index.html" />
+        <option value="$PROJECT_DIR$/static/main.js" />
+        <option value="$PROJECT_DIR$/static/app/user/preferenceController.js" />
+        <option value="$PROJECT_DIR$/static/l10n/en-US.json.js" />
+        <option value="$PROJECT_DIR$/static/l10n/vi-VN.json.js" />
+        <option value="$PROJECT_DIR$/static/app/application-configuration.js" />
+        <option value="$PROJECT_DIR$/static/app/user/preference.html" />
       </list>
     </option>
   </component>
@@ -416,7 +297,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -436,78 +316,9 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="routers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="models" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="middleware" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="controllers" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="crm" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="auth" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -520,6 +331,7 @@
     <property name="js-jscs-nodeInterpreter" value="C:\Program Files\nodejs\node.exe" />
     <property name="DefaultGoTemplateProperty" value="Go File" />
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="com.intellij.database.dataSource.DataSourceTemplate" value="PostgreSQL" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -528,7 +340,7 @@
       <recent name="C:\Projects\GoWork\src\erpvietnam\crm\static\app\common\config" />
     </key>
   </component>
-  <component name="RunManager" selected="Go Application.run">
+  <component name="RunManager" selected="JavaScript Debug.localhost">
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="INTERPRETER_PATH" value="" />
@@ -806,26 +618,26 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
-    <editor active="true" />
+    <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28510028" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5905405" sideWeight="0.50323623" order="7" side_tool="true" content_ui="tabs" />
-      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26638773" sideWeight="0.50385606" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45467225" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24128312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30962342" sideWeight="0.49676377" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22315203" sideWeight="0.49676377" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33472803" sideWeight="0.49614397" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24128312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32775453" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.2994429" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -841,6 +653,24 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/static/app/common/config/moment.js</url>
+          <line>9</line>
+          <option name="timeStamp" value="146" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/static/app/user/preferenceController.js</url>
+          <line>128</line>
+          <option name="timeStamp" value="178" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="javascript">
+          <url>file://$PROJECT_DIR$/static/app/application-configuration.js</url>
+          <line>6</line>
+          <properties />
+          <option name="timeStamp" value="179" />
+        </line-breakpoint>
+      </breakpoints>
       <breakpoints-dialog>
         <breakpoints-dialog />
       </breakpoints-dialog>
@@ -852,402 +682,388 @@
           </properties>
         </breakpoint>
       </default-breakpoints>
-      <option name="time" value="82" />
+      <option name="time" value="180" />
     </breakpoint-manager>
     <watches-manager>
       <configuration name="GoApplicationRunConfiguration">
-        <watch expression="err" language="go" />
-      </configuration>
-      <configuration name="JavascriptDebugType">
-        <watch expression="$location" language="JavaScript" />
+        <watch expression="r.Body" language="go" />
       </configuration>
     </watches-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/../fhc/static/bower_components/satellizer/satellizer.js">
+    <entry file="file://$PROJECT_DIR$/../../github.com/jmoiron/sqlx/sqlx.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="223" column="10" selection-start-line="223" selection-start-column="10" selection-end-line="223" selection-end-column="10" />
+        <state relative-caret-position="11272">
+          <caret line="728" column="59" selection-start-line="728" selection-start-column="35" selection-end-line="728" selection-end-column="59" />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$APPLICATION_HOME_DIR$/plugins/JavaScriptLanguage/lib/JavaScriptLanguage.jar!/com/intellij/lang/javascript/index/predefined/DHTML.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="1195" column="0" selection-start-line="1195" selection-start-column="0" selection-end-line="1195" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/jquery/AUTHORS.txt">
+    <entry file="file://$PROJECT_DIR$/db/dbconf.yml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="5" selection-end-column="56" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/bootstrap/.bower.json">
+    <entry file="file://C:/Go/src/database/sql/sql.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-102">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/jquery/.bower.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="17" selection-start-line="18" selection-start-column="12" selection-end-line="18" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/jquery/bower.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="298">
-          <caret line="30" column="15" selection-start-line="28" selection-start-column="5" selection-end-line="28" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-toastr/README.md">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-toastr/dist/angular-toastr.tpls.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-toastr/dist/angular-toastr.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/index.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="21" column="25" selection-start-line="21" selection-start-column="9" selection-end-line="21" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/styles/site.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="203">
-          <caret line="77" column="22" selection-start-line="77" selection-start-column="22" selection-end-line="77" selection-end-column="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/requirejs/require.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="1690" column="12" selection-start-line="1690" selection-start-column="12" selection-end-line="1690" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/angularAMD/angularAMD.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-687">
-          <caret line="115" column="30" selection-start-line="115" selection-start-column="25" selection-end-line="115" selection-end-column="30" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/main.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="179">
-          <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-ui-router/release/angular-ui-router.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="168">
-          <caret line="6" column="16517" selection-start-line="6" selection-start-column="16517" selection-end-line="6" selection-end-column="16517" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-ui-router/release/angular-ui-router.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-71569">
-          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/app/user/login.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="42" selection-start-line="0" selection-start-column="32" selection-end-line="0" selection-end-column="52" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/app/application-configuration.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-238">
-          <caret line="22" column="38" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="38" />
+        <state relative-caret-position="144">
+          <caret line="726" column="0" selection-start-line="726" selection-start-column="0" selection-end-line="726" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/app/common/config/stateConfig.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="417">
-          <caret line="55" column="23" selection-start-line="53" selection-start-column="16" selection-end-line="55" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/static/app/common/services/AlertsServices.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="7" column="31" selection-start-line="7" selection-start-column="31" selection-end-line="7" selection-end-column="31" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://C:/Go/src/builtin/builtin.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="159">
-          <caret line="133" column="5" selection-start-line="133" selection-start-column="5" selection-end-line="133" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/codegangsta/negroni/logger.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="17" column="28" selection-start-line="17" selection-start-column="28" selection-end-line="17" selection-end-column="28" />
+        <state relative-caret-position="281">
+          <caret line="24" column="24" selection-start-line="24" selection-start-column="20" selection-end-line="24" selection-end-column="24" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/models/models.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="502">
-          <caret line="36" column="0" selection-start-line="36" selection-start-column="0" selection-end-line="40" selection-end-column="1" />
+        <state relative-caret-position="153">
+          <caret line="9" column="21" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="21" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/satori/go.uuid/uuid.go">
+    <entry file="file://$PROJECT_DIR$/static/bower_components/moment/locale/vi.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="189" column="14" selection-start-line="189" selection-start-column="14" selection-end-line="189" selection-end-column="14" />
+        <state relative-caret-position="459">
+          <caret line="33" column="29" selection-start-line="33" selection-start-column="29" selection-end-line="33" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/main.go">
+    <entry file="file://$PROJECT_DIR$/static/app/organization/organizationsService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="14" column="20" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="20" />
+        <state relative-caret-position="136">
+          <caret line="8" column="50" selection-start-line="8" selection-start-column="50" selection-end-line="8" selection-end-column="50" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/gorilla/mux/mux.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="94" column="28" selection-start-line="94" selection-start-column="28" selection-end-line="94" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/codegangsta/negroni/response_writer.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="331">
-          <caret line="29" column="5" selection-start-line="29" selection-start-column="5" selection-end-line="29" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/codegangsta/negroni/recovery.go">
+    <entry file="file://$PROJECT_DIR$/controllers/organizationController.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="221">
-          <caret line="19" column="5" selection-start-line="19" selection-start-column="5" selection-end-line="19" selection-end-column="5" />
+          <caret line="18" column="185" selection-start-line="18" selection-start-column="143" selection-end-line="18" selection-end-column="185" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/codegangsta/negroni/negroni.go">
+    <entry file="file://$PROJECT_DIR$/static/bower_components/moment/min/moment-with-locales.min.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="326">
-          <caret line="30" column="0" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Go/src/net/http/server.go">
+    <entry file="file://$PROJECT_DIR$/static/bower_components/moment/min/moment-with-locales.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="27013">
-          <caret line="1609" column="16" selection-start-line="1609" selection-start-column="7" selection-end-line="1609" selection-end-column="16" />
-          <folding />
+        <state relative-caret-position="119">
+          <caret line="4187" column="29" selection-start-line="4187" selection-start-column="29" selection-end-line="4187" selection-end-column="29" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/gorilla/context/context.go">
+    <entry file="file://$PROJECT_DIR$/static/bower_components/moment/src/moment.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="132">
-          <caret line="95" column="0" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+        <state relative-caret-position="102">
+          <caret line="6" column="69" selection-start-line="6" selection-start-column="69" selection-end-line="6" selection-end-column="69" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/middleware/middleware.go">
+    <entry file="file://$PROJECT_DIR$/auth/jwt_backend.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="476">
-          <caret line="37" column="0" selection-start-line="37" selection-start-column="0" selection-end-line="37" selection-end-column="0" />
+        <state relative-caret-position="64">
+          <caret line="46" column="39" selection-start-line="46" selection-start-column="39" selection-end-line="46" selection-end-column="39" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/app/user/loginController.js">
+    <entry file="file://C:/Go/src/time/time.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="612">
-          <caret line="38" column="78" selection-start-line="38" selection-start-column="64" selection-end-line="38" selection-end-column="78" />
+        <state relative-caret-position="106">
+          <caret line="915" column="11" selection-start-line="915" selection-start-column="9" selection-end-line="915" selection-end-column="11" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/app/main/home.html">
+    <entry file="file://$PROJECT_DIR$/auth/auth.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="799">
-          <caret line="47" column="92" selection-start-line="47" selection-start-column="92" selection-end-line="47" selection-end-column="92" />
+        <state relative-caret-position="493">
+          <caret line="34" column="143" selection-start-line="34" selection-start-column="138" selection-end-line="34" selection-end-column="143" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/static/app/main/homeController.js">
+    <entry file="file://$PROJECT_DIR$/controllers/authController.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
-          <caret line="12" column="10" selection-start-line="12" selection-start-column="10" selection-end-line="12" selection-end-column="10" />
+        <state relative-caret-position="272">
+          <caret line="23" column="56" selection-start-line="23" selection-start-column="46" selection-end-line="23" selection-end-column="56" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/common/config/moment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="5" column="0" selection-start-line="5" selection-start-column="0" selection-end-line="16" selection-end-column="3" />
           <folding>
             <element signature="e#0#45#0" expanded="false" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/mainController.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="24" column="92" selection-start-line="24" selection-start-column="67" selection-end-line="24" selection-end-column="92" />
-          <folding>
-            <element signature="e#21#114#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/controllers/authController.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="14" column="61" selection-start-line="14" selection-start-column="61" selection-end-line="14" selection-end-column="61" />
-          <folding>
-            <element signature="e#21#142#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth/auth.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="17" column="47" selection-start-line="17" selection-start-column="47" selection-end-line="17" selection-end-column="47" />
-          <folding>
-            <element signature="e#14#93#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/auth/jwt_backend.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="663">
-          <caret line="52" column="0" selection-start-line="52" selection-start-column="0" selection-end-line="52" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/timestamp.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="17" column="33" selection-start-line="17" selection-start-column="20" selection-end-line="17" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/log/log.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="332">
-          <caret line="40" column="17" selection-start-line="40" selection-start-column="17" selection-end-line="40" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/Sirupsen/logrus/logger.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="263">
-          <caret line="155" column="35" selection-start-line="155" selection-start-column="35" selection-end-line="155" selection-end-column="35" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../github.com/Sirupsen/logrus/entry.go">
+    <entry file="file://$PROJECT_DIR$/../../github.com/hatuan/godev/bundles/org.eclipse.orion.client.ui/web/orion/jslintworker.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="229">
-          <caret line="148" column="30" selection-start-line="148" selection-start-column="26" selection-end-line="148" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/currency.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="13" column="55" selection-start-line="13" selection-start-column="55" selection-end-line="13" selection-end-column="55" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/db/dbconf.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="34">
-          <caret line="2" column="30" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="30" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/client.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="484">
-          <caret line="51" column="61" selection-start-line="51" selection-start-column="61" selection-end-line="51" selection-end-column="61" />
-          <folding>
-            <element signature="e#16#185#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/organization.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="349">
-          <caret line="53" column="26" selection-start-line="53" selection-start-column="23" selection-end-line="53" selection-end-column="26" />
-          <folding>
-            <element signature="e#16#151#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/models/user.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="86" column="40" selection-start-line="86" selection-start-column="30" selection-end-line="86" selection-end-column="40" />
-          <folding>
-            <element signature="e#16#161#0" expanded="true" />
-          </folding>
+          <caret line="1443" column="15" selection-start-line="1443" selection-start-column="15" selection-end-line="1443" selection-end-column="15" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/routers/router.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="544">
-          <caret line="45" column="38" selection-start-line="45" selection-start-column="38" selection-end-line="45" selection-end-column="38" />
-          <folding />
+        <state relative-caret-position="224">
+          <caret line="51" column="51" selection-start-line="51" selection-start-column="35" selection-end-line="51" selection-end-column="51" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/organization.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="275">
+          <caret line="52" column="45" selection-start-line="52" selection-start-column="45" selection-end-line="52" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/client.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="283">
+          <caret line="77" column="0" selection-start-line="77" selection-start-column="0" selection-end-line="77" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/user/usersService.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="12" column="27" selection-start-line="12" selection-start-column="27" selection-end-line="12" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/common/services/AjaxServices.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="12" column="38" selection-start-line="12" selection-start-column="34" selection-end-line="12" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/user.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="188">
+          <caret line="83" column="29" selection-start-line="83" selection-start-column="29" selection-end-line="83" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular/angular.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="103">
+          <caret line="4556" column="0" selection-start-line="4556" selection-start-column="0" selection-end-line="4556" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-bootstrap/ui-bootstrap.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-bootstrap/ui-bootstrap-csp.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-bootstrap/ui-bootstrap-tpls.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="6919" column="59" selection-start-line="6919" selection-start-column="20" selection-end-line="6919" selection-end-column="59" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/styles/kendo.common-bootstrap.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="151">
+          <caret line="23" column="190853" selection-start-line="23" selection-start-column="190841" selection-end-line="23" selection-end-column="190853" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/styles/kendo.bootstrap.min.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-12">
+          <caret line="1" column="28" selection-start-line="1" selection-start-column="28" selection-end-line="1" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="http://localhost/source/kendo.all.js">
+      <provider selected="true" editor-type-id="httpFileEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/controllers/mainController.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="340">
+          <caret line="26" column="9" selection-start-line="26" selection-start-column="9" selection-end-line="26" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/models/timestamp.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="21" column="51" selection-start-line="21" selection-start-column="51" selection-end-line="21" selection-end-column="51" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/controllers/userController.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="451">
-          <caret line="35" column="24" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="24" />
+        <state relative-caret-position="222">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/user/loginController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="197">
+          <caret line="39" column="32" selection-start-line="39" selection-start-column="31" selection-end-line="39" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/main/navBarController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="11" column="0" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/main/navBar.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="799">
+          <caret line="47" column="50" selection-start-line="47" selection-start-column="50" selection-end-line="47" selection-end-column="50" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/cldr-data/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="-1122">
+            <caret line="18" column="60" selection-start-line="18" selection-start-column="60" selection-end-line="18" selection-end-column="60" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/cldr-data/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="58" selection-start-line="4" selection-start-column="15" selection-end-line="4" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/cldr-data/index.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="24" column="5" selection-start-line="24" selection-start-column="5" selection-end-line="24" selection-end-column="71" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/.bowerrc" />
+    <entry file="file://$PROJECT_DIR$/static/bower.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="408">
+          <caret line="40" column="30" selection-start-line="40" selection-start-column="30" selection-end-line="40" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="629">
+          <caret line="37" column="18" selection-start-line="37" selection-start-column="18" selection-end-line="37" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/l10n/vi.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="51">
+          <caret line="3" column="0" selection-start-line="3" selection-start-column="0" selection-end-line="3" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/l10n/en.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-globalize-wrapper/dist/angular-globalize-wrapper.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="353">
+          <caret line="95" column="12" selection-start-line="95" selection-start-column="12" selection-end-line="95" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/main.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="22" column="72" selection-start-line="22" selection-start-column="72" selection-end-line="22" selection-end-column="72" />
+          <folding>
+            <marker date="1464886388142" expanded="true" signature="61:3306" placeholder="{&quot;baseUrl&quot;: &quot;&quot;...}" />
+            <marker date="1464886388142" expanded="true" signature="122:397" placeholder="{&quot;application-configuration&quot;: 'app/application-configuration'...}" />
+            <marker date="1464886388142" expanded="true" signature="2910:3232" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-moment/angular-moment.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="347" column="16" selection-start-line="347" selection-start-column="16" selection-end-line="347" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/bower_components/angular-moment/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;MarkdownPreviewEditor]">
+        <state split_layout="FIRST">
+          <first_editor relative-caret-position="-102">
+            <caret line="45" column="4" selection-start-line="45" selection-start-column="4" selection-end-line="45" selection-end-column="32" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+      <provider editor-type-id="MarkdownFxPreviewEditor">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/user/preferenceController.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1513">
+          <caret line="128" column="29" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="28" />
+          <folding>
+            <element signature="e#0#45#0" expanded="false" />
+            <marker date="1464886297343" expanded="true" signature="4962:5982" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/user/preference.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="26" column="64" selection-start-line="26" selection-start-column="55" selection-end-line="26" selection-end-column="64" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/static/app/application-configuration.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
           <folding />
         </state>
       </provider>

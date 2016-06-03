@@ -5,8 +5,19 @@ type Flash struct {
 	Message string
 }
 
+type Response struct {
+	ReturnStatus     bool
+	ReturnMessage    []string
+	ValidationErrors map[string]interface{}
+	TotalPages       int
+	TotalRows        int
+	PageSize         int
+	IsAuthenticated  bool
+	Data             map[string]interface{}
+}
+
 type Token struct {
-	TransactionalInformationDTO
+	TransactionalInformation
 	Token string `json:"token"`
 }
 
@@ -15,14 +26,14 @@ type LoginDTO struct {
 	Password string `json:"password"`
 }
 
-type TransactionalInformationDTO struct {
-	ReturnStatus     bool                   `json:"return_status"`
-	ReturnMessage    []string               `json:"return_message"`
-	ValidationErrors map[string]interface{} `json:"validation_errors"`
-	TotalPages       int                    `json:"total_pages"`
-	TotalRows        int                    `json:"total_rows"`
-	PageSize         int                    `json:"page_size"`
-	IsAuthenticated  bool                   `json:"is_authenticated"`
+type TransactionalInformation struct {
+	ReturnStatus     bool
+	ReturnMessage    []string
+	ValidationErrors map[string]interface{}
+	TotalPages       int
+	TotalRows        int
+	PageSize         int
+	IsAuthenticated  bool
 }
 
 type ApplicationMenuDTO struct {
@@ -36,6 +47,6 @@ type ApplicationMenuDTO struct {
 
 //ApplicationModelDTO user for return from  controllers.InitializeApplication
 type ApplicationModelDTO struct {
-	TransactionalInformationDTO
+	TransactionalInformation
 	MenuItems []ApplicationMenuDTO `json:"menu_items"`
 }

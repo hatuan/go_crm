@@ -1,12 +1,13 @@
 package controllers
 
 import (
+	"encoding/json"
+	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
+	ctx "github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
 	"net/http"
-	"erpvietnam/crm/log"
-	ctx "github.com/gorilla/context"
 )
 
 //API_Users_Id Get & Update User
@@ -41,10 +42,22 @@ func API_User_Preference(w http.ResponseWriter, r *http.Request, next http.Handl
 		preference, err := requestUser.GetPreference()
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, preference, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": models.PreferenceDTO{}}}, http.StatusInternalServerError)
 		}
-		JSONResponse(w, preference, http.StatusOK)
+		JSONResponse(w, models.Response{ReturnStatus: true, IsAuthenticated: true, Data: map[string]interface{}{"Preference": preference}}, http.StatusOK)
+	case r.Method == "POST": //update preference to user
+		preference := new(models.PreferenceDTO)
+		err := json.NewDecoder(r.Body).Decode(&preference)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": models.PreferenceDTO{}}}, http.StatusInternalServerError)
+		}
+		err = requestUser.SetPreference(*preference)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": preference}}, http.StatusInternalServerError)
+		}
+		JSONResponse(w, models.Response{ReturnStatus: true, IsAuthenticated: true, Data: map[string]interface{}{"Preference": preference}}, http.StatusOK)
 	}
-
 
 }

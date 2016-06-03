@@ -11,8 +11,8 @@ import (
 	"os"
 	"time"
 
-	jwt "github.com/dgrijalva/jwt-go"
 	"encoding/json"
+	jwt "github.com/dgrijalva/jwt-go"
 )
 
 type JWTAuthenticationBackend struct {
@@ -49,7 +49,7 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userName string) (string,
 		log.Error(err)
 		return "", err
 	}
-	user_json,_ := json.Marshal(user)
+	user_json, _ := json.Marshal(user)
 	token.Claims["user"] = string(user_json)
 
 	tokenString, err := token.SignedString(backend.privateKey)

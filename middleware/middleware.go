@@ -5,17 +5,16 @@ import (
 	"fmt"
 	"net/http"
 
-	jwt "github.com/dgrijalva/jwt-go"
-	"erpvietnam/crm/models"
 	"encoding/json"
+	"erpvietnam/crm/models"
+	jwt "github.com/dgrijalva/jwt-go"
 	ctx "github.com/gorilla/context"
 )
 
 type Context struct {
-
 }
 
-func NewContext() *Context{
+func NewContext() *Context {
 	return &Context{}
 }
 
@@ -43,7 +42,10 @@ func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next 
 
 		next(rw, req)
 	} else {
-		transactionalInformation := new(models.TransactionalInformationDTO)
+		transactionalInformation := new(models.TransactionalInformation)
+		transactionalInformation.IsAuthenticated = false
+		transactionalInformation.ReturnStatus = false
+		transactionalInformation.ReturnMessage = []string{"Auth failed"}
 
 		response, err := json.Marshal(transactionalInformation)
 		if err != nil {
@@ -55,5 +57,3 @@ func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next 
 		rw.Write(response)
 	}
 }
-
-

@@ -51,7 +51,7 @@ func GetUser(id string) (User, error) {
 	defer db.Close()
 
 	u := User{}
-	err = db.Get(&u, "SELECT * FROM \"user\" WHERE id=$1::uuid", id)
+	err = db.Get(&u, "SELECT * FROM \"user\" WHERE id=$1", id)
 	if err != nil {
 		return u, err
 	}
@@ -79,20 +79,19 @@ func GetUserByUsername(name string) (User, error) {
 }
 
 type PreferenceDTO struct {
-	Organization     Organization           `json:"organization"`
-	CultureUIID        string                 `json:"culture_ui"`
-	WorkingDate      *Timestamp              `json:"working_date"`
+	OrganizationID string
+	CultureUIID    string
+	WorkingDate    *Timestamp
 }
 
-func (u User)GetPreference() (PreferenceDTO, error) {
+func (u User) GetPreference() (PreferenceDTO, error) {
 	preference := PreferenceDTO{}
 
-	err := preference.Organization.Get(u.OrganizationID)
+	//TODO: check if u.OrganizationID == "" => load rootOrganization
+	preference.OrganizationID = u.OrganizationID
 
-	if err != nil {
-		return preference, err
-	}
-	preference.WorkingDate = time.Now()
+	preference.WorkingDate = &Timestamp{time.Now()}
+
 	if u.CultureUIID == "" {
 		u.CultureUIID = "vi-VN"
 	}
@@ -101,6 +100,24 @@ func (u User)GetPreference() (PreferenceDTO, error) {
 	return preference, nil
 }
 
-func (u * User)SetPreference(preference PreferenceDTO) {
+func (u *User) SetPreference(preference PreferenceDTO) error {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
 
+	_, err = db.NamedExec(`UPDATE "user" SET organization_id = :organization_id, culture_ui_id = :culture_ui_id WHERE id = :id`,
+		map[string]interface{}{
+			"organization_id": preference.OrganizationID,
+			"culture_ui_id":   preference.CultureUIID,
+			"id":              u.ID,
+		})
+	if err != nil {
+		return err
+	}
+	u.OrganizationID = preference.OrganizationID
+	u.CultureUIID = preference.CultureUIID
+
+	return nil
 }

@@ -1,28 +1,28 @@
 package models
 
 import (
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
+	"database/sql"
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
 	"errors"
-	"database/sql"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
 type Organization struct {
-	ID                string     `json:"id"`
-	Code              string     `json:"code"`
-	Name              string     `json:"name"`
-	RecCreatedByID    string     `json:"rec_created_by_id"`
-	RecCreatedByUser  User       `json:"rec_created_by_user"`
-	RecCreated        *Timestamp `json:"rec_created"`
-	RecModifiedByID   string     `json:"rec_modified_by_id"`
-	RecModifiedByUser User       `json:"rec_modified_by_user"`
-	RecModified       *Timestamp `json:"rec_modified"`
-	Status            int8       `json:"status"`
-	Version           int16      `json:"version"`
-	ClientID          string     `json:"client_id"`
-	Client            Client     `json:"client"`
+	ID                string     `db:"id"`
+	Code              string     `db:"code"`
+	Name              string     `db:"name"`
+	RecCreatedByID    string     `db:"rec_created_by"`
+	RecCreatedByUser  *User      `db:"-"`
+	RecCreatedAt      *Timestamp `db:"rec_created_at"`
+	RecModifiedByID   string     `db:"rec_modified_by"`
+	RecModifiedByUser *User      `db:"-"`
+	RecModifiedAt     *Timestamp `db:"rec_modified_at"`
+	Status            int8       `db:"status"`
+	Version           int16      `db:"version"`
+	ClientID          string     `db:"client_id"`
+	Client            Client     `db:"-"`
 }
 
 var ErrRootOrganizationNotFound = errors.New("Error RootOrganization Not Found")
@@ -49,8 +49,7 @@ func (o Organization) GetRootOrganization() (Organization, error) {
 	return rootOrganization, nil
 }
 
-// Get returns the user that the given id corresponds to. If no user is found, an
-// error is thrown.
+// Get returns the Organization that the given id corresponds to. If no Organization is found, an error is thrown.
 func (o *Organization) Get(id string) error {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
@@ -58,7 +57,7 @@ func (o *Organization) Get(id string) error {
 	}
 	defer db.Close()
 
-	err = db.Get(&o, "SELECT * FROM organization WHERE id=$1::uuid", id)
+	err = db.Get(&o, "SELECT * FROM organization WHERE id=$1", id)
 	if err == sql.ErrNoRows {
 		return ErrOrganizationNotFound
 	} else if err != nil {

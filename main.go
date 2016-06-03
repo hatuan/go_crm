@@ -6,8 +6,8 @@ import (
 	"erpvietnam/crm/settings"
 	"net/http"
 
-	"github.com/codegangsta/negroni"
 	"erpvietnam/crm/middleware"
+	"github.com/codegangsta/negroni"
 )
 
 func main() {

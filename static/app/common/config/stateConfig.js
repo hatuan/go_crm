@@ -34,6 +34,19 @@ define(['angularAMD'], function (angularAMD) {
                 resolve: {
                     skipIfAuthenticated: _skipIfAuthenticated
                 }
+            })
+            .state('preference', {
+                url: '/preference',
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/user/preference.html',
+                        controller: 'PreferenceController',
+                        controllerUrl: 'app/user/preferenceController',
+                    })
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
             });
 
         function _skipIfAuthenticated($q, $state, $auth) {

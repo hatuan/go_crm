@@ -3,8 +3,8 @@ package auth
 import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
-	"net/http"
 	"errors"
+	"net/http"
 )
 
 // ErrLoginInvalid is thrown when a user attempts to register a username that is taken.
@@ -19,20 +19,20 @@ func TokenLogin(requestLogin *models.LoginDTO) (int, models.Token) {
 		if err != nil {
 			log.Error(err)
 			token := models.Token{
-				TransactionalInformationDTO: models.TransactionalInformationDTO{ReturnMessage: [] string{err.Error()}, ReturnStatus: false},
-				Token : "",
+				TransactionalInformation: models.TransactionalInformation{ReturnMessage: []string{err.Error()}, ReturnStatus: false},
+				Token: "",
 			}
 			return http.StatusInternalServerError, token
 		}
 		response := models.Token{
-			TransactionalInformationDTO: models.TransactionalInformationDTO{ReturnStatus: true},
+			TransactionalInformation: models.TransactionalInformation{ReturnStatus: true, IsAuthenticated: true},
 			Token: token,
 		}
 		return http.StatusOK, response
 	}
 
 	return http.StatusUnauthorized, models.Token{
-		TransactionalInformationDTO: models.TransactionalInformationDTO{ReturnMessage:  [] string{ErrLoginInvalid.Error()}, ReturnStatus: false},
+		TransactionalInformation: models.TransactionalInformation{ReturnMessage: []string{ErrLoginInvalid.Error()}, ReturnStatus: false},
 		Token: "",
 	}
 }
@@ -44,12 +44,12 @@ func TokenRefresh(username string) (int, models.Token) {
 	if err != nil {
 		log.Error(err)
 		return http.StatusInternalServerError, models.Token{
-			TransactionalInformationDTO: models.TransactionalInformationDTO{ReturnMessage: [] string{err.Error()}, ReturnStatus: false},
+			TransactionalInformation: models.TransactionalInformation{ReturnMessage: []string{err.Error()}, ReturnStatus: false},
 			Token: "",
 		}
 	}
 	response := models.Token{
-		TransactionalInformationDTO: models.TransactionalInformationDTO{ReturnStatus: true},
+		TransactionalInformation: models.TransactionalInformation{ReturnStatus: true},
 		Token: token,
 	}
 	return http.StatusOK, response

@@ -2,15 +2,15 @@ package controllers
 
 import (
 	"encoding/json"
-	"net/http"
+	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
 	"fmt"
-	"erpvietnam/crm/log"
+	"net/http"
 )
 
 //InitializeApplication run init menu ... before login
 func InitializeApplication(w http.ResponseWriter, r *http.Request) {
-	applicationModel := new (models.ApplicationModelDTO)
+	applicationModel := new(models.ApplicationModelDTO)
 
 	//TODO: Implement InitializeApplication here
 

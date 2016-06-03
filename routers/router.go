@@ -49,6 +49,12 @@ func InitRoutes() *mux.Router {
 			negroni.HandlerFunc(controllers.API_User_Preference),
 		))
 
+	api.Handle("/organizations/GetOrganizations",
+		negroni.New(
+			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.API_Organizations),
+		))
+
 	// Setup static file serving
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static/"))))
 

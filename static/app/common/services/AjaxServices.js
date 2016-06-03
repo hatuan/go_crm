@@ -3,7 +3,7 @@
  */
 define(['application-configuration'], function (app) {
 
-    app.register.service('ajaxService', ['$http', 'blockUI', function ($http, blockUI) {
+    app.register.service('ajaxService', ['$http', 'blockUI', '$state', function ($http, blockUI, $state) {
 
         // setting timeout of 1 second to simulate a busy server.
 
@@ -15,7 +15,7 @@ define(['application-configuration'], function (app) {
                     successFunction(response, status);
                 }).error(function (response) {
                     blockUI.stop();                   
-                    if (response.IsAuthenicated == false) { window.location = "/index.html"; }
+                    if (response.IsAuthenicated == false) { $state.go('login'); }
                     errorFunction(response);
                 });
             }, 1000);
@@ -44,7 +44,7 @@ define(['application-configuration'], function (app) {
                     successFunction(response, status);
                 }).error(function (response) {
                     blockUI.stop();
-                    if (response.IsAuthenicated == false) { window.location = "/index.html"; }
+                    if (response.IsAuthenicated == false) { $state.go('login'); }
                     errorFunction(response);
                 });
             }, 1000);
@@ -59,7 +59,7 @@ define(['application-configuration'], function (app) {
                     successFunction(response, status);
                 }).error(function (response) {
                     blockUI.stop();
-                    if (response.IsAuthenicated == false) { window.location = "/index.html"; }
+                    if (response.IsAuthenicated == false) { $state.go('login'); }
                     errorFunction(response);
                 });
             }, 1000);
@@ -71,8 +71,8 @@ define(['application-configuration'], function (app) {
             setTimeout(function () {
                 $http({ method: 'GET', url: route, params: data }).success(function (response, status, headers, config) {                 
                     successFunction(response, status);
-                }).error(function (response) {                  ;
-                    if (response.IsAuthenicated == false) { window.location = "/index.html"; }
+                }).error(function (response) {
+                    if (response.IsAuthenicated == false) { $state.go('login'); }
                     errorFunction(response);
                 });
             }, 0);

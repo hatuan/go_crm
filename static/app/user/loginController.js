@@ -12,6 +12,7 @@ define(['application-configuration', 'alertsService'], function (app) {
         $rootScope.alerts = [];
 
         $scope.initializeController = function () {
+            $rootScope.IsloggedIn = false;
 
             $scope.UserName = "";
             $scope.Password = "";
@@ -36,10 +37,12 @@ define(['application-configuration', 'alertsService'], function (app) {
                 .then(function (response) {
                     toastr.success('You have successfully signed in!');
 
+                    $rootScope.authenticated = true;
+
                     $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
 
                     setTimeout(function () {
-                        $state.go('home');
+                        $state.go('preference');
                     }, 10);
                 })
                 .catch(function (error) {

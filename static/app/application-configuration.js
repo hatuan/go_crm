@@ -3,8 +3,8 @@
  */
 "use strict";
 
-define(['angularAMD', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'jquery', 'bootstrap', 'toastr' ], function (angularAMD) {
-    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr']);
+define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'myApp.navBar'], function (angularAMD) {
+    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'myApp.NavBar']);
 
     app.config(function (blockUIConfig) {
 
@@ -13,11 +13,11 @@ define(['angularAMD', 'ui.router', 'satellizer', 'pascalprecht.translate', 'bloc
         // Change the default delay to 100ms before the blocking is visible
         blockUIConfig.delay = 1;
         // Disable automatically blocking of the user interface
-        blockUIConfig.autoBlock =false;
+        blockUIConfig.autoBlock = false;
 
     });
 
-    app.config(['$authProvider', function($authProvider) {
+    app.config(['$authProvider', function ($authProvider) {
         // Satellizer configuration that specifies which API
         // route the JWT should be retrieved from
         $authProvider.loginUrl = '/api/token-auth';
@@ -26,12 +26,49 @@ define(['angularAMD', 'ui.router', 'satellizer', 'pascalprecht.translate', 'bloc
 
     app.config(stateConfig);
 
+    app.config(['$validatorProvider', function ($validatorProvider) {
+        $validatorProvider.setDefaults({
+            errorElement: 'span',
+            /* http://stackoverflow.com/questions/21813868/adding-jquery-validation-to-kendo-ui-elements */
+            /* http://lukaszledochowski.blogspot.nl/2015/02/validation-using-aspnet-mvc-kendo-ui.html */
+            ignore: []
+
+        });
+    }]);
+
+
+    app.config(['globalizeWrapperProvider', function (globalizeWrapperProvider) {
+                // The path to cldr-data
+                globalizeWrapperProvider.setCldrBasePath('bower_components/cldr-data');
+
+                // The path to messages
+                globalizeWrapperProvider.setL10nBasePath('l10n');
+
+                // Files to load in main dir: "{{cldrBasePath}}/main/{{locale}}"
+                globalizeWrapperProvider.setMainResources([
+                    'currencies.json',
+                    'ca-gregorian.json',
+                    'timeZoneNames.json',
+                    'numbers.json'
+                ]);
+
+                // Files to load in supplemental dir: "{{cldrBasePath}}/supplemental'
+                globalizeWrapperProvider.setSupplementalResources([
+                    'currencyData.json',
+                    'likelySubtags.json',
+                    'plurals.json',
+                    'timeData.json',
+                    'weekData.json'
+                ]);
+            }]
+    );
+
     app.controller('indexController', ['$scope', '$rootScope', '$http', 'blockUI', function ($scope, $rootScope, $http, blockUI) {
 
         $scope.initializeController = function () {
             $rootScope.displayContent = false;
             // if ($location.path() != "") {
-                $scope.initializeApplication($scope.initializeApplicationComplete, $scope.initializeApplicationError);
+            $scope.initializeApplication($scope.initializeApplicationComplete, $scope.initializeApplicationError);
             // }
         };
 
@@ -74,6 +111,32 @@ define(['angularAMD', 'ui.router', 'satellizer', 'pascalprecht.translate', 'bloc
         }
 
     }]);
+
+    app.run(['$state', '$rootScope', '$auth', 'globalizeWrapper', 'amMoment', function ($state, $rootScope, $auth, globalizeWrapper, amMoment) {
+        
+        //kendo.culture("vi-VN");
+
+        //$rootScope.datePickerConfig = {
+        //   format: "dd/MM/yyyy",
+        //   parseFormats: ["yyyy-MM-dd", "dd/MM/yyyy", "yyyy/MM/dd"],
+        //};
+
+        $rootScope.isAuthenticated = function () {
+            return $auth.isAuthenticated();
+        };
+
+        globalizeWrapper.loadLocales([ 'vi', 'en' ]);
+        
+        $rootScope.$on('GlobalizeLoadSuccess', function () { 
+            console.log("GlobalizeLoadSuccess"); 
+        });
+        
+        $rootScope.$on('GlobalizeLocaleChanged', function () {
+            console.log("globalizeWrapper.getLocale() = " + globalizeWrapper.getLocale());
+            Globalize.locale( globalizeWrapper.getLocale() ); 
+        });
+    }]);
+
 
     // Bootstrap Angular when DOM is ready
     angularAMD.bootstrap(app);

@@ -7,6 +7,11 @@
     <link rel="stylesheet" href="/bower_components/bootstrap/dist/css/bootstrap.css">
     <link rel="stylesheet" href="/bower_components/angular-block-ui/dist/angular-block-ui.min.css"/>
     <link rel="stylesheet" href="/bower_components/angular-toastr/dist/angular-toastr.min.css"/>
+    <!-- <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.common-bootstrap.min.css"> -->
+    <!-- <link rel="stylesheet" href="http://kendo.cdn.telerik.com/2016.2.504/styles/kendo.bootstrap.min.css"> -->
+    <link rel="stylesheet" href="/styles/kendo.common-bootstrap.min.css">
+    <link rel="stylesheet" href="/styles/kendo.bootstrap.min.css">
+
     <link rel="stylesheet" href="/styles/site.css">
     <link rel='stylesheet' href="/styles/roboto.css">
     <style type="text/css">
@@ -19,7 +24,19 @@
     </style>
 </head>
 <body ng-controller="indexController" ng-init="initializeController()" ng-cloak>
+    <div ng-include="'/app/main/navbar.html'"></div>
     <div ui-view="master"></div>
+
+    <script src="/bower_components/cldrjs/dist/cldr.js"></script>
+    <script src="/bower_components/cldrjs/dist/cldr/event.js"></script>
+    <script src="/bower_components/cldrjs/dist/cldr/supplemental.js"></script>
+
+    <script src="/bower_components/globalize/dist/globalize.js"></script>
+    <script src="/bower_components/globalize/dist/globalize/message.js"></script>
+    <script src="/bower_components/globalize/dist/globalize/number.js"></script>
+    <script src="/bower_components/globalize/dist/globalize/plural.js"></script>
+    <script src="/bower_components/globalize/dist/globalize/currency.js"></script>
+    <script src="/bower_components/globalize/dist/globalize/date.js"></script>
     <script data-main="main.js" src="/bower_components/requirejs/require.js"></script>
 </body>
 </html>
