@@ -47,6 +47,19 @@ define(['angularAMD'], function (angularAMD) {
                 resolve: {
                     redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
                 }
+            })
+            .state('master', {
+                url: '/master',
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/main/master.html',
+                        controller: 'MasterController',
+                        controllerUrl: 'app/main/masterController',
+                    })
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
             });
 
         function _skipIfAuthenticated($q, $state, $auth) {

@@ -21,11 +21,4 @@ define(['application-configuration'], function (app) {
     HomeController.$inject = injectParams;
 
     app.register.controller('HomeController', HomeController);
-/*
-    app.register.controller('HomeController', ['$scope', '$rootScope', '$auth', function ($scope, $rootScope, $auth) {
-        $scope.isAuthenticated = function() {
-            return $auth.isAuthenticated();
-        };
-    }]);
-*/
 });

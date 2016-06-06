@@ -128,11 +128,11 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
         globalizeWrapper.loadLocales([ 'vi', 'en' ]);
         
         $rootScope.$on('GlobalizeLoadSuccess', function () { 
-            console.log("GlobalizeLoadSuccess"); 
+            //console.log("GlobalizeLoadSuccess"); 
         });
         
         $rootScope.$on('GlobalizeLocaleChanged', function () {
-            console.log("globalizeWrapper.getLocale() = " + globalizeWrapper.getLocale());
+            //console.log("globalizeWrapper.getLocale() = " + globalizeWrapper.getLocale());
             Globalize.locale( globalizeWrapper.getLocale() ); 
         });
     }]);

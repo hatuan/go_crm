@@ -70,7 +70,6 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'organizati
             var preference = new Object();
             preference.OrganizationID = $scope.OrganizationID;
             preference.CultureUIID = $scope.CultureUIID;
-            //preference.WorkingDate = new moment($scope.WorkingDate, moment.ISO_8601).unix();
             preference.WorkingDate = new moment($scope.WorkingDate).unix();
             return preference;
 
@@ -78,13 +77,13 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'organizati
 
         $scope.validationOptions = {
             rules: {
-                organization: {
+                Organization: {
                     required: true
                 },
-                cultureui: {
+                CultureUI: {
                     required: true
                 },
-                workingdate: {
+                WorkingDate: {
                     date: true,
                     required: true
                 }

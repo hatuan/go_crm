@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
+	"net/http"
+
 	ctx "github.com/gorilla/context"
 	"github.com/gorilla/mux"
 	"github.com/satori/go.uuid"
-	"net/http"
 )
 
 //API_Users_Id Get & Update User
@@ -38,13 +39,20 @@ func API_User_Preference(w http.ResponseWriter, r *http.Request, next http.Handl
 	requestUser := ctx.Get(r, "user").(models.User)
 
 	switch {
+
 	case r.Method == "GET":
-		preference, err := requestUser.GetPreference()
+		user, err := models.GetUser(requestUser.ID)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": models.PreferenceDTO{}}}, http.StatusInternalServerError)
+		}
+		preference, err := user.GetPreference()
 		if err != nil {
 			log.Error(err.Error())
 			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": models.PreferenceDTO{}}}, http.StatusInternalServerError)
 		}
 		JSONResponse(w, models.Response{ReturnStatus: true, IsAuthenticated: true, Data: map[string]interface{}{"Preference": preference}}, http.StatusOK)
+
 	case r.Method == "POST": //update preference to user
 		preference := new(models.PreferenceDTO)
 		err := json.NewDecoder(r.Body).Decode(&preference)
