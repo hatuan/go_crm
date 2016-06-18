@@ -13,7 +13,6 @@ type Currency struct {
 	Status            int8         `json:"status"`
 	Version           int16        `json:"version"`
 	ClientID          string       `json:"client_id"`
-	Client            Client       `json:"client" db:"-"`
 	OrganizationID    string       `json:"organization_id"`
 	Organization      Organization `json:"organization" db:"-"`
 }

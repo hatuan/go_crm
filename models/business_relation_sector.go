@@ -1,5 +1,12 @@
 package models
 
+import (
+	"erpvietnam/crm/log"
+	"erpvietnam/crm/settings"
+
+	"github.com/jmoiron/sqlx"
+)
+
 type BusinessRelationSector struct {
 	ID                string       `json:"id"`
 	Code              string       `json:"code"`
@@ -16,4 +23,22 @@ type BusinessRelationSector struct {
 	Client            Client       `json:"client" db:"-"`
 	OrganizationID    string       `json:"organization_id"`
 	Organization      Organization `json:"organization" db:"-"`
+}
+
+func GetBusinessRelationSectors(orgID string) ([]BusinessRelationSector, error) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+		return []BusinessRelationSector{}, err
+	}
+	defer db.Close()
+
+	businessRelationSectors := []BusinessRelationSector{}
+	err = db.Select(&businessRelationSectors, "SELECT * FROM business_relation_sector WHERE organization_id = $1", orgID)
+	if err != nil {
+		log.Error(err)
+		return businessRelationSectors, err
+	}
+
+	return businessRelationSectors, nil
 }

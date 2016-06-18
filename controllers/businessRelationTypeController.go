@@ -8,11 +8,17 @@ import (
 	"github.com/gorilla/context"
 )
 
-func API_BusinessRelationType(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	requestUser := context.Get(r, "user").(models.User)
 
 	switch {
 	case r.Method == "GET":
+		user, err := models.GetUser(requestUser.ID)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": models.BusinessRelationType{}}}, http.StatusInternalServerError)
+		}
+
 		client := new(models.Client)
 		err := client.Get(requestUser.ClientID)
 		if err != nil {
