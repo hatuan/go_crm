@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"encoding/json"
+
 	jwt "github.com/dgrijalva/jwt-go"
 )
 
@@ -38,19 +39,30 @@ func InitJWTAuthenticationBackend() *JWTAuthenticationBackend {
 	return authBackendInstance
 }
 
-func (backend *JWTAuthenticationBackend) GenerateToken(userName string) (string, error) {
-	token := jwt.New(jwt.SigningMethodRS512)
-	token.Claims["exp"] = time.Now().Add(time.Hour * time.Duration(settings.Settings.JWTExpirationDelta)).Unix()
-	token.Claims["iat"] = time.Now().Unix()
-	token.Claims["sub"] = userName
+type MyCustomClaims struct {
+	User string `json:"user"`
+	*jwt.StandardClaims
+}
 
+func (backend *JWTAuthenticationBackend) GenerateToken(userName string) (string, error) {
 	user, err := models.GetUserByUsername(userName)
 	if err != nil && err != models.ErrUsernameTaken {
 		log.Error(err)
 		return "", err
 	}
+
 	user_json, _ := json.Marshal(user)
-	token.Claims["user"] = string(user_json)
+
+	claims := &MyCustomClaims{
+		string(user_json),
+		&jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(time.Hour * time.Duration(settings.Settings.JWTExpirationDelta)).Unix(),
+			IssuedAt:  time.Now().Unix(),
+			Subject:   userName,
+		},
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodRS512, claims)
 
 	tokenString, err := token.SignedString(backend.privateKey)
 	if err != nil {

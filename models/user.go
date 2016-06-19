@@ -1,15 +1,16 @@
 package models
 
 import (
+	"database/sql"
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
 	"errors"
+	"strings"
 
-	"database/sql"
+	"time"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"time"
 )
 
 // User represents the user model
@@ -41,6 +42,8 @@ type User struct {
 // ErrUsernameTaken is thrown when a user attempts to register a username that is taken.
 var ErrUsernameTaken = errors.New("username already taken")
 
+var ErrUsernameNotFound = errors.New("Error User's name Not Found")
+
 // GetUser returns the user that the given id corresponds to. If no user is found, an
 // error is thrown.
 func GetUser(id string) (User, error) {
@@ -68,10 +71,10 @@ func GetUserByUsername(name string) (User, error) {
 	defer db.Close()
 
 	u := User{}
-	err = db.Get(&u, "SELECT * FROM \"user\" WHERE name=$1", name)
+	err = db.Get(&u, "SELECT * FROM \"user\" WHERE name=$1", strings.ToUpper(name))
 	// No issue if we don't find a record
 	if err == sql.ErrNoRows {
-		return u, nil
+		return u, ErrUsernameNotFound
 	} else if err == nil {
 		return u, ErrUsernameTaken
 	}

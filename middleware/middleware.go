@@ -7,7 +7,9 @@ import (
 
 	"encoding/json"
 	"erpvietnam/crm/models"
+
 	jwt "github.com/dgrijalva/jwt-go"
+	"github.com/dgrijalva/jwt-go/request"
 	ctx "github.com/gorilla/context"
 )
 
@@ -27,7 +29,7 @@ func (c *Context) ServeHTTP(rw http.ResponseWriter, req *http.Request, next http
 func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next http.HandlerFunc) {
 	authBackend := auth.InitJWTAuthenticationBackend()
 
-	token, err := jwt.ParseFromRequest(req, func(token *jwt.Token) (interface{}, error) {
+	token, err := request.ParseFromRequestWithClaims(req, request.AuthorizationHeaderExtractor, &auth.MyCustomClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
 		}
@@ -36,8 +38,8 @@ func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next 
 
 	if err == nil && token.Valid {
 		user := models.User{}
-		user_bytes := []byte(token.Claims["user"].(string))
-		json.Unmarshal(user_bytes, &user)
+		userBytes := []byte(token.Claims.(*auth.MyCustomClaims).User)
+		json.Unmarshal(userBytes, &user)
 		ctx.Set(req, "user", user)
 
 		next(rw, req)

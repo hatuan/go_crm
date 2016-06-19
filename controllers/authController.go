@@ -5,8 +5,9 @@ import (
 	"erpvietnam/crm/auth"
 	"erpvietnam/crm/models"
 	"errors"
-	ctx "github.com/gorilla/context"
 	"net/http"
+
+	ctx "github.com/gorilla/context"
 )
 
 // ErrUsernameTaken is thrown when a user attempts to register a username that is taken.
@@ -19,6 +20,7 @@ func TokenAuth(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 		err := json.NewDecoder(r.Body).Decode(&requestLogin)
 		if err != nil {
 			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrRequestLoginInvalidate.Error()}, IsAuthenticated: false}, http.StatusInternalServerError)
+			return
 		}
 
 		responseStatus, token := auth.TokenLogin(requestLogin)

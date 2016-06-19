@@ -16,21 +16,16 @@ func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http
 		user, err := models.GetUser(requestUser.ID)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			return
 		}
 
-		client := new(models.Client)
-		err := client.Get(requestUser.ClientID)
+		businessRelationTypes, err := models.GetBusinessRelationTypes(user.OrganizationID)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, Data: map[string]interface{}{"Organizations": []models.Organization{}}, IsAuthenticated: true}, http.StatusInternalServerError)
-
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			return
 		}
-		organizations, err := client.GetOrganizations()
-		if err != nil {
-			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, Data: map[string]interface{}{"Organizations": []models.Organization{}}, IsAuthenticated: true}, http.StatusInternalServerError)
-		}
-		JSONResponse(w, models.Response{ReturnStatus: true, Data: map[string]interface{}{"Organizations": organizations}, IsAuthenticated: true}, http.StatusOK)
+		JSONResponse(w, models.Response{ReturnStatus: true, Data: map[string]interface{}{"BusinessRelationTypes": businessRelationTypes}, IsAuthenticated: true}, http.StatusOK)
 	}
 }

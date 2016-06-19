@@ -3,13 +3,15 @@ package models
 import (
 	"database/sql"
 	"erpvietnam/crm/log"
+
 	"github.com/shopspring/decimal"
 
 	"erpvietnam/crm/settings"
 	"errors"
+	"time"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
-	"time"
 )
 
 // Client represents the client model
@@ -68,7 +70,6 @@ func (c *Client) Get(id string) error {
 		log.Fatal(err)
 	}
 	defer db.Close()
-	//_client := Client{}
 	err = db.QueryRowx("SELECT *  FROM client WHERE id=$1", id).StructScan(c)
 	if err == sql.ErrNoRows {
 		return ErrClientNotFound
