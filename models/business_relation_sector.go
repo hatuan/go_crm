@@ -19,6 +19,7 @@ type BusinessRelationSector struct {
 	RecModified       *Timestamp `db:"rec_modified_at"`
 	Status            int8       `db:"status"`
 	Version           int16      `db:"version"`
+	ClientID          string     `db:"client_id"`
 	OrganizationID    string     `db:"organization_id"`
 	Organization      string     `db:"organization"`
 }
