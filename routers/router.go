@@ -49,22 +49,39 @@ func InitRoutes() *mux.Router {
 			negroni.HandlerFunc(controllers.API_User_Preference),
 		))
 
+	//organization api
 	api.Handle("/organizations/GetOrganizations",
 		negroni.New(
 			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
 			negroni.HandlerFunc(controllers.API_Organizations),
 		))
 
+	//other api
+	api.Handle("/check-unique",
+		negroni.New(
+			negroni.HandlerFunc(controllers.API_Check_Unique),
+		))
+
+	//businessrelationtype api
 	api.Handle("/businessrelationtypes",
 		negroni.New(
 			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
 			negroni.HandlerFunc(controllers.API_BusinessRelationTypes),
 		))
+
+	api.Handle("/businessrelationtype",
+		negroni.New(
+			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.API_BusinessRelationType_Id),
+		))
+
+	//businessrelationsector api
 	api.Handle("/businessrelationsectors",
 		negroni.New(
 			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
 			negroni.HandlerFunc(controllers.API_BusinessRelationSectors),
 		))
+
 	// Setup static file serving
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static/"))))
 

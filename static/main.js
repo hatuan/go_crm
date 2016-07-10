@@ -34,8 +34,10 @@ require.config({
         'alertsService': 'app/common/services/alertsServices',
         'stateConfig': 'app/common/config/stateConfig',
         'myApp.navBar': 'app/main/navBarController',
+        'myApp.Capitalize': 'app/common/capitalize',
         'organizationsService': 'app/organization/organizationsService',
-        'usersService': 'app/user/usersService'
+        'usersService': 'app/user/usersService',
+        'businessRelationTypesService': 'app/contactManager/businessRelationTypesService'
     },
     // Add angular modules that does not support AMD out of the box, put it in a shim
     shim: {

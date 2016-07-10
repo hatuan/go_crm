@@ -13,6 +13,31 @@ import (
 	_ "github.com/lib/pq"
 )
 
+type UserClaim struct {
+	ID                  string        `json:"id"`
+	Name                string        `json:"name" db:"name"`
+	Password            string        `json:"-" db:"password"`
+	Comment             string        `json:"comment"  db:"comment"`
+	FullName            string        `json:"full_name" db:"full_name"`
+	PasswordAnswer      string        `json:"-" db:"password_answer"`
+	PasswordQuestion    string        `json:"-" db:"password_question"`
+	Email               string        `json:"email"`
+	CreatedDate         *Timestamp    `json:"created_date,omitempty" db:"created_date"`
+	IsActivated         bool          `json:"is_activated" db:"is_activated"`
+	IsLockedOut         bool          `joson:"is_locked_out" db:"is_locked_out" `
+	LastLockedOutDate   *Timestamp    `json:"last_locked_out_date,omitempty" db:"last_locked_out_date"`
+	LastLockedOutReason string        `json:"last_locked_out_reason" db:"last_locked_out_reason"`
+	LastLoginDate       *Timestamp    `json:"last_login_date,omitempty" db:"last_login_date"`
+	LastLoginIP         string        `json:"last_login_ip" db:"last_login_ip"`
+	LastModifiedDate    *Timestamp    `json:"last_modified_date,omitempty" db:"last_modified_date"`
+	ClientID            string        `json:"client_id" db:"client_id"`
+	Client              *Client       `json:"client" db:"-"`
+	OrganizationID      string        `json:"organization_id" db:"organization_id"`
+	Organization        *Organization `json:"organization" db:"-"`
+	CultureUIID         string        `json:"culture_ui_id" db:"culture_ui_id"`
+	Roles               []Role        `json:"roles" db:"-"`
+}
+
 // User represents the user model
 type User struct {
 	ID                  string        `json:"id"`

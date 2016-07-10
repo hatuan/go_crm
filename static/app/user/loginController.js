@@ -38,6 +38,7 @@ define(['application-configuration', 'alertsService'], function (app) {
                     toastr.success('You have successfully signed in!');
 
                     $rootScope.authenticated = true;
+                    $rootScope.currentUser = response.data;
 
                     $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
 

@@ -60,6 +60,54 @@ define(['angularAMD'], function (angularAMD) {
                 resolve: {
                     redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
                 }
+            })
+            .state('setup', {
+                url: "/setup/:setupModule"
+            })
+            .state('businessRelationType', {
+                url: "/businessRelationType",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactManager/businessRelationTypes.html',
+                        controller: 'BusinessRelationTypesController',
+                        controllerUrl: 'app/contactManager/businessRelationTypesController',
+                    })
+                },
+                params: {
+                    businessRelationTypeID: null
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            .state('businessRelationTypeMaintenance', {
+                url: "/businessRelationTypeMaintenance",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactManager/businessRelationTypeMaintenance.html',
+                        controller: 'BusinessRelationTypeMaintenanceController',
+                        controllerUrl: 'app/contactManager/businessRelationTypeMaintenanceController',
+                    })
+                },
+                params: {
+                    id: null
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            .state('businessRelationSector', {
+                url: "/businessrelationsector",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactmanager/businessRelationTypes.html',
+                        controller: 'BusinessRelationTypesController',
+                        controllerUrl: 'app/contactmanager/businessRelationTypesController',
+                    })
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
             });
 
         function _skipIfAuthenticated($q, $state, $auth) {

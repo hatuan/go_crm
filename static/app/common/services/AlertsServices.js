@@ -3,7 +3,7 @@
  */
 define(['application-configuration'], function (app) {
 
-    app.register.service('alertsService', ['$rootScope', function ($rootScope) {
+    app.register.service('alertsService', ['$rootScope', 'toastr', function ($rootScope, toastr) {
 
         $rootScope.alerts = [];
         $rootScope.MessageBox = "";
@@ -14,8 +14,27 @@ define(['application-configuration'], function (app) {
                 var property = prop + "InputError";
                 scope[property] = true;
             }
+        };
 
-        }
+        this.RenderFloatErrorMessage = function(message) {
+            var messageBox = formatMessage(message);
+            toastr.error(messageBox, 'Error');
+        };
+
+        this.RenderFloatSuccessMessage = function(message) {
+            var messageBox = formatMessage(message);
+            toastr.success(messageBox, 'Success');
+        };
+
+        this.RenderFloatWarningMessage = function(message) {
+            var messageBox = formatMessage(message);
+            toastr.warning(messageBox, 'Warning');
+        };
+
+        this.RenderFloatInformationMessage = function(message) {
+            var messageBox = formatMessage(message);
+            toastr.info(messageBox, 'Information');
+        };
 
         this.RenderErrorMessage = function (message) {
 
@@ -27,7 +46,6 @@ define(['application-configuration'], function (app) {
         };
 
         this.RenderSuccessMessage = function (message) {
-
             var messageBox = formatMessage(message);
             $rootScope.alerts = [];
             $rootScope.MessageBox = messageBox;
@@ -42,7 +60,7 @@ define(['application-configuration'], function (app) {
             $rootScope.alerts.push({ 'type': 'warning', 'msg': '' });
         };
 
-        this.RenderInformationalMessage = function (message) {
+        this.RenderInformationMessage = function (message) {
 
             var messageBox = formatMessage(message);
             $rootScope.alerts = [];

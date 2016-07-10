@@ -2,43 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ac1bd661-dc60-47e8-bf73-bb1d6137e015" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/controllers/organizationController.go" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/app/organization/organizationsService.js" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/l10n/en.json" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/static/l10n/vi.json" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/debug" afterPath="$PROJECT_DIR$/debug" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/GOPATH__crm_.xml" afterPath="$PROJECT_DIR$/.idea/libraries/GOPATH__crm_.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth/auth.go" afterPath="$PROJECT_DIR$/auth/auth.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth/doc.go" afterPath="$PROJECT_DIR$/auth/doc.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/auth/jwt_backend.go" afterPath="$PROJECT_DIR$/auth/jwt_backend.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/authController.go" afterPath="$PROJECT_DIR$/controllers/authController.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/mainController.go" afterPath="$PROJECT_DIR$/controllers/mainController.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/userController.go" afterPath="$PROJECT_DIR$/controllers/userController.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/main.go" afterPath="$PROJECT_DIR$/main.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middleware/doc.go" afterPath="$PROJECT_DIR$/middleware/doc.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/middleware/middleware.go" afterPath="$PROJECT_DIR$/middleware/middleware.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/client.go" afterPath="$PROJECT_DIR$/models/client.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/currency.go" afterPath="$PROJECT_DIR$/models/currency.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/doc.go" afterPath="$PROJECT_DIR$/models/doc.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/models.go" afterPath="$PROJECT_DIR$/models/models.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/organization.go" afterPath="$PROJECT_DIR$/models/organization.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/role.go" afterPath="$PROJECT_DIR$/models/role.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/timestamp.go" afterPath="$PROJECT_DIR$/models/timestamp.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user.go" afterPath="$PROJECT_DIR$/models/user.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/models/user_in_role.go" afterPath="$PROJECT_DIR$/models/user_in_role.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/routers/router.go" afterPath="$PROJECT_DIR$/routers/router.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/sessions/sessions.go" afterPath="$PROJECT_DIR$/sessions/sessions.go" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/application-configuration.js" afterPath="$PROJECT_DIR$/static/app/application-configuration.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/common/config/stateConfig.js" afterPath="$PROJECT_DIR$/static/app/common/config/stateConfig.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/common/services/AjaxServices.js" afterPath="$PROJECT_DIR$/static/app/common/services/AjaxServices.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/main/home.html" afterPath="$PROJECT_DIR$/static/app/main/home.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/app/user/loginController.js" afterPath="$PROJECT_DIR$/static/app/user/loginController.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/bower.json" afterPath="$PROJECT_DIR$/static/bower.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/bower_components/jquery/.bower.json" afterPath="$PROJECT_DIR$/static/bower_components/jquery/.bower.json" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/index.html" afterPath="$PROJECT_DIR$/static/index.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/main.js" afterPath="$PROJECT_DIR$/static/main.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/static/styles/site.css" afterPath="$PROJECT_DIR$/static/styles/site.css" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/controllers/businessRelationTypeController.go" afterPath="$PROJECT_DIR$/controllers/businessRelationTypeController.go" />
     </list>
     <ignored path="crm.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -70,11 +35,10 @@
       <file leaf-file-name="preferenceController.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/app/user/preferenceController.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1513">
+            <state relative-caret-position="2142">
               <caret line="128" column="29" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="28" />
               <folding>
                 <element signature="e#0#45#0" expanded="false" />
-                <marker date="1464886297343" expanded="true" signature="4962:5982" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -83,7 +47,7 @@
       <file leaf-file-name="preference.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/static/app/user/preference.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="442">
               <caret line="26" column="64" selection-start-line="26" selection-start-column="55" selection-end-line="26" selection-end-column="64" />
               <folding />
             </state>
@@ -106,7 +70,6 @@
             <state relative-caret-position="374">
               <caret line="22" column="72" selection-start-line="22" selection-start-column="72" selection-end-line="22" selection-end-column="72" />
               <folding>
-                <marker date="1464886388142" expanded="true" signature="61:3306" placeholder="{&quot;baseUrl&quot;: &quot;&quot;...}" />
                 <marker date="1464886388142" expanded="true" signature="122:397" placeholder="{&quot;application-configuration&quot;: 'app/application-configuration'...}" />
                 <marker date="1464886388142" expanded="true" signature="2910:3232" placeholder="{...}" />
               </folding>
@@ -119,7 +82,9 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="306">
               <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-              <folding />
+              <folding>
+                <marker date="1465035871000" expanded="true" signature="5573:5677" placeholder="{...}" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -200,8 +165,8 @@
         <option value="$PROJECT_DIR$/static/app/user/preferenceController.js" />
         <option value="$PROJECT_DIR$/static/l10n/en-US.json.js" />
         <option value="$PROJECT_DIR$/static/l10n/vi-VN.json.js" />
-        <option value="$PROJECT_DIR$/static/app/application-configuration.js" />
         <option value="$PROJECT_DIR$/static/app/user/preference.html" />
+        <option value="$PROJECT_DIR$/static/app/application-configuration.js" />
       </list>
     </option>
   </component>
@@ -214,7 +179,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-8" />
     <option name="y" value="-8" />
-    <option name="width" value="1456" />
+    <option name="width" value="1616" />
     <option name="height" value="876" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
@@ -297,6 +262,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="Scratches" />
       <pane id="ProjectPane">
         <subPane>
@@ -318,7 +284,6 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -617,27 +582,27 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1456" height="876" extended-state="6" />
+    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28510028" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.28856042" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.26638773" sideWeight="0.50385606" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32969153" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.45467225" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24128312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.22315203" sideWeight="0.49676377" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33472803" sideWeight="0.49614397" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24128312" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32775453" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33472803" sideWeight="0.49614397" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -667,7 +632,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/static/app/application-configuration.js</url>
           <line>6</line>
-          <properties />
           <option name="timeStamp" value="179" />
         </line-breakpoint>
       </breakpoints>
@@ -1014,7 +978,6 @@
         <state relative-caret-position="374">
           <caret line="22" column="72" selection-start-line="22" selection-start-column="72" selection-end-line="22" selection-end-column="72" />
           <folding>
-            <marker date="1464886388142" expanded="true" signature="61:3306" placeholder="{&quot;baseUrl&quot;: &quot;&quot;...}" />
             <marker date="1464886388142" expanded="true" signature="122:397" placeholder="{&quot;application-configuration&quot;: 'app/application-configuration'...}" />
             <marker date="1464886388142" expanded="true" signature="2910:3232" placeholder="{...}" />
           </folding>
@@ -1043,18 +1006,17 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/static/app/user/preferenceController.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1513">
+        <state relative-caret-position="2142">
           <caret line="128" column="29" selection-start-line="128" selection-start-column="20" selection-end-line="128" selection-end-column="28" />
           <folding>
             <element signature="e#0#45#0" expanded="false" />
-            <marker date="1464886297343" expanded="true" signature="4962:5982" placeholder="{...}" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/static/app/user/preference.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
+        <state relative-caret-position="442">
           <caret line="26" column="64" selection-start-line="26" selection-start-column="55" selection-end-line="26" selection-end-column="64" />
           <folding />
         </state>
@@ -1064,7 +1026,9 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="306">
           <caret line="18" column="0" selection-start-line="18" selection-start-column="0" selection-end-line="18" selection-end-column="0" />
-          <folding />
+          <folding>
+            <marker date="1465035871000" expanded="true" signature="5573:5677" placeholder="{...}" />
+          </folding>
         </state>
       </provider>
     </entry>

@@ -54,13 +54,13 @@ func API_User_Preference(w http.ResponseWriter, r *http.Request, next http.Handl
 		JSONResponse(w, models.Response{ReturnStatus: true, IsAuthenticated: true, Data: map[string]interface{}{"Preference": preference}}, http.StatusOK)
 
 	case r.Method == "POST": //update preference to user
-		preference := new(models.PreferenceDTO)
+		preference := models.PreferenceDTO{}
 		err := json.NewDecoder(r.Body).Decode(&preference)
 		if err != nil {
 			log.Error(err.Error())
 			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": models.PreferenceDTO{}}}, http.StatusInternalServerError)
 		}
-		err = requestUser.SetPreference(*preference)
+		err = requestUser.SetPreference(preference)
 		if err != nil {
 			log.Error(err.Error())
 			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": preference}}, http.StatusInternalServerError)

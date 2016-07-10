@@ -100,7 +100,8 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'organizati
         $scope.updatePreferenceCompleted = function (response) {
             $scope.clearValidationErrors();
             alertsService.RenderSuccessMessage(response.ReturnMessage);
-
+            
+            $rootScope.Preference = response.Data.Preference;
             $window.localStorage.setItem('Preference', JSON.stringify(response.Data.Preference));
 
             setTimeout(function () {

@@ -1,0 +1,48 @@
+<div class="container-fluid body-content" ng-init="initializeController()">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="pull-left">
+                    Business Relation Types
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
+        <div class="btn-group" role="group" aria-label="First group">
+            <a class="btn btn-default" role="button" id="refresh"><span class="glyphicon glyphicon-refresh"></span></a>
+            <a class="btn btn-default" role="button" ui-sref="businessRelationTypeMaintenance({id: ''})"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" role="button" ui-sref="businessRelationTypeSearch"><span class="glyphicon glyphicon-search"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-delete"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-check-all"><span class="glyphicon glyphicon-ok"></span></a>
+            <a class="btn btn-default" role="button" id="help"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </div>
+    </div>
+    <br/>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th>Code</th>
+                            <th>Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr ng-repeat="businessRelationType in BusinessRelationTypes">
+                            <td><input type="checkbox" autocomplete="off" value="{{businessRelationType.id}}"> <a ui-sref="businessRelationTypeMaintenance({id: '{{businessRelationType.ID}}'})">{{businessRelationType.Code}}</a</td>
+                            <td><div ng-bind="businessRelationType.Name"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div style="padding-top:20px">
+            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+                <div ng-bind-html="MessageBox"></div>
+            </alert>
+        </div>
+    </div>
+</div>

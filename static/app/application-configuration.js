@@ -3,8 +3,8 @@
  */
 "use strict";
 
-define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'myApp.navBar'], function (angularAMD) {
-    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'myApp.NavBar']);
+define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'myApp.navBar', 'myApp.Capitalize'], function (angularAMD) {
+    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'myApp.NavBar', 'myApp.Capitalize']);
 
     app.config(function (blockUIConfig) {
 
@@ -24,6 +24,17 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
         $authProvider.loginRoute = '/login';
     }]);
 
+    //https://github.com/Foxandxss/angular-toastr
+    app.config(function (toastrConfig) {
+        angular.extend(toastrConfig, {
+            allowHtml: true,
+            closeButton: true,
+            closeHtml: '<button>&times;</button>',
+            extendedTimeOut: 1000,
+            timeOut: 5000,
+        });
+    });
+
     app.config(stateConfig);
 
     app.config(['$validatorProvider', function ($validatorProvider) {
@@ -38,29 +49,29 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
 
 
     app.config(['globalizeWrapperProvider', function (globalizeWrapperProvider) {
-                // The path to cldr-data
-                globalizeWrapperProvider.setCldrBasePath('bower_components/cldr-data');
+        // The path to cldr-data
+        globalizeWrapperProvider.setCldrBasePath('bower_components/cldr-data');
 
-                // The path to messages
-                globalizeWrapperProvider.setL10nBasePath('l10n');
+        // The path to messages
+        globalizeWrapperProvider.setL10nBasePath('l10n');
 
-                // Files to load in main dir: "{{cldrBasePath}}/main/{{locale}}"
-                globalizeWrapperProvider.setMainResources([
-                    'currencies.json',
-                    'ca-gregorian.json',
-                    'timeZoneNames.json',
-                    'numbers.json'
-                ]);
+        // Files to load in main dir: "{{cldrBasePath}}/main/{{locale}}"
+        globalizeWrapperProvider.setMainResources([
+            'currencies.json',
+            'ca-gregorian.json',
+            'timeZoneNames.json',
+            'numbers.json'
+        ]);
 
-                // Files to load in supplemental dir: "{{cldrBasePath}}/supplemental'
-                globalizeWrapperProvider.setSupplementalResources([
-                    'currencyData.json',
-                    'likelySubtags.json',
-                    'plurals.json',
-                    'timeData.json',
-                    'weekData.json'
-                ]);
-            }]
+        // Files to load in supplemental dir: "{{cldrBasePath}}/supplemental'
+        globalizeWrapperProvider.setSupplementalResources([
+            'currencyData.json',
+            'likelySubtags.json',
+            'plurals.json',
+            'timeData.json',
+            'weekData.json'
+        ]);
+    }]
     );
 
     app.controller('indexController', ['$scope', '$rootScope', '$http', 'blockUI', function ($scope, $rootScope, $http, blockUI) {
@@ -90,7 +101,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
 
         $scope.AjaxGet = function (route, successFunction, errorFunction) {
             setTimeout(function () {
-                $http({method: 'GET', url: route}).success(function (response, status, headers, config) {
+                $http({ method: 'GET', url: route }).success(function (response, status, headers, config) {
                     successFunction(response, status);
                 }).error(function (response) {
                     errorFunction(response);
@@ -101,7 +112,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
 
         $scope.AjaxGetWithData = function (data, route, successFunction, errorFunction) {
             setTimeout(function () {
-                $http({method: 'GET', url: route, params: data}).success(function (response, status, headers, config) {
+                $http({ method: 'GET', url: route, params: data }).success(function (response, status, headers, config) {
                     successFunction(response, status);
                 }).error(function (response) {
                     errorFunction(response);
@@ -113,7 +124,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
     }]);
 
     app.run(['$state', '$rootScope', '$auth', 'globalizeWrapper', 'amMoment', function ($state, $rootScope, $auth, globalizeWrapper, amMoment) {
-        
+
         //kendo.culture("vi-VN");
 
         //$rootScope.datePickerConfig = {
@@ -125,15 +136,15 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
             return $auth.isAuthenticated();
         };
 
-        globalizeWrapper.loadLocales([ 'vi', 'en' ]);
-        
-        $rootScope.$on('GlobalizeLoadSuccess', function () { 
+        globalizeWrapper.loadLocales(['vi', 'en']);
+
+        $rootScope.$on('GlobalizeLoadSuccess', function () {
             //console.log("GlobalizeLoadSuccess"); 
         });
-        
+
         $rootScope.$on('GlobalizeLocaleChanged', function () {
             //console.log("globalizeWrapper.getLocale() = " + globalizeWrapper.getLocale());
-            Globalize.locale( globalizeWrapper.getLocale() ); 
+            Globalize.locale(globalizeWrapper.getLocale());
         });
     }]);
 
