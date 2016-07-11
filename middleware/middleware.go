@@ -37,9 +37,17 @@ func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next 
 	})
 
 	if err == nil && token.Valid {
-		user := models.User{}
-		userBytes := []byte(token.Claims.(*auth.MyCustomClaims).User)
-		json.Unmarshal(userBytes, &user)
+		userClaim := models.User{}
+		userClaimBytes := []byte(token.Claims.(*auth.MyCustomClaims).User)
+		json.Unmarshal(userClaimBytes, &userClaim)
+
+		user, err := models.GetUser(userClaim.ID)
+		if err != nil {
+			response := []byte("{\"ReturnMessage\":\"" + err.Error() + "\"}\"")
+			rw.Header().Set("Content-Type", "application/json")
+			rw.WriteHeader(http.StatusUnauthorized)
+			rw.Write(response)
+		}
 		ctx.Set(req, "user", user)
 
 		next(rw, req)
@@ -51,7 +59,7 @@ func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next 
 
 		response, err := json.Marshal(transactionalInformation)
 		if err != nil {
-			response = []byte("{\"return_message\":\"" + err.Error() + "\"}\"")
+			response = []byte("{\"ReturnMessage\":\"" + err.Error() + "\"}\"")
 		}
 
 		rw.Header().Set("Content-Type", "application/json")

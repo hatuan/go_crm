@@ -39,6 +39,7 @@
     "jpkleemans-angular-validate": "^1.0.0",
     "globalize": "^1.1.1",
     "angular-globalize-wrapper": "^1.0.0",
-    "jquery-validation-globalize": "^1.0.0"
+    "jquery-validation-globalize": "^1.0.0",
+    "font-awesome": "^4.6.3"
   }
 }

@@ -61,6 +61,8 @@ type ApplicationModelDTO struct {
 	MenuItems []ApplicationMenuDTO `json:"menu_items"`
 }
 
+const EmptyUUID = "00000000-0000-0000-0000-000000000000"
+
 func CheckUnique(table, ID, code, orgID string) (bool, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
@@ -68,7 +70,10 @@ func CheckUnique(table, ID, code, orgID string) (bool, error) {
 	}
 	defer db.Close()
 
-	strSQL := fmt.Sprintf("SELECT id FROM %s WHERE code = $1 AND id <> $2 AND  organization_id = $3", table)
+	if ID == "" {
+		ID = EmptyUUID
+	}
+	strSQL := fmt.Sprintf("SELECT id FROM %s WHERE code = $1 AND id <> $2 AND organization_id = $3", table)
 	log.Info(strSQL)
 
 	var otherID string

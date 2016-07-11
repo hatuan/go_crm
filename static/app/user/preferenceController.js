@@ -54,6 +54,8 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'organizati
         $scope.getPreferenceCompleted = function (response) {
             $scope.clearValidationErrors();
             alertsService.RenderSuccessMessage(response.ReturnMessage);
+            
+            $rootScope.Preference = response.Data.Preference;
 
             $scope.OrganizationID = response.Data.Preference.OrganizationID;
             $scope.CultureUIID = response.Data.Preference.CultureUIID;
@@ -102,7 +104,6 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'organizati
             alertsService.RenderSuccessMessage(response.ReturnMessage);
             
             $rootScope.Preference = response.Data.Preference;
-            $window.localStorage.setItem('Preference', JSON.stringify(response.Data.Preference));
 
             setTimeout(function () {
                 $state.go('home');

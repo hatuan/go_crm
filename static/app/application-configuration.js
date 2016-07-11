@@ -3,8 +3,8 @@
  */
 "use strict";
 
-define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'myApp.navBar', 'myApp.Capitalize'], function (angularAMD) {
-    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'myApp.NavBar', 'myApp.Capitalize']);
+define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'myApp.navBar', 'myApp.Capitalize', 'myApp.Constants'], function (angularAMD) {
+    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'myApp.NavBar', 'myApp.Capitalize', 'myApp.Constants']);
 
     app.config(function (blockUIConfig) {
 
@@ -127,6 +127,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
 
         //kendo.culture("vi-VN");
 
+        // kendo-date-picker config
         //$rootScope.datePickerConfig = {
         //   format: "dd/MM/yyyy",
         //   parseFormats: ["yyyy-MM-dd", "dd/MM/yyyy", "yyyy/MM/dd"],

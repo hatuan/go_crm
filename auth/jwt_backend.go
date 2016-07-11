@@ -51,10 +51,19 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userName string) (string,
 		return "", err
 	}
 
-	user_json, _ := json.Marshal(user)
+	userClaim := models.UserClaim{
+		ID:             user.ID,
+		Name:           user.Name,
+		Comment:        user.Comment,
+		FullName:       user.FullName,
+		ClientID:       user.ClientID,
+		OrganizationID: user.OrganizationID,
+	}
+
+	userClaimJSON, _ := json.Marshal(userClaim)
 
 	claims := &MyCustomClaims{
-		string(user_json),
+		string(userClaimJSON),
 		&jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour * time.Duration(settings.Settings.JWTExpirationDelta)).Unix(),
 			IssuedAt:  time.Now().Unix(),

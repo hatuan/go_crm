@@ -40,8 +40,6 @@ define(['application-configuration', 'alertsService'], function (app) {
                     $rootScope.authenticated = true;
                     $rootScope.currentUser = response.data;
 
-                    $window.localStorage.setItem('currentUser', JSON.stringify(response.data));
-
                     setTimeout(function () {
                         $state.go('preference');
                     }, 10);

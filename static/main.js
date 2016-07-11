@@ -33,6 +33,7 @@ require.config({
         'ajaxService': 'app/common/services/ajaxServices',
         'alertsService': 'app/common/services/alertsServices',
         'stateConfig': 'app/common/config/stateConfig',
+        'myApp.Constants': 'app/common/constants',
         'myApp.navBar': 'app/main/navBarController',
         'myApp.Capitalize': 'app/common/capitalize',
         'organizationsService': 'app/organization/organizationsService',

@@ -9,10 +9,9 @@ define(['angular'], function (angular) {
     var injectParams = ['$scope', '$rootScope', '$auth', '$window'];
 
     var NavBarController = function ($scope, $rootScope, $auth, $window) {
-        $scope.currentUser = function() {
-            return JSON.parse($window.localStorage && $window.localStorage.getItem('currentUser'))
-        }
-
+        //$scope.currentUser = function() {
+        //    return JSON.parse($window.localStorage && $window.localStorage.getItem('currentUser'))
+        //}
     }
 
     NavBarController.$inject = injectParams;
