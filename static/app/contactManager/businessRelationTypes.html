@@ -8,41 +8,70 @@
             </div>
         </div>
     </div>
-    <div class="btn-toolbar" role="toolbar" aria-label="Toolbar">
+    <div class="btn-toolbar margin-bottom-15" role="toolbar" aria-label="Toolbar">
         <div class="btn-group" role="group" aria-label="First group">
-            <a class="btn btn-default" role="button" id="refresh"><span class="glyphicon glyphicon-refresh"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></a>
             <a class="btn btn-default" role="button" ui-sref="businessRelationTypeMaintenance({id: ''})"><span class="glyphicon glyphicon-plus"></span></a>
-            <a class="btn btn-default" role="button" ui-sref="businessRelationTypeSearch"><span class="glyphicon glyphicon-search"></span></a>
-            <a class="btn btn-default" role="button" id="btn-toolbar-delete"><span class="glyphicon glyphicon-remove"></span></a>
-            <a class="btn btn-default" role="button" id="btn-toolbar-check-all"><span class="glyphicon glyphicon-ok"></span></a>
-            <a class="btn btn-default" role="button" id="help"><span class="glyphicon glyphicon-question-sign"></span></a>
+            <a class="btn btn-default" ng-class="{'active':Search!=''}" aria-pressed="Search!=''" role="button" id="btn-toolbar-search" ng-click="search()"><span class="glyphicon glyphicon-search"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-delete" ng-click="delete()"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-check-all" ng-click="selectAll()"><span class="glyphicon glyphicon-ok"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-help"><span class="glyphicon glyphicon-question-sign"></span></a>
         </div>
     </div>
-    <br/>
+    <div class="margin-bottom-15" uib-collapse="!isSearched">
+		<div class="well">
+            <div class="row" ng-repeat="searchCondition in SearchConditions">
+                <div class="col-xs-2">
+                    <select class="form-control valid" ng-model="searchCondition.ID">
+                        <option value="">-- Select --</option>
+                        <option value="Code">Code</option>
+                        <option value="Name">Name</option>
+                    </select>
+                </div>
+                <div class="col-xs-3">
+                    <div class="input-group">
+                        <input type="text" class="form-control" ng-model="searchCondition.Value" placeholder="Search for..."/>
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default" ng-disabled="searchCondition.Type == 'FREE'"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></button>
+                        </span>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-danger" ng-show="$index > 0" ng-click="RemoveSearchCondition($index)"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+                <button type="button" class="btn btn-default" ng-show="$index == SearchConditions.length - 1" ng-click="AddSearchCondition()"><span class="glyphicon glyphicon-plus" aria-hidden="true"></span></button>   
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
+                </div>
+            </div>
+        </div>
+	</div>
     <div class="row">
-        <div class="col-md-6">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
+        <div class="col-md-6 margin-bottom-15">
+            <div class="table-responsive constrained">
+                <table class="table table-bordered table-striped" style="table-layout: fixed;">
                     <thead>
                         <tr>
-                            <th>Code</th>
-                            <th>Name</th>
+                            <th style="text-align: center; width: 15px; min-width: 15px;"></th>
+                            <th class="col-md-1">Code</th>
+                            <th class="col-md-2">Name</th>
                         </tr>
                     </thead>
                     <tbody>
-
-                        <tr ng-repeat="businessRelationType in BusinessRelationTypes">
-                            <td><input type="checkbox" autocomplete="off" value="{{businessRelationType.id}}"> <a ui-sref="businessRelationTypeMaintenance({id: '{{businessRelationType.ID}}'})">{{businessRelationType.Code}}</a</td>
+                        <tr ng-repeat="businessRelationType in (FilteredItems = (BusinessRelationTypes|limitTo: PageSize: (CurrentPage - 1) * PageSize))">
+                            <td style="text-align: center;" ng-click="toggleSelection(businessRelationType.ID)"><input type="checkbox" id="{{businessRelationType.ID}}" value="{{businessRelationType.ID}}" ng-checked="Selection.indexOf(businessRelationType.ID) > -1"/></td>
+                            <td><a ui-sref="businessRelationTypeMaintenance({id: '{{businessRelationType.ID}}'})">{{businessRelationType.Code}}</a</td>
                             <td><div ng-bind="businessRelationType.Name"></div></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
         </div>
-        <div style="padding-top:20px">
-            <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
-                <div ng-bind-html="MessageBox"></div>
-            </alert>
-        </div>
+    </div>
+    <uib-pagination class="margin-bottom-15" total-items="TotalRows" ng-model="CurrentPage" items-per-page='PageSize'/>
+    <div class="margin-bottom-15">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            <div ng-bind-html="MessageBox"></div>
+        </alert>
     </div>
 </div>

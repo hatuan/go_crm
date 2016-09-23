@@ -5,6 +5,8 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
 	"errors"
+	"fmt"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
 	uuid "github.com/satori/go.uuid"
@@ -69,7 +71,7 @@ func (c *BusinessRelationType) Validate() error {
 	return nil
 }
 
-func GetBusinessRelationTypes(orgID string) ([]BusinessRelationType, error) {
+func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]BusinessRelationType, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)
@@ -78,13 +80,42 @@ func GetBusinessRelationTypes(orgID string) ([]BusinessRelationType, error) {
 	defer db.Close()
 
 	businessRelationTypes := []BusinessRelationType{}
-	err = db.Select(&businessRelationTypes, "SELECT business_relation_type.*, user_created.name as rec_created_by_user, "+
-		" user_modified.name as rec_modified_by_user, organization.name as organization"+
-		" FROM business_relation_type "+
-		" INNER JOIN \"user\" as user_created ON business_relation_type.rec_created_by = user_created.id "+
-		" INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
-		" INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "+
-		" WHERE business_relation_type.organization_id = $1 ORDER BY business_relation_type.code", orgID)
+
+	sqlString := "SELECT business_relation_type.*, user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, organization.name as organization" +
+		" FROM business_relation_type " +
+		" INNER JOIN \"user\" as user_created ON business_relation_type.rec_created_by = user_created.id " +
+		" INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "
+
+	sqlWhere := " WHERE business_relation_type.organization_id = $1"
+	if len(searchCondition) > 0 {
+		sqlWhere += fmt.Sprintf(" AND %s", searchCondition)
+	}
+
+	var sqlOrder string
+	if len(infiniteScrollingInformation.SortDirection) == 0 || infiniteScrollingInformation.SortDirection == "ASC" {
+		//if len(infiniteScrollingInformation.After) >= 0 && len(infiniteScrollingInformation.SortExpression) > 0 {
+		///	sqlWhere += fmt.Sprintf(" AND %s > $2", "business_relation_type."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+		//}
+		if len(infiniteScrollingInformation.SortExpression) > 0 {
+			sqlOrder = fmt.Sprintf(" ORDER BY %s ASC", "business_relation_type."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+		}
+	} else { //sort DESC
+		//if len(infiniteScrollingInformation.After) >= 0 && len(infiniteScrollingInformation.SortDirection) > 0 {
+		//	sqlWhere += fmt.Sprintf(" AND %s < $2", "business_relation_type."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+		//}
+		if len(infiniteScrollingInformation.SortExpression) > 0 {
+			sqlOrder = fmt.Sprintf(" ORDER BY %s DESC", "business_relation_type."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+		}
+	}
+	var sqlLimit string = ""
+	if len(infiniteScrollingInformation.FetchSize) > 0 {
+		sqlLimit += fmt.Sprintf(" LIMIT %s ", infiniteScrollingInformation.FetchSize)
+	}
+	sqlString += sqlWhere + sqlOrder + sqlLimit
+
+	err = db.Select(&businessRelationTypes, sqlString, orgID)
 
 	if err != nil {
 		log.Error(err)
@@ -107,7 +138,7 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 	defer db.Close()
 
 	if businessRelationType.ID == "" {
-		businessRelationType.ID = uuid.NewV1().String()
+		businessRelationType.ID = uuid.NewV4().String()
 		businessRelationType.Version = 1
 		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_type(id, code, name, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
 			" VALUES (:id, :code, :name, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
@@ -188,4 +219,26 @@ func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationT
 		return BusinessRelationType{}, err
 	}
 	return businessRelationType, nil
+}
+
+func DeleteBusinessRelationTypeById(orgID string, ids []string) error {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	query, args, err := sqlx.In("DELETE FROM business_relation_type "+
+		" WHERE business_relation_type.id IN (?) and business_relation_type.organization_id=?", ids, orgID)
+
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+
+	_, err = db.Exec(query, args...)
+
+	if err != nil && err == sql.ErrNoRows {
+		return ErrBusinessRelationTypeNotFound
+	} else if err != nil {
+		return err
+	}
+	return nil
 }

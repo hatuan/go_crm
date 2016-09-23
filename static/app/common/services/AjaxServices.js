@@ -67,7 +67,7 @@ define(['application-configuration'], function (app) {
         }
 
 
-        this.AjaxGetWithNoBlock = function (data, route, successFunction, errorFunction) {            
+        this.AjaxGetWithDataNoBlock = function (data, route, successFunction, errorFunction) {            
             setTimeout(function () {
                 $http({ method: 'GET', url: route, params: data }).success(function (response, status, headers, config) {                 
                     successFunction(response, status);
@@ -79,6 +79,16 @@ define(['application-configuration'], function (app) {
 
         }
 
+        this.AjaxDelete = function (data, route, successFunction, errorFunction) {            
+            setTimeout(function () {
+                $http({ method: 'DELETE', url: route, params: data }).success(function (response, status, headers, config) {                 
+                    successFunction(response, status);
+                }).error(function (response) {
+                    if (response.IsAuthenicated == false) { $state.go('login'); }
+                    errorFunction(response);
+                });
+            }, 0);
+        }
 
     }]);
 });

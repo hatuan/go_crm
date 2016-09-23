@@ -207,3 +207,22 @@ html, body {
 /*********************
 * Social Buttons End
 *********************/
+
+/********************/
+.pagination {
+    margin-top: 0px !important;
+    margin-bottom: 0px !important;
+}
+
+.constrained {
+    height:450px;
+    overflow-y:auto;
+}
+
+.margin-bottom-15{
+  margin-bottom:15px;
+}
+
+.row+.row{
+  margin-top: 10px;
+}

@@ -4,8 +4,11 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
 	"fmt"
+	"strconv"
+	"strings"
 
 	"database/sql"
+	"database/sql/driver"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -28,7 +31,7 @@ type Response struct {
 
 type Token struct {
 	TransactionalInformation
-	Token string `json:"token"`
+	Token string //`json:"token"` //must use lowercase
 }
 
 type LoginDTO struct {
@@ -44,6 +47,21 @@ type TransactionalInformation struct {
 	TotalRows        int
 	PageSize         int
 	IsAuthenticated  bool
+}
+
+type InquiryInformationDTO struct {
+	CurrentPageNumber int
+	PageSize          int
+	SearchCondition   string
+	SortDirection     string
+	SortExpression    string
+}
+
+type InfiniteScrollingInformation struct {
+	After          string
+	FetchSize      string
+	SortDirection  string
+	SortExpression string
 }
 
 type ApplicationMenuDTO struct {
@@ -86,4 +104,53 @@ func CheckUnique(table, ID, code, orgID string) (bool, error) {
 		return false, err
 	}
 	return false, nil
+}
+
+// InterfaceArray is a type implementing the sql/driver/value interface
+// This is due to the native driver not supporting arrays...
+type InterfaceArray []interface{}
+
+// Value returns the driver compatible value
+func (a InterfaceArray) Value() (driver.Value, error) {
+	var strs []string
+	for _, i := range a {
+		if str, ok := i.(string); ok {
+			strs = append(strs, q(str))
+		} else {
+			strs = append(strs, "''")
+		}
+	}
+	return "{" + strings.Join(strs, ",") + "}", nil
+}
+
+// Int64Array is a type implementing the sql/driver/value interface
+// This is due to the native driver not supporting arrays...
+type Int64Array []int64
+
+// Value returns the driver compatible value
+func (a Int64Array) Value() (driver.Value, error) {
+	var strs []string
+	for _, i := range a {
+		strs = append(strs, strconv.FormatInt(i, 10))
+	}
+	return "{" + strings.Join(strs, ",") + "}", nil
+}
+
+// StringArray is a type implementing the sql/driver/value interface
+// This is due to the native driver not supporting arrays...
+type StringArray []string
+
+// Value returns the driver compatible value
+func (a StringArray) Value() (driver.Value, error) {
+	var strs []string
+	for _, i := range a {
+		strs = append(strs, q(i))
+	}
+	return "{" + strings.Join(strs, ",") + "}", nil
+}
+
+// q
+func q(s string) string {
+	re := strings.NewReplacer("'", "''")
+	return "'" + re.Replace(s) + "'"
 }

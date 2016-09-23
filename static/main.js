@@ -30,6 +30,7 @@ require.config({
         'kendo.culture.us': "scripts/kendo-ui/cultures/kendo.culture.en-US.min",
         'kendo.culture.vi': "scripts/kendo-ui/cultures/kendo.culture.vi.min",
         'kendo.culture.vn': "scripts/kendo-ui/cultures/kendo.culture.vi-VN.min",
+        'ngInfiniteScroll': "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min",
         'ajaxService': 'app/common/services/ajaxServices',
         'alertsService': 'app/common/services/alertsServices',
         'stateConfig': 'app/common/config/stateConfig',
@@ -62,6 +63,7 @@ require.config({
         'kendo.culture.us': ["kendo.all.min"],
         'kendo.culture.vi': ["kendo.all.min"],
         'kendo.culture.vn': ["kendo.all.min"],
+        'ngInfiniteScroll': ['angular'],
     },
 
     // kick start application
