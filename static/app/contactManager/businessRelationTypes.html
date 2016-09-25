@@ -12,7 +12,7 @@
         <div class="btn-group" role="group" aria-label="First group">
             <a class="btn btn-default" role="button" id="btn-toolbar-refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></a>
             <a class="btn btn-default" role="button" ui-sref="businessRelationTypeMaintenance({id: ''})"><span class="glyphicon glyphicon-plus"></span></a>
-            <a class="btn btn-default" ng-class="{'active':Search!=''}" aria-pressed="Search!=''" role="button" id="btn-toolbar-search" ng-click="search()"><span class="glyphicon glyphicon-search"></span></a>
+            <a class="btn btn-default" ng-class="{'active':Search!=''}" aria-pressed="Search!=''" role="button" id="btn-toolbar-search" ng-click="showSearch()"><span class="glyphicon glyphicon-search"></span></a>
             <a class="btn btn-default" role="button" id="btn-toolbar-delete" ng-click="delete()"><span class="glyphicon glyphicon-remove"></span></a>
             <a class="btn btn-default" role="button" id="btn-toolbar-check-all" ng-click="selectAll()"><span class="glyphicon glyphicon-ok"></span></a>
             <a class="btn btn-default" role="button" id="btn-toolbar-help"><span class="glyphicon glyphicon-question-sign"></span></a>
@@ -22,17 +22,14 @@
 		<div class="well">
             <div class="row" ng-repeat="searchCondition in SearchConditions">
                 <div class="col-xs-2">
-                    <select class="form-control valid" ng-model="searchCondition.ID">
-                        <option value="">-- Select --</option>
-                        <option value="Code">Code</option>
-                        <option value="Name">Name</option>
+                    <select class="form-control valid" ng-model="searchCondition.Object" ng-options="SearchConditionObject.Name for SearchConditionObject in SearchConditionObjects"">
                     </select>
                 </div>
                 <div class="col-xs-3">
                     <div class="input-group">
-                        <input type="text" class="form-control" ng-model="searchCondition.Value" placeholder="Search for..."/>
+                        <input type="text" class="form-control" ng-model="searchCondition.Object.Value" placeholder="Search for..."/>
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default" ng-disabled="searchCondition.Type == 'FREE'"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></button>
+                            <button type="button" class="btn btn-default" ng-disabled="searchCondition.Object.Type == 'FREE'"><span class="glyphicon glyphicon-option-horizontal" aria-hidden="true"></span></button>
                         </span>
                     </div>
                 </div>
@@ -41,7 +38,7 @@
             </div>
             <div class="row">
                 <div class="col-xs-2">
-                    <button type="button" class="btn btn-default btn-lg"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
+                    <button type="button" class="btn btn-default" ng-click="startSearch()"><span class="glyphicon glyphicon-search" aria-hidden="true"></span> Search</button>
                 </div>
             </div>
         </div>

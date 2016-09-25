@@ -37,6 +37,7 @@ require.config({
         'myApp.Constants': 'app/common/constants',
         'myApp.navBar': 'app/main/navBarController',
         'myApp.Capitalize': 'app/common/capitalize',
+        'sqlParseService': 'app/common/services/sqlParseServices',
         'organizationsService': 'app/organization/organizationsService',
         'usersService': 'app/user/usersService',
         'businessRelationTypesService': 'app/contactManager/businessRelationTypesService'

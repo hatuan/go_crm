@@ -3,10 +3,10 @@
  */
 "use strict";
 
-define(['application-configuration', 'ajaxService', 'alertsService', 'businessRelationTypesService'], function (app, $) {
-    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'businessRelationTypesService'];
+define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseService', 'businessRelationTypesService'], function (app, $) {
+    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'sqlParseService', 'businessRelationTypesService'];
 
-    var businessRelationTypesController = function ($scope, $rootScope, $state, $window, moment, alertsService, businessRelationTypesService) {
+    var businessRelationTypesController = function ($scope, $rootScope, $state, $window, moment, alertsService, sqlParseService, businessRelationTypesService) {
 
         $scope.initializeController = function () {
             $rootScope.applicationModule = "BusinessRelationTypes";
@@ -22,24 +22,80 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'businessRe
             $scope.TotalRows = 0;
             $scope.Selection=[];
 
-            $scope.BusinessRelationTypes = [];
-            $scope.FilteredItems = [];
-            $scope.getBusinessRelationTypes();
+            $scope.SearchConditionObjects = [];
+            $scope.SearchConditionObjects.push({
+                'ID': "business_relation_type.code",
+                'Name': "Code",
+                'Type': "CODE", //CODE, FREE, DATE
+                'ValueIn': "BusinessRelationType",
+                'Value': ""
+            },
+            {
+                'ID': "business_relation_type.name",
+                'Name': "Name",
+                'Type': "FREE", //CODE, FREE, DATE
+                'ValueIn': "",
+                'Value': ""
+            });
 
             $scope.SearchConditions = [];
             $scope.AddSearchCondition();
+
+            $scope.BusinessRelationTypes = [];
+            $scope.FilteredItems = [];
+            $scope.getBusinessRelationTypes();
         };
 
         $scope.refresh = function () {
             $scope.getBusinessRelationTypes();
         }
 
-        $scope.search = function () {
+        $scope.showSearch = function () {
             $scope.isSearched = !$scope.isSearched;
         }
+
+        $scope.startSearch = function() {
+            var searchConditions = [];
+            
+            for(var _i = 0; _i < $scope.SearchConditions.length; _i ++) {
+                searchConditions.push({
+                    "ID": $scope.SearchConditions[_i].Object.ID,
+                    "Value": $scope.SearchConditions[_i].Object.Value,
+                });
+            }
+
+            sqlParseService.getSqlCondition(searchConditions, $scope.searchCompleted, $scope.searchError);
+        }
+
+        $scope.searchCompleted = function(response, status) {
+            var errs = response.Data.Errs;
+            var stmts = response.Data.Stmts;
+             
+            for(var _i = 0; _i < errs.length; _i ++) {
+                $scope.SearchConditions[_i].Error = "";
+                $scope.SearchConditions[_i].HasError = false;
+                $scope.SearchConditions[_i].Stmt = stmts[_i];
+                if (_i == 0)
+                    $scope.Search = $scope.SearchConditions[_i].Stmt;
+                else 
+                    $scope.Search += "AND (" + $scope.SearchConditions[_i].Stmt + ")";
+            }
+            $scope.getBusinessRelationTypes();
+        }
+
+        $scope.searchError = function(response, status) {
+            var errs = response.Data.Errs;
+            var stmts = response.Data.Stmts;
+            for(var _i = 0; _i < errs.length; _i ++) {
+                $scope.SearchConditions[_i].Error = errs[_i];
+                $scope.SearchConditions[_i].HasError = errs[_i].length > 0;
+                $scope.SearchConditions[_i].Stmt = stmts[_i];
+            }
+        }
+
         $scope.selectAll = function () {
             $scope.Selection=[];
-            for(var i = 0; i < $scope.FilteredItems.length; i++){
+            for(var i = 0; i < $scope.FilteredItems.length; i++) {
                 $scope.Selection.push($scope.FilteredItems[i]["ID"]);
             }
         }
@@ -103,10 +159,11 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'businessRe
 
         $scope.AddSearchCondition = function(){
             var searchCondition = new Object();
-            searchCondition.ID = "";
-            searchCondition.Type = "FREE"; //Value in : CODE, FREE, DATE
-            searchCondition.SearchValue = "BusinessRelationType";
-            searchCondition.Value = "";
+            searchCondition.No = $scope.SearchConditions.length + 1;
+            searchCondition.Err = "";
+            searchCondition.HasErr = false;
+            searchCondition.Stmt = "";
+            searchCondition.Object = JSON.parse(JSON.stringify($scope.SearchConditionObjects[0]));
 
             $scope.SearchConditions.push(searchCondition);
         }

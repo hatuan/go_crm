@@ -114,7 +114,7 @@ func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScro
 		sqlLimit += fmt.Sprintf(" LIMIT %s ", infiniteScrollingInformation.FetchSize)
 	}
 	sqlString += sqlWhere + sqlOrder + sqlLimit
-
+	log.Debug(sqlString)
 	err = db.Select(&businessRelationTypes, sqlString, orgID)
 
 	if err != nil {

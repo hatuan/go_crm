@@ -61,6 +61,11 @@ func InitRoutes() *mux.Router {
 		negroni.New(
 			negroni.HandlerFunc(controllers.API_Check_Unique),
 		))
+	api.Handle("/sqlparse",
+		negroni.New(
+			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.API_SQLParse),
+		))
 
 	//businessrelationtype api
 	api.Handle("/businessrelationtypes",
