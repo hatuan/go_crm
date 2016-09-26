@@ -40,7 +40,12 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseSe
 
             $scope.SearchConditions = [];
             $scope.AddSearchCondition();
-
+            //for (var i = 0; i < $scope.SearchConditionObjects.length; i++) {
+            //    if ($scope.SearchConditionObjects[i].ID == $scope.SearchConditions[0].Object.ID) {
+            //        $scope.SearchConditions[0].Object = $scope.SearchConditionObjects[i];
+            //        break;
+            //    }
+            //}
             $scope.BusinessRelationTypes = [];
             $scope.FilteredItems = [];
             $scope.getBusinessRelationTypes();
@@ -163,7 +168,8 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseSe
             searchCondition.Err = "";
             searchCondition.HasErr = false;
             searchCondition.Stmt = "";
-            searchCondition.Object = JSON.parse(JSON.stringify($scope.SearchConditionObjects[0]));
+            //searchCondition.Object = JSON.parse(JSON.stringify($scope.SearchConditionObjects[0]));
+            searchCondition.Object = $scope.SearchConditionObjects[0];
 
             $scope.SearchConditions.push(searchCondition);
         }
