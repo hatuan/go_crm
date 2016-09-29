@@ -40,12 +40,7 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseSe
 
             $scope.SearchConditions = [];
             $scope.AddSearchCondition();
-            //for (var i = 0; i < $scope.SearchConditionObjects.length; i++) {
-            //    if ($scope.SearchConditionObjects[i].ID == $scope.SearchConditions[0].Object.ID) {
-            //        $scope.SearchConditions[0].Object = $scope.SearchConditionObjects[i];
-            //        break;
-            //    }
-            //}
+
             $scope.BusinessRelationTypes = [];
             $scope.FilteredItems = [];
             $scope.getBusinessRelationTypes();
@@ -72,6 +67,14 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseSe
             sqlParseService.getSqlCondition(searchConditions, $scope.searchCompleted, $scope.searchError);
         }
 
+        $scope.clearSearch = function() {
+            $scope.SearchConditions = [];
+            $scope.AddSearchCondition();
+
+            $scope.Search = "";
+            $scope.getBusinessRelationTypes();
+        }
+
         $scope.searchCompleted = function(response, status) {
             var errs = response.Data.Errs;
             var stmts = response.Data.Stmts;
@@ -81,10 +84,11 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseSe
                 $scope.SearchConditions[_i].HasError = false;
                 $scope.SearchConditions[_i].Stmt = stmts[_i];
                 if (_i == 0)
-                    $scope.Search = $scope.SearchConditions[_i].Stmt;
+                    $scope.Search = "(" + $scope.SearchConditions[_i].Stmt +")";
                 else 
-                    $scope.Search += "AND (" + $scope.SearchConditions[_i].Stmt + ")";
+                    $scope.Search += " AND (" + $scope.SearchConditions[_i].Stmt + ")";
             }
+            $scope.Search = "(" + $scope.Search + ")";
             $scope.getBusinessRelationTypes();
         }
 
@@ -166,10 +170,10 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'sqlParseSe
             var searchCondition = new Object();
             searchCondition.No = $scope.SearchConditions.length + 1;
             searchCondition.Err = "";
-            searchCondition.HasErr = false;
+            searchCondition.HasError = false;
             searchCondition.Stmt = "";
-            //searchCondition.Object = JSON.parse(JSON.stringify($scope.SearchConditionObjects[0]));
-            searchCondition.Object = $scope.SearchConditionObjects[0];
+            searchCondition.Objects = JSON.parse(JSON.stringify($scope.SearchConditionObjects));
+            searchCondition.Object = searchCondition.Objects[0];
 
             $scope.SearchConditions.push(searchCondition);
         }
