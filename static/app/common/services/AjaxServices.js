@@ -1,9 +1,9 @@
 /**
  * Created by tuanha-01 on 5/6/2016.
  */
-define(['application-configuration'], function (app) {
+define(['angularAMD'], function (angularAMD) {
 
-    app.register.service('ajaxService', ['$http', 'blockUI', '$state', function ($http, blockUI, $state) {
+    angularAMD.service('ajaxService', ['$http', 'blockUI', '$state', function ($http, blockUI, $state) {
 
         // setting timeout of 1 second to simulate a busy server.
 

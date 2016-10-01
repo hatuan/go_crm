@@ -1,20 +1,17 @@
 /**
  * Created by tuanha-01 on 5/23/2016.
  */
-define(['application-configuration', 'sqlParseService'], function (app) {
+define(['angularAMD', 'ajaxService'], function (angularAMD) {
 
-    var injectParams = ['sqlParseService'];
+    var injectParams = ['ajaxService'];
 
-    var searchFn = function (sqlParseService) {
+    var searchDirective = function (ajaxService) {
         return {
             restrict: 'EA',
-            templateUrl: 'app/common/directives/search.html',
+            templateUrl: 'app/common/directives/searchForm.html',
             scope: {
-                searchConditionObjects: '@searchConditionObjects',
-                parentSearch: '&search'
-            },
-            link: function (scope, element, attrs, modelCtrl) {
-                
+                searchConditionObjects: '=searchConditionObjects',
+                parentSearch: '&searchCallback'
             },
             controller: function($scope){
                 $scope.initializeController = function () {
@@ -34,7 +31,7 @@ define(['application-configuration', 'sqlParseService'], function (app) {
                         });
                     }
 
-                    sqlParseService.getSqlCondition(searchConditions, $scope.searchCompleted, $scope.searchError);
+                    ajaxService.AjaxPost(searchConditions, "/api/sqlparse", $scope.searchCompleted, $scope.searchError);
                 }
 
                 $scope.clearSearch = function() {
@@ -42,7 +39,7 @@ define(['application-configuration', 'sqlParseService'], function (app) {
                     $scope.addSearchCondition();
 
                     $scope.searchSqlCondition = "";
-                    $scope.parentSearch();
+                    $scope.parentSearch({searchSqlCondition: $scope.searchSqlCondition});
                 }
 
                 $scope.searchCompleted = function(response, status) {
@@ -50,16 +47,17 @@ define(['application-configuration', 'sqlParseService'], function (app) {
                     var stmts = response.Data.Stmts;
                     
                     for(var _i = 0; _i < errs.length; _i ++) {
-                        $scope.SearchConditions[_i].Error = "";
-                        $scope.SearchConditions[_i].HasError = false;
-                        $scope.SearchConditions[_i].Stmt = stmts[_i];
+                        $scope.searchConditions[_i].Error = "";
+                        $scope.searchConditions[_i].HasError = false;
+                        $scope.searchConditions[_i].Stmt = stmts[_i];
                         if (_i == 0)
                             $scope.searchSqlCondition = "(" + $scope.searchConditions[_i].Stmt +")";
                         else 
                             $scope.searchSqlCondition += " AND (" + $scope.searchConditions[_i].Stmt + ")";
                     }
                     $scope.searchSqlCondition = "(" + $scope.searchSqlCondition + ")";
-                    $scope.parentSearch(searchSqlCondition);
+
+                    $scope.parentSearch({sqlCondition: $scope.searchSqlCondition});
                 }
 
                 $scope.searchError = function(response, status) {
@@ -74,18 +72,18 @@ define(['application-configuration', 'sqlParseService'], function (app) {
 
                  $scope.addSearchCondition = function(){
                     var searchCondition = new Object();
-                    searchCondition.No = $scope.SearchConditions.length + 1;
+                    searchCondition.No = $scope.searchConditions.length + 1;
                     searchCondition.Err = "";
                     searchCondition.HasError = false;
                     searchCondition.Stmt = "";
-                    searchCondition.Objects = JSON.parse(JSON.stringify($scope.SearchConditionObjects));
+                    searchCondition.Objects = JSON.parse(JSON.stringify($scope.searchConditionObjects));
                     searchCondition.Object = searchCondition.Objects[0];
 
-                    $scope.SearchConditions.push(searchCondition);
+                    $scope.searchConditions.push(searchCondition);
                 }
                 
                 $scope.removeSearchCondition = function(_index){
-                    $scope.SearchConditions.splice(_index, 1);
+                    $scope.searchConditions.splice(_index, 1);
                 }
 
                 $scope.initializeController();
@@ -93,7 +91,7 @@ define(['application-configuration', 'sqlParseService'], function (app) {
         }
     };
 
-    searchFn.$inject = injectParams;
+    searchDirective.$inject = injectParams;
 
-    app.register.directive('search', searchFn)
+    angularAMD.directive('searchForm', searchDirective)
 });

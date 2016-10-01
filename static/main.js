@@ -36,6 +36,7 @@ require.config({
         'stateConfig': 'app/common/config/stateConfig',
         'myApp.Constants': 'app/common/constants',
         'myApp.Capitalize': 'app/common/capitalize',
+        'myApp.Search': 'app/common/directives/searchForm',
         'sqlParseService': 'app/common/services/sqlParseServices',
         'myApp.navBar': 'app/main/navBarController',
         'organizationsService': 'app/organization/organizationsService',

@@ -1,9 +1,9 @@
 /**
  * Created by tuanha-01 on 5/6/2016.
  */
-define(['application-configuration'], function (app) {
+define(['angularAMD'], function (angularAMD) {
 
-    app.register.service('alertsService', ['$rootScope', 'toastr', function ($rootScope, toastr) {
+    angularAMD.service('alertsService', ['$rootScope', 'toastr', function ($rootScope, toastr) {
 
         $rootScope.alerts = [];
         $rootScope.MessageBox = "";

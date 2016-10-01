@@ -1,9 +1,9 @@
 /**
  * Created by tuanha-01 on 5/30/2016.
  */
-define(['application-configuration', 'ajaxService'], function (app) {
+define(['angularAMD', 'ajaxService'], function (angularAMD) {
 
-    app.register.service('businessRelationTypesService', ['ajaxService', function (ajaxService) {
+    angularAMD.service('businessRelationTypesService', ['ajaxService', function (ajaxService) {
         
         this.getBusinessRelationTypes = function (businessRelationType, successFunction, errorFunction) {
             ajaxService.AjaxGetWithData(businessRelationType, "/api/businessrelationtypes", successFunction, errorFunction);

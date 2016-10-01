@@ -1,6 +1,6 @@
-define(['application-configuration', 'ajaxService'], function (app) {
+define(['angularAMD', 'ajaxService'], function (angularAMD) {
 
-    app.register.service('sqlParseService', ['ajaxService', function (ajaxService) {
+    angularAMD.service('sqlParseService', ['ajaxService', function (ajaxService) {
         this.getSqlCondition = function (sqlCondition, successFunction, errorFunction) {
             ajaxService.AjaxPost(sqlCondition, "/api/sqlparse", successFunction, errorFunction);
         };
