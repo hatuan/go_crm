@@ -11,7 +11,7 @@ define(['angularAMD', 'ajaxService'], function (angularAMD) {
             templateUrl: 'app/common/directives/searchForm.html',
             scope: {
                 searchConditionObjects: '=searchConditionObjects',
-                parentSearch: '&searchCallback'
+                parentSearch: '&searchCallback' //parameter must lowcase???? (Ex : searchSqlCondition don't work')
             },
             controller: function($scope){
                 $scope.initializeController = function () {

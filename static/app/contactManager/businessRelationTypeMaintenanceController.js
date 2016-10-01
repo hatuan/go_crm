@@ -3,7 +3,7 @@
  */
 "use strict";
 
-define(['application-configuration', 'ajaxService', 'alertsService', 'businessRelationTypesService'], function (app, $) {
+define(['angularAMD', 'ajaxService', 'alertsService', 'businessRelationTypesService'], function (angularAMD, $) {
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'businessRelationTypesService', '$stateParams', 'Constants'];
 
     var businessRelationTypeMaintenanceController = function ($scope, $rootScope, $state, $window, moment, alertsService, businessRelationTypesService, $stateParams, Constants) {
@@ -134,5 +134,5 @@ define(['application-configuration', 'ajaxService', 'alertsService', 'businessRe
     };
 
     businessRelationTypeMaintenanceController.$inject = injectParams;
-    app.register.controller('BusinessRelationTypeMaintenanceController', businessRelationTypeMaintenanceController);
+    angularAMD.controller('BusinessRelationTypeMaintenanceController', businessRelationTypeMaintenanceController);
 });
