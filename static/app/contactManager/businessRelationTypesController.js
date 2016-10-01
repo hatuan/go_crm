@@ -82,7 +82,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'businessR
         };
 
         $scope.getBusinessRelationTypes = function (searchSqlCondition) {
-            if(searchSqlCondition)
+            if(!angular.isUndefinedOrNull(searchSqlCondition))
                 $scope.Search = searchSqlCondition;
             var businessRelationTypeInquiry = $scope.createBusinessRelationTypeObject();
             businessRelationTypesService.getBusinessRelationTypes(businessRelationTypeInquiry, $scope.businessRelationTypesInquiryCompleted, $scope.businessRelationTypesInquiryError);

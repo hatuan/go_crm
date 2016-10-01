@@ -39,7 +39,7 @@ define(['angularAMD', 'ajaxService'], function (angularAMD) {
                     $scope.addSearchCondition();
 
                     $scope.searchSqlCondition = "";
-                    $scope.parentSearch({searchSqlCondition: $scope.searchSqlCondition});
+                    $scope.parentSearch({param: ""});
                 }
 
                 $scope.searchCompleted = function(response, status) {
@@ -57,7 +57,7 @@ define(['angularAMD', 'ajaxService'], function (angularAMD) {
                     }
                     $scope.searchSqlCondition = "(" + $scope.searchSqlCondition + ")";
 
-                    $scope.parentSearch({sqlCondition: $scope.searchSqlCondition});
+                    $scope.parentSearch({param: $scope.searchSqlCondition});
                 }
 
                 $scope.searchError = function(response, status) {

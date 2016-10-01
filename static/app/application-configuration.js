@@ -150,6 +150,9 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 
         });
     }]);
 
+    angular.isUndefinedOrNull = function(val) {
+        return angular.isUndefined(val) || val === null;
+    }
 
     // Bootstrap Angular when DOM is ready
     angularAMD.bootstrap(app);
