@@ -6,6 +6,7 @@ import (
 	"erpvietnam/crm/settings"
 	"errors"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/jmoiron/sqlx"
@@ -44,42 +45,50 @@ var ErrBusinessRelationTypeCodeDuplicate = errors.New("BusinessRelationType's co
 // ErrBusinessRelationTypeFatal indicates there was fatal error
 var ErrBusinessRelationTypeFatal = errors.New("BusinessRelationType has fatal error")
 
+// ErrBusinessRelationTypeValidate indicates there was validate error
+var ErrBusinessRelationTypeValidate = errors.New("BusinessRelationType has validate error")
+
 // Validate checks to make sure there are no invalid fields in a submitted
-func (c *BusinessRelationType) Validate() error {
-	switch {
-	case c.Code == "":
-		return ErrBusinessRelationTypeCodeNotSpecified
-	case c.Name == "":
-		return ErrBusinessRelationTypeNameNotSpecified
-	case c.Code != "":
+func (c *BusinessRelationType) Validate() map[string]InterfaceArray {
+	validationErrors := make(map[string]InterfaceArray)
+
+	if c.Code == "" {
+		validationErrors["Code"] = append(validationErrors["Code"], ErrBusinessRelationTypeCodeNotSpecified.Error())
+	}
+	if c.Name == "" {
+		validationErrors["Name"] = append(validationErrors["Name"], ErrBusinessRelationTypeNameNotSpecified.Error())
+	}
+	if c.Code != "" {
 		db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 		if err != nil {
-			log.Fatal(err)
-			return ErrBusinessRelationTypeFatal
+			log.Error(err)
+			validationErrors["Fatal"] = append(validationErrors["Fatal"], ErrBusinessRelationTypeFatal.Error())
 		}
 		defer db.Close()
-		var id string
-		err = db.Get(&id, "SELECT ID FROM business_relation_type WHERE code = $1 AND organization_id = $2", c.Code, c.OrganizationID)
-		if err != nil && err != sql.ErrNoRows {
-			log.Fatal(err)
-			return ErrBusinessRelationTypeFatal
+		var otherID string
+		ID := EmptyUUID
+		if c.ID != "" {
+			ID = c.ID
 		}
-		if id != c.ID && err != sql.ErrNoRows {
-			return ErrBusinessRelationTypeCodeDuplicate
+		err = db.Get(&otherID, "SELECT id FROM business_relation_type WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
+		if err != nil && err != sql.ErrNoRows {
+			log.Error(err)
+			validationErrors["Fatal"] = append(validationErrors["Fatal"], ErrBusinessRelationTypeFatal.Error())
+		}
+		if otherID != "" && err != sql.ErrNoRows {
+			validationErrors["Code"] = append(validationErrors["Code"], ErrBusinessRelationTypeCodeDuplicate.Error())
 		}
 	}
-	return nil
+	return validationErrors
 }
 
-func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]BusinessRelationType, error) {
+func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]BusinessRelationType, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
-		log.Fatal(err)
-		return []BusinessRelationType{}, err
+		log.Error(err)
+		return []BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	defer db.Close()
-
-	businessRelationTypes := []BusinessRelationType{}
 
 	sqlString := "SELECT business_relation_type.*, user_created.name as rec_created_by_user, " +
 		" user_modified.name as rec_modified_by_user, organization.name as organization" +
@@ -109,31 +118,33 @@ func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScro
 			sqlOrder = fmt.Sprintf(" ORDER BY %s DESC", "business_relation_type."+strings.ToLower(infiniteScrollingInformation.SortExpression))
 		}
 	}
-	var sqlLimit string = ""
+	sqlLimit := ""
 	if len(infiniteScrollingInformation.FetchSize) > 0 {
 		sqlLimit += fmt.Sprintf(" LIMIT %s ", infiniteScrollingInformation.FetchSize)
 	}
 	sqlString += sqlWhere + sqlOrder + sqlLimit
 	log.Debug(sqlString)
+
+	businessRelationTypes := []BusinessRelationType{}
 	err = db.Select(&businessRelationTypes, sqlString, orgID)
 
 	if err != nil {
 		log.Error(err)
-		return businessRelationTypes, err
+		return businessRelationTypes, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 
-	return businessRelationTypes, nil
+	return businessRelationTypes, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(businessRelationTypes)) + " records found"}}
 }
 
-func PostBusinessRelationType(businessRelationType BusinessRelationType) (BusinessRelationType, error) {
-	if err := businessRelationType.Validate(); err != nil {
-		return BusinessRelationType{}, err
+func PostBusinessRelationType(businessRelationType BusinessRelationType) (BusinessRelationType, TransactionalInformation) {
+	if validateErrs := businessRelationType.Validate(); len(validateErrs) != 0 {
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationTypeValidate.Error()}, ValidationErrors: validateErrs}
 	}
 
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
-		log.Fatal(err)
-		return BusinessRelationType{}, err
+		log.Error(err)
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	defer db.Close()
 
@@ -145,7 +156,7 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 		_, err := stmt.Exec(businessRelationType)
 		if err != nil {
 			log.Error(err)
-			return BusinessRelationType{}, err
+			return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 		}
 
 	} else {
@@ -156,22 +167,31 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 			"version = :version + 1," +
 			"rec_modified_by = :rec_modified_by, rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
 
-		_, err := stmt.Exec(businessRelationType)
+		result, err := stmt.Exec(businessRelationType)
 		if err != nil {
 			log.Error(err)
-			return BusinessRelationType{}, err
+			return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+		changes, err := result.RowsAffected()
+		if err != nil {
+			log.Error(err)
+			return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+		if changes == 0 {
+			return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationTypeNotFound.Error()}}
 		}
 	}
 	businessRelationType, _ = GetBusinessRelationTypeByID(businessRelationType.ID)
-	return businessRelationType, nil
+	return businessRelationType, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
 // GetBusinessRelationTypeByID returns the BusinessRelationType that the given id corresponds to. If no BusinessRelationType is found, an
 // error is thrown.
-func GetBusinessRelationTypeByID(id string) (BusinessRelationType, error) {
+func GetBusinessRelationTypeByID(id string) (BusinessRelationType, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	defer db.Close()
 
@@ -185,22 +205,26 @@ func GetBusinessRelationTypeByID(id string) (BusinessRelationType, error) {
 		"		INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "+
 		"	WHERE business_relation_type.id=$1", id)
-	if err != nil && err == ErrBusinessRelationTypeNotFound {
-		return BusinessRelationType{}, ErrBusinessRelationTypeNotFound
+	if err != nil && err == sql.ErrNoRows {
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationTypeNotFound.Error()}}
 	} else if err != nil {
-		return BusinessRelationType{}, err
+		log.Error(err)
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
-	return businessRelationType, nil
+	return businessRelationType, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
-// GetBusinessRelationTypeByCode returns the BusinessRelationType that the given id corresponds to. If no BusinessRelationType is found, an
-// error is thrown.
-func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationType, error) {
+// GetBusinessRelationTypeByCode returns the BusinessRelationType that the given id corresponds to.
+// If no BusinessRelationType is found, an error is thrown.
+func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationType, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	defer db.Close()
+
+	org, _ := GetOrganizationByID(orgID)
 
 	businessRelationType := BusinessRelationType{}
 	err = db.Get(&businessRelationType, "SELECT business_relation_type.*,"+
@@ -211,20 +235,22 @@ func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationT
 		"		INNER JOIN \"user\" as user_created ON business_relation_type.rec_created_by = user_created.id "+
 		"		INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "+
-		"	WHERE business_relation_type.code=$1 and business_relation_type.organization_id=$2", code, orgID)
+		"	WHERE business_relation_type.code=$1 and business_relation_type.client_id=$2", code, org.ClientID)
 
 	if err != nil && err == sql.ErrNoRows {
-		return BusinessRelationType{}, ErrBusinessRelationTypeNotFound
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationTypeNotFound.Error()}}
 	} else if err != nil {
-		return BusinessRelationType{}, err
+		log.Error(err)
+		return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
-	return businessRelationType, nil
+	return businessRelationType, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
-func DeleteBusinessRelationTypeById(orgID string, ids []string) error {
+func DeleteBusinessRelationTypeById(orgID string, ids []string) TransactionalInformation {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
-		log.Fatal(err)
+		log.Error(err)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	defer db.Close()
 
@@ -236,9 +262,10 @@ func DeleteBusinessRelationTypeById(orgID string, ids []string) error {
 	_, err = db.Exec(query, args...)
 
 	if err != nil && err == sql.ErrNoRows {
-		return ErrBusinessRelationTypeNotFound
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationTypeNotFound.Error()}}
 	} else if err != nil {
-		return err
+		log.Error(err)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
-	return nil
+	return TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }

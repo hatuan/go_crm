@@ -1,0 +1,56 @@
+<div class="container-fluid body-content" ng-init="initializeController()">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="pull-left">
+                    {{title}} Business Relation Sector
+                </h2>
+            </div>
+            <div class="pull-right">
+                <div style="bottom: 15px; position: relative; top: 15px">
+                    <a class="btn btn-primary" id="save-button" ng-click="update(BusinessRelationSectorMaintenanceForm)"><span class="fa fa-floppy-o fa-lg"></span>&nbsp; Save</a>
+                    <a class="btn btn-primary" id="cancel-button" ng-click="cancel()">Cancel</a>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+    <br/>
+    <form ng-submit="update(BusinessRelationSectorMaintenanceForm)" id="BusinessRelationSectorMaintenanceForm" name="BusinessRelationSectorMaintenanceForm" class="form-horizontal" role="form"
+        ng-validate="validationOptions">
+        <div class="form-group has-feedback">
+            <label class="col-xs-2 control-label" for="Code">Code</label>
+            <div class="col-xs-2">
+                <input type="text" class="form-control" name="Code" id="Code" ng-model="Code" capitalize/>
+            </div>
+        </div>
+
+        <div class="form-group has-feedback">
+            <label class="col-xs-2 control-label" for="Name">Name</label>
+            <div class="col-xs-2">
+                <input type="text" class="form-control" name="Name" id="Name" ng-model="Name"/>
+            </div>
+        </div>
+        <div class="form-group has-feedback">
+            <label class="col-xs-2 control-label" for="Status">Status</label>
+            <div class="col-xs-2">
+                <select class="form-control" id="Status" name="Status" ng-model="Status" ng-options="s.Code as s.Name for s in Constants.Status"/>
+
+                <!-- <input type="text" class="form-control" name="NamStatuse" id="Status" ng-model="Status"/> -->
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="Created">Created</label>
+            <div class="col-xs-2">
+                <input type="text" class="form-control" name="Created" id="Created" value="{{RecCreatedByUser}} - {{RecCreated | amDateFormat:'DD/MM/YYYY HH:MM'}}" disabled/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-xs-2 control-label" for="Modified">Modified</label>
+            <div class="col-xs-2">
+                <input type="text" class="form-control" name="Modified" id="Modified" value="{{RecModifiedByUser}} - {{RecModified | amDateFormat:'DD/MM/YYYY HH:MM'}}" disabled/>
+            </div>
+        </div>
+
+    </form>
+</div>

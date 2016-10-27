@@ -1,5 +1,8 @@
 // Place your settings in this file to overwrite default and user settings.
 {
+    "workbench.editor.showTabs": false,
+    "workbench.editor.enablePreview": false,
+    "workbench.editor.enablePreviewFromQuickOpen": false,
     "go.buildOnSave": true,
     "go.lintOnSave": true,
     "go.vetOnSave": true,

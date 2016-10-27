@@ -5,6 +5,7 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
 	"erpvietnam/sql-parser/dynamic-where"
+	"errors"
 	"fmt"
 	"net/http"
 	"strings"
@@ -70,3 +71,6 @@ func API_SQLParse(w http.ResponseWriter, r *http.Request, next http.HandlerFunc)
 		}
 	}
 }
+
+// ErrIDParameterNotFound is thrown when do not found ID in request
+var ErrIDParameterNotFound = errors.New("ID Parameter Not Found")

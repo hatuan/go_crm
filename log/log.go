@@ -1,8 +1,10 @@
 package log
 
 import (
-	log "github.com/Sirupsen/logrus"
 	"os"
+
+	"github.com/Gurpartap/logrus-stack"
+	log "github.com/Sirupsen/logrus"
 )
 
 var logger = log.New()
@@ -15,6 +17,9 @@ func init() {
 
 	// Output to stderr instead of stdout, could also be a file.
 	logger.Out = os.Stderr
+
+	// Add the stack hook.
+	log.AddHook(logrus_stack.StandardHook())
 
 	// Only log the warning severity or above.
 	logger.Level = log.DebugLevel

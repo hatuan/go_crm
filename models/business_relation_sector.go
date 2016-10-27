@@ -1,10 +1,16 @@
 package models
 
 import (
+	"database/sql"
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
+	"errors"
+	"fmt"
+	"strconv"
+	"strings"
 
 	"github.com/jmoiron/sqlx"
+	uuid "github.com/satori/go.uuid"
 )
 
 type BusinessRelationSector struct {
@@ -12,7 +18,7 @@ type BusinessRelationSector struct {
 	Code              string     `db:"code"`
 	Name              string     `db:"name"`
 	RecCreatedByID    string     `db:"rec_created_by"`
-	RecCreatedByName  string     `db:"rec_created_by_user"`
+	RecCreatedByUser  string     `db:"rec_created_by_user"`
 	RecCreated        *Timestamp `db:"rec_created_at"`
 	RecModifiedByID   string     `db:"rec_modified_by"`
 	RecModifiedByUser string     `db:"rec_modified_by_user"`
@@ -24,27 +30,239 @@ type BusinessRelationSector struct {
 	Organization      string     `db:"organization"`
 }
 
-func GetBusinessRelationSectors(orgID string) ([]BusinessRelationSector, error) {
+// ErrBusinessRelationSectorNotFound indicates there was no BusinessRelationSector
+var ErrBusinessRelationSectorNotFound = errors.New("BusinessRelationSector not found")
+
+// ErrBusinessRelationSectorNameNotSpecified indicates there was no name given by the user
+var ErrBusinessRelationSectorNameNotSpecified = errors.New("BusinessRelationSector's name not specified")
+
+// ErrBusinessRelationSectorCodeNotSpecified indicates there was no code given by the user
+var ErrBusinessRelationSectorCodeNotSpecified = errors.New("BusinessRelationSector's code not specified")
+
+// ErrBusinessRelationSectorCodeDuplicate indicates there was duplicate of code given by the user
+var ErrBusinessRelationSectorCodeDuplicate = errors.New("BusinessRelationSector's code is duplicate")
+
+// ErrBusinessRelationSectorFatal indicates there was fatal error
+var ErrBusinessRelationSectorFatal = errors.New("BusinessRelationSector has fatal error")
+
+// ErrBusinessRelationSectorValidate indicates there was validate error
+var ErrBusinessRelationSectorValidate = errors.New("BusinessRelationSector has validate error")
+
+// Validate checks to make sure there are no invalid fields in a submitted
+func (c *BusinessRelationSector) Validate() map[string]InterfaceArray {
+	validationErrors := make(map[string]InterfaceArray)
+
+	if c.Code == "" {
+		validationErrors["Code"] = append(validationErrors["Code"], ErrBusinessRelationSectorCodeNotSpecified.Error())
+	}
+	if c.Name == "" {
+		validationErrors["Name"] = append(validationErrors["Name"], ErrBusinessRelationSectorNameNotSpecified.Error())
+	}
+	if c.Code != "" {
+		db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+		if err != nil {
+			log.Error(err)
+			validationErrors["Fatal"] = append(validationErrors["Fatal"], ErrBusinessRelationSectorFatal.Error())
+		}
+		defer db.Close()
+		var otherID string
+		ID := EmptyUUID
+		if c.ID != "" {
+			ID = c.ID
+		}
+		err = db.Get(&otherID, "SELECT id FROM business_relation_sector WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
+		if err != nil && err != sql.ErrNoRows {
+			log.Error(err)
+			validationErrors["Fatal"] = append(validationErrors["Fatal"], ErrBusinessRelationSectorFatal.Error())
+		}
+		if otherID != "" && err != sql.ErrNoRows {
+			validationErrors["Code"] = append(validationErrors["Code"], ErrBusinessRelationSectorCodeDuplicate.Error())
+		}
+	}
+
+	return validationErrors
+}
+
+func GetBusinessRelationSectors(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]BusinessRelationSector, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
-		log.Fatal(err)
-		return []BusinessRelationSector{}, err
+		log.Error(err)
+		return []BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	defer db.Close()
 
+	sqlString := "SELECT business_relation_sector.*, user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, organization.name as organization" +
+		" FROM business_relation_sector " +
+		" INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id " +
+		" INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "
+
+	sqlWhere := " WHERE business_relation_sector.organization_id = $1"
+	if len(searchCondition) > 0 {
+		sqlWhere += fmt.Sprintf(" AND %s", searchCondition)
+	}
+
+	var sqlOrder string
+	if len(infiniteScrollingInformation.SortDirection) == 0 || infiniteScrollingInformation.SortDirection == "ASC" {
+		if len(infiniteScrollingInformation.SortExpression) > 0 {
+			sqlOrder = fmt.Sprintf(" ORDER BY %s ASC", "business_relation_sector."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+		}
+	} else { //sort DESC
+		if len(infiniteScrollingInformation.SortExpression) > 0 {
+			sqlOrder = fmt.Sprintf(" ORDER BY %s DESC", "business_relation_sector."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+		}
+	}
+
+	sqlLimit := ""
+	if len(infiniteScrollingInformation.FetchSize) > 0 {
+		sqlLimit += fmt.Sprintf(" LIMIT %s ", infiniteScrollingInformation.FetchSize)
+	}
+	sqlString += sqlWhere + sqlOrder + sqlLimit
+	log.Debug(sqlString)
+
 	businessRelationSectors := []BusinessRelationSector{}
-	err = db.Select(&businessRelationSectors, "SELECT business_relation_sector.*, user_created.name as rec_created_by_user, "+
-		" user_modified.name as rec_modified_by_user, organization.name as organization"+
-		" FROM business_relation_sector "+
-		" INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id "+
-		" INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id "+
-		" INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "+
-		" WHERE business_relation_sector.organization_id = $1", orgID)
+	err = db.Select(&businessRelationSectors, sqlString, orgID)
 
 	if err != nil {
 		log.Error(err)
-		return businessRelationSectors, err
+		return businessRelationSectors, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 
-	return businessRelationSectors, nil
+	return businessRelationSectors, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(businessRelationSectors)) + " records found"}}
+}
+
+func PostBusinessRelationSector(businessRelationSector BusinessRelationSector) (BusinessRelationSector, TransactionalInformation) {
+	if validateErrs := businessRelationSector.Validate(); len(validateErrs) != 0 {
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationSectorValidate.Error()}, ValidationErrors: validateErrs}
+	}
+
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	if businessRelationSector.ID == "" {
+		businessRelationSector.ID = uuid.NewV4().String()
+		businessRelationSector.Version = 1
+		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_sector(id, code, name, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:id, :code, :name, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
+		_, err := stmt.Exec(businessRelationSector)
+		if err != nil {
+			log.Error(err)
+			return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+
+	} else {
+		stmt, _ := db.PrepareNamed("UPDATE business_relation_sector SET " +
+			"code = :code," +
+			"name = :name," +
+			"status = :status," +
+			"version = :version + 1," +
+			"rec_modified_by = :rec_modified_by, rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
+
+		result, err := stmt.Exec(businessRelationSector)
+		if err != nil {
+			log.Error(err)
+			return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+		changes, err := result.RowsAffected()
+		if err != nil {
+			log.Error(err)
+			return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+		if changes == 0 {
+			return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationSectorNotFound.Error()}}
+		}
+	}
+
+	businessRelationSector, _ = GetBusinessRelationSectorByID(businessRelationSector.ID)
+	return businessRelationSector, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
+}
+
+// GetBusinessRelationSectorByID returns the BusinessRelationSector that the given id corresponds to. If no BusinessRelationSector is found, an
+// error is thrown.
+func GetBusinessRelationSectorByID(id string) (BusinessRelationSector, TransactionalInformation) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	businessRelationSector := BusinessRelationSector{}
+	err = db.Get(&businessRelationSector, "SELECT business_relation_sector.*,"+
+		"user_created.name as rec_created_by_user,"+
+		"user_modified.name as rec_modified_by_user,"+
+		"organization.name as organization"+
+		"	FROM business_relation_sector "+
+		"		INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id "+
+		"		INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id "+
+		"		INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "+
+		"	WHERE business_relation_sector.id=$1", id)
+
+	if err != nil && err == sql.ErrNoRows {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationSectorNotFound.Error()}}
+	} else if err != nil {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	return businessRelationSector, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
+}
+
+// GetBusinessRelationSectorByCode returns the BusinessRelationSector that the given id corresponds to.
+// If no BusinessRelationSector is found, an error is thrown.
+func GetBusinessRelationSectorByCode(code string, orgID string) (BusinessRelationSector, TransactionalInformation) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	org, _ := GetOrganizationByID(orgID)
+
+	businessRelationSector := BusinessRelationSector{}
+	err = db.Get(&businessRelationSector, "SELECT business_relation_sector.*,"+
+		"user_created.name as rec_created_by_user,"+
+		"user_modified.name as rec_modified_by_user,"+
+		"organization.name as organization"+
+		"	FROM business_relation_sector "+
+		"		INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id "+
+		"		INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id "+
+		"		INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "+
+		"	WHERE business_relation_sector.code=$1 and business_relation_sector.client_id=$2", code, org.ClientID)
+
+	if err != nil && err == sql.ErrNoRows {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationSectorNotFound.Error()}}
+	} else if err != nil {
+		log.Error(err)
+		return BusinessRelationSector{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	return businessRelationSector, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
+}
+
+func DeleteBusinessRelationSectorById(orgID string, ids []string) TransactionalInformation {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	query, args, err := sqlx.In("DELETE FROM business_relation_sector "+
+		" WHERE business_relation_sector.id IN (?) and business_relation_sector.organization_id=?", ids, orgID)
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+	_, err = db.Exec(query, args...)
+	if err != nil && err == sql.ErrNoRows {
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationSectorNotFound.Error()}}
+	} else if err != nil {
+		log.Error(err)
+		return TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	return TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }

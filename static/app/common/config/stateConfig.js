@@ -100,10 +100,26 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/businessrelationsector",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactmanager/businessRelationTypes.html',
-                        controller: 'BusinessRelationTypesController',
-                        controllerUrl: 'app/contactmanager/businessRelationTypesController',
+                        templateUrl: 'app/contactmanager/businessRelationSectors.html',
+                        controller: 'BusinessRelationSectorsController',
+                        controllerUrl: 'app/contactmanager/businessRelationSectorsController',
                     })
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            .state('businessRelationSectorMaintenance', {
+                url: "/businessRelationSectorMaintenance",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactManager/businessRelationSectorMaintenance.html',
+                        controller: 'BusinessRelationSectorMaintenanceController',
+                        controllerUrl: 'app/contactManager/businessRelationSectorMaintenanceController',
+                    })
+                },
+                params: {
+                    id: null
                 },
                 resolve: {
                     redirectIfNotAuthenticated: _redirectIfNotAuthenticated,

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	"strings"
+	"text/template"
 
 	"database/sql"
 	"database/sql/driver"
@@ -21,7 +22,7 @@ type Flash struct {
 type Response struct {
 	ReturnStatus     bool
 	ReturnMessage    []string
-	ValidationErrors map[string]interface{}
+	ValidationErrors map[string]InterfaceArray
 	TotalPages       int
 	TotalRows        int
 	PageSize         int
@@ -42,7 +43,7 @@ type LoginDTO struct {
 type TransactionalInformation struct {
 	ReturnStatus     bool
 	ReturnMessage    []string
-	ValidationErrors map[string]interface{}
+	ValidationErrors map[string]InterfaceArray
 	TotalPages       int
 	TotalRows        int
 	PageSize         int
@@ -81,6 +82,7 @@ type ApplicationModelDTO struct {
 
 const EmptyUUID = "00000000-0000-0000-0000-000000000000"
 
+// CheckUnique check unique of Code on each client
 func CheckUnique(table, ID, code, orgID string) (bool, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
@@ -91,17 +93,21 @@ func CheckUnique(table, ID, code, orgID string) (bool, error) {
 	if ID == "" {
 		ID = EmptyUUID
 	}
-	strSQL := fmt.Sprintf("SELECT id FROM %s WHERE code = $1 AND id <> $2 AND organization_id = $3", table)
-	log.Info(strSQL)
+	org, _ := GetOrganizationByID(orgID)
+
+	table = template.HTMLEscapeString(table)
+	strSQL := fmt.Sprintf("SELECT id FROM %s WHERE code = $1 AND id != $2 AND client_id = $3", table)
+
+	log.Debug(strSQL)
 
 	var otherID string
-	err = db.Get(&otherID, strSQL, code, ID, orgID)
+	err = db.Get(&otherID, strSQL, code, ID, org.ClientID)
 
 	if err != nil && err == sql.ErrNoRows {
 		return true, nil
 	} else if err != nil {
-		log.Fatal(err)
-		return false, err
+		log.Error(err)
+		return true, err
 	}
 	return false, nil
 }
@@ -153,4 +159,17 @@ func (a StringArray) Value() (driver.Value, error) {
 func q(s string) string {
 	re := strings.NewReplacer("'", "''")
 	return "'" + re.Replace(s) + "'"
+}
+
+type ErrorCollector []error
+
+func (c *ErrorCollector) Collect(e error) { *c = append(*c, e) }
+
+func (c *ErrorCollector) Error() (errs []string) {
+
+	for _, e := range *c {
+		errs = append(errs, e.Error())
+	}
+
+	return errs
 }

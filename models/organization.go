@@ -5,6 +5,7 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
 	"errors"
+
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -64,4 +65,22 @@ func (o *Organization) Get(id string) error {
 		return err
 	}
 	return nil
+}
+
+// GetOrganizationByID returns the Organization that the given id corresponds to. If no Organization is found, an error is thrown.
+func GetOrganizationByID(id string) (Organization, error) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	organization := Organization{}
+	err = db.Get(&organization, "SELECT * FROM organization WHERE id=$1", id)
+	if err == sql.ErrNoRows {
+		return organization, ErrOrganizationNotFound
+	} else if err != nil {
+		return organization, err
+	}
+	return organization, nil
 }

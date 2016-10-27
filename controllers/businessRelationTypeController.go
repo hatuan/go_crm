@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
-	"errors"
+
 	"net/http"
 	"strings"
 	"time"
@@ -20,7 +20,7 @@ func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http
 		user, err := models.GetUser(requestUser.ID)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusBadRequest)
 			return
 		}
 
@@ -30,10 +30,9 @@ func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http
 			SortDirection:  r.URL.Query().Get("SortDirection"),
 			SortExpression: r.URL.Query().Get("SortExpression")}
 
-		businessRelationTypes, err := models.GetBusinessRelationTypes(user.OrganizationID, r.URL.Query().Get("Search"), infiniteScrollingInformation)
-		if err != nil {
-			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusInternalServerError)
+		businessRelationTypes, tranInfor := models.GetBusinessRelationTypes(user.OrganizationID, r.URL.Query().Get("Search"), infiniteScrollingInformation)
+		if tranInfor.ReturnStatus == false {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfor.ReturnStatus, ReturnMessage: tranInfor.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusBadRequest)
 			return
 		}
 		JSONResponse(w, models.Response{ReturnStatus: true, TotalRows: len(businessRelationTypes), Data: map[string]interface{}{"BusinessRelationTypes": businessRelationTypes}, IsAuthenticated: true}, http.StatusOK)
@@ -43,18 +42,20 @@ func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http
 		err := json.NewDecoder(r.Body).Decode(&businessRelationType)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": models.BusinessRelationType{}}}, http.StatusBadRequest)
 			return
 		}
 		user, err := models.GetUser(requestUser.ID)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationTypes": []models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": []models.BusinessRelationType{}}}, http.StatusBadRequest)
 			return
 		}
 		if businessRelationType.ID == "" {
-			businessRelationType.RecCreatedByID, businessRelationType.RecModifiedByID = user.ID, user.ID
-			businessRelationType.RecCreated, businessRelationType.RecModified = &models.Timestamp{time.Now()}, &models.Timestamp{time.Now()}
+			businessRelationType.RecCreatedByID = user.ID
+			businessRelationType.RecModifiedByID = user.ID
+			businessRelationType.RecCreated = &models.Timestamp{time.Now()}
+			businessRelationType.RecModified = &models.Timestamp{time.Now()}
 			businessRelationType.ClientID = user.ClientID
 			businessRelationType.OrganizationID = user.OrganizationID
 		} else {
@@ -62,10 +63,12 @@ func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http
 			businessRelationType.RecModified = &models.Timestamp{time.Now()}
 		}
 
-		businessRelationType, err = models.PostBusinessRelationType(businessRelationType)
-		if err != nil {
-			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": businessRelationType}}, http.StatusInternalServerError)
+		businessRelationType, tranInfor := models.PostBusinessRelationType(businessRelationType)
+		if tranInfor.ReturnStatus == false && len(tranInfor.ValidationErrors) > 0 {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfor.ReturnStatus, ReturnMessage: tranInfor.ReturnMessage, ValidationErrors: tranInfor.ValidationErrors, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": businessRelationType}}, http.StatusBadRequest)
+			return
+		} else if tranInfor.ReturnStatus == false {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfor.ReturnStatus, ReturnMessage: tranInfor.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": businessRelationType}}, http.StatusBadRequest)
 			return
 		}
 
@@ -74,40 +77,32 @@ func API_BusinessRelationTypes(w http.ResponseWriter, r *http.Request, next http
 	case r.Method == "DELETE":
 		user, err := models.GetUser(requestUser.ID)
 		if err != nil {
-			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true}, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true}, http.StatusBadRequest)
 			return
 		}
 		ids := strings.Split(r.URL.Query().Get("ID"), ",")
-		err = models.DeleteBusinessRelationTypeById(user.OrganizationID, ids)
-		if err != nil {
-			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true}, http.StatusInternalServerError)
+		tranInfo := models.DeleteBusinessRelationTypeById(user.OrganizationID, ids)
+		if tranInfo.ReturnStatus == false {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true}, http.StatusBadRequest)
 			return
 		}
-		JSONResponse(w, models.Response{ReturnStatus: true, IsAuthenticated: true}, http.StatusOK)
+		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true}, http.StatusOK)
 	}
 }
-
-// ErrIDParameterNotFound is thrown when do not found ID in request
-var ErrIDParameterNotFound = errors.New("ID Parameter Not Found")
 
 func API_BusinessRelationType_Id(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	switch {
 	case r.Method == "GET":
 		ID := r.URL.Query().Get("ID")
 		if ID == "" {
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrIDParameterNotFound.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": models.BusinessRelationType{}}}, http.StatusInternalServerError)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrIDParameterNotFound.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": models.BusinessRelationType{}}}, http.StatusBadRequest)
 			return
 		}
-		businessRelationType, err := models.GetBusinessRelationTypeByID(ID)
-		if err != nil {
-			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": models.BusinessRelationType{}}}, http.StatusInternalServerError)
+		businessRelationType, tranInfo := models.GetBusinessRelationTypeByID(ID)
+		if !tranInfo.ReturnStatus {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"BusinessRelationType": models.BusinessRelationType{}}}, http.StatusBadRequest)
 			return
 		}
-		JSONResponse(w, models.Response{ReturnStatus: true, Data: map[string]interface{}{"BusinessRelationType": businessRelationType}, IsAuthenticated: true}, http.StatusOK)
-
-	case r.Method == "DELETE":
+		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"BusinessRelationType": businessRelationType}, IsAuthenticated: true}, http.StatusOK)
 	}
 }
