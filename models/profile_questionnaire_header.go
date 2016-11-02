@@ -14,31 +14,32 @@ import (
 )
 
 type ProfileQuestionnaireHeader struct {
-	ID                       string     `db:"id"`
-	Code                     string     `db:"code"`
-	Name                     string     `db:"name"`
-	Priority                 int8       `db:"priority"`
-	ContactType              int8       `db:"contact_type"`
-	BusinessRelationTypeID   string     `db:"business_relation_type_id"`
-	BusinessRelationTypeCode string     `db:"business_relation_type_code"`
-	RecCreatedByID           string     `db:"rec_created_by"`
-	RecCreatedByUser         string     `db:"rec_created_by_user"`
-	RecCreated               *Timestamp `db:"rec_created_at"`
-	RecModifiedByID          string     `db:"rec_modified_by"`
-	RecModifiedByUser        string     `db:"rec_modified_by_user"`
-	RecModified              *Timestamp `db:"rec_modified_at"`
-	Status                   int8       `db:"status"`
-	Version                  int16      `db:"version"`
-	ClientID                 string     `db:"client_id"`
-	OrganizationID           string     `db:"organization_id"`
-	Organization             string     `db:"organization"`
+	ID                       string                     `db:"id"`
+	Code                     string                     `db:"code"`
+	Description              string                     `db:"description"`
+	Priority                 int8                       `db:"priority"`
+	ContactType              int8                       `db:"contact_type"`
+	BusinessRelationTypeID   string                     `db:"business_relation_type_id"`
+	BusinessRelationTypeCode string                     `db:"business_relation_type_code"`
+	ProfileQuestionnaireLine []ProfileQuestionnaireLine `db:"-" json:"omitempty"`
+	RecCreatedByID           string                     `db:"rec_created_by"`
+	RecCreatedByUser         string                     `db:"rec_created_by_user"`
+	RecCreated               *Timestamp                 `db:"rec_created_at"`
+	RecModifiedByID          string                     `db:"rec_modified_by"`
+	RecModifiedByUser        string                     `db:"rec_modified_by_user"`
+	RecModified              *Timestamp                 `db:"rec_modified_at"`
+	Status                   int8                       `db:"status"`
+	Version                  int16                      `db:"version"`
+	ClientID                 string                     `db:"client_id"`
+	OrganizationID           string                     `db:"organization_id"`
+	Organization             string                     `db:"organization"`
 }
 
 // ErrProfileQuestionnaireHeaderNotFound indicates there was no ProfileQuestionnaireHeader
 var ErrProfileQuestionnaireHeaderNotFound = errors.New("ProfileQuestionnaireHeader not found")
 
-// ErrProfileQuestionnaireHeaderNameNotSpecified indicates there was no name given by the user
-var ErrProfileQuestionnaireHeaderNameNotSpecified = errors.New("ProfileQuestionnaireHeader's name not specified")
+// ErrProfileQuestionnaireHeaderDescriptionNotSpecified indicates there was no description given by the user
+var ErrProfileQuestionnaireHeaderDescriptionNotSpecified = errors.New("ProfileQuestionnaireHeader's description not specified")
 
 // ErrProfileQuestionnaireHeaderCodeNotSpecified indicates there was no code given by the user
 var ErrProfileQuestionnaireHeaderCodeNotSpecified = errors.New("ProfileQuestionnaireHeader's code not specified")
@@ -59,8 +60,8 @@ func (c *ProfileQuestionnaireHeader) Validate() map[string]InterfaceArray {
 	if c.Code == "" {
 		validationErrors["Code"] = append(validationErrors["Code"], ErrProfileQuestionnaireHeaderCodeNotSpecified.Error())
 	}
-	if c.Name == "" {
-		validationErrors["Name"] = append(validationErrors["Name"], ErrProfileQuestionnaireHeaderNameNotSpecified.Error())
+	if c.Description == "" {
+		validationErrors["Description"] = append(validationErrors["Description"], ErrProfileQuestionnaireHeaderDescriptionNotSpecified.Error())
 	}
 	if c.Code != "" {
 		db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
@@ -74,7 +75,7 @@ func (c *ProfileQuestionnaireHeader) Validate() map[string]InterfaceArray {
 		if c.ID != "" {
 			ID = c.ID
 		}
-		err = db.Get(&otherID, "SELECT id FROM business_relation_sector WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
+		err = db.Get(&otherID, "SELECT id FROM profile_questionnaire_header WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
 		if err != nil && err != sql.ErrNoRows {
 			log.Error(err)
 			validationErrors["Fatal"] = append(validationErrors["Fatal"], ErrProfileQuestionnaireHeaderFatal.Error())
@@ -95,14 +96,18 @@ func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infini
 	}
 	defer db.Close()
 
-	sqlString := "SELECT business_relation_sector.*, user_created.name as rec_created_by_user, " +
-		" user_modified.name as rec_modified_by_user, organization.name as organization" +
-		" FROM business_relation_sector " +
-		" INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id " +
-		" INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id " +
-		" INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "
+	sqlString := "SELECT profile_questionnaire_header.*, " +
+		" user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, " +
+		" organization.name as organization, " +
+		" business_relation_type.code as business_relation_type_code" +
+		" FROM profile_questionnaire_header " +
+		" INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id " +
+		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id " +
+		" INNER JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "
 
-	sqlWhere := " WHERE business_relation_sector.organization_id = $1"
+	sqlWhere := " WHERE profile_questionnaire_header.organization_id = $1"
 	if len(searchCondition) > 0 {
 		sqlWhere += fmt.Sprintf(" AND %s", searchCondition)
 	}
@@ -110,11 +115,11 @@ func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infini
 	var sqlOrder string
 	if len(infiniteScrollingInformation.SortDirection) == 0 || infiniteScrollingInformation.SortDirection == "ASC" {
 		if len(infiniteScrollingInformation.SortExpression) > 0 {
-			sqlOrder = fmt.Sprintf(" ORDER BY %s ASC", "business_relation_sector."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+			sqlOrder = fmt.Sprintf(" ORDER BY %s ASC", "profile_questionnaire_header."+strings.ToLower(infiniteScrollingInformation.SortExpression))
 		}
 	} else { //sort DESC
 		if len(infiniteScrollingInformation.SortExpression) > 0 {
-			sqlOrder = fmt.Sprintf(" ORDER BY %s DESC", "business_relation_sector."+strings.ToLower(infiniteScrollingInformation.SortExpression))
+			sqlOrder = fmt.Sprintf(" ORDER BY %s DESC", "profile_questionnaire_header."+strings.ToLower(infiniteScrollingInformation.SortExpression))
 		}
 	}
 
@@ -136,8 +141,8 @@ func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infini
 	return ProfileQuestionnaireHeaders, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(ProfileQuestionnaireHeaders)) + " records found"}}
 }
 
-func PostProfileQuestionnaireHeader(ProfileQuestionnaireHeader ProfileQuestionnaireHeader) (ProfileQuestionnaireHeader, TransactionalInformation) {
-	if validateErrs := ProfileQuestionnaireHeader.Validate(); len(validateErrs) != 0 {
+func PostProfileQuestionnaireHeader(profileQuestionnaireHeader ProfileQuestionnaireHeader) (ProfileQuestionnaireHeader, TransactionalInformation) {
+	if validateErrs := profileQuestionnaireHeader.Validate(); len(validateErrs) != 0 {
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireHeaderValidate.Error()}, ValidationErrors: validateErrs}
 	}
 
@@ -148,26 +153,29 @@ func PostProfileQuestionnaireHeader(ProfileQuestionnaireHeader ProfileQuestionna
 	}
 	defer db.Close()
 
-	if ProfileQuestionnaireHeader.ID == "" {
-		ProfileQuestionnaireHeader.ID = uuid.NewV4().String()
-		ProfileQuestionnaireHeader.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_sector(id, code, name, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :name, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
-		_, err := stmt.Exec(ProfileQuestionnaireHeader)
+	if profileQuestionnaireHeader.ID == "" {
+		profileQuestionnaireHeader.ID = uuid.NewV4().String()
+		profileQuestionnaireHeader.Version = 1
+		stmt, _ := db.PrepareNamed("INSERT INTO profile_questionnaire_header(id, code, decription, priority, contact_type, business_relation_type_id, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:id, :code, :decription, :priority, :contact_type, :business_relation_type_id, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
+		_, err := stmt.Exec(profileQuestionnaireHeader)
 		if err != nil {
 			log.Error(err)
 			return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 		}
 
 	} else {
-		stmt, _ := db.PrepareNamed("UPDATE business_relation_sector SET " +
+		stmt, _ := db.PrepareNamed("UPDATE profile_questionnaire_header SET " +
 			"code = :code," +
-			"name = :name," +
+			"decription = :decription," +
+			"priority = :priority," +
+			"contact_type = :contact_type," +
+			"business_relation_type_id = :business_relation_type_id, " +
 			"status = :status," +
 			"version = :version + 1," +
 			"rec_modified_by = :rec_modified_by, rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
 
-		result, err := stmt.Exec(ProfileQuestionnaireHeader)
+		result, err := stmt.Exec(profileQuestionnaireHeader)
 		if err != nil {
 			log.Error(err)
 			return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
@@ -182,8 +190,8 @@ func PostProfileQuestionnaireHeader(ProfileQuestionnaireHeader ProfileQuestionna
 		}
 	}
 
-	ProfileQuestionnaireHeader, _ = GetProfileQuestionnaireHeaderByID(ProfileQuestionnaireHeader.ID)
-	return ProfileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
+	profileQuestionnaireHeader, _ = GetProfileQuestionnaireHeaderByID(profileQuestionnaireHeader.ID)
+	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
 // GetProfileQuestionnaireHeaderByID returns the ProfileQuestionnaireHeader that the given id corresponds to. If no ProfileQuestionnaireHeader is found, an
@@ -196,16 +204,18 @@ func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, T
 	}
 	defer db.Close()
 
-	ProfileQuestionnaireHeader := ProfileQuestionnaireHeader{}
-	err = db.Get(&ProfileQuestionnaireHeader, "SELECT business_relation_sector.*,"+
+	profileQuestionnaireHeader := ProfileQuestionnaireHeader{}
+	err = db.Get(&profileQuestionnaireHeader, "SELECT profile_questionnaire_header.*,"+
 		"user_created.name as rec_created_by_user,"+
 		"user_modified.name as rec_modified_by_user,"+
-		"organization.name as organization"+
-		"	FROM business_relation_sector "+
-		"		INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id "+
-		"		INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "+
-		"	WHERE business_relation_sector.id=$1", id)
+		"organization.name as organization,"+
+		"business_relation_type.code as business_relation_type_code"+
+		"	FROM profile_questionnaire_header "+
+		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
+		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
+		"		INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id "+
+		"		INNER JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
+		"	WHERE profile_questionnaire_header.id=$1", id)
 
 	if err != nil && err == sql.ErrNoRows {
 		log.Error(err)
@@ -214,7 +224,7 @@ func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, T
 		log.Error(err)
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
-	return ProfileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
+	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
 // GetProfileQuestionnaireHeaderByCode returns the ProfileQuestionnaireHeader that the given id corresponds to.
@@ -229,16 +239,18 @@ func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQues
 
 	org, _ := GetOrganizationByID(orgID)
 
-	ProfileQuestionnaireHeader := ProfileQuestionnaireHeader{}
-	err = db.Get(&ProfileQuestionnaireHeader, "SELECT business_relation_sector.*,"+
+	profileQuestionnaireHeader := ProfileQuestionnaireHeader{}
+	err = db.Get(&profileQuestionnaireHeader, "SELECT profile_questionnaire_header.*,"+
 		"user_created.name as rec_created_by_user,"+
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization"+
-		"	FROM business_relation_sector "+
-		"		INNER JOIN \"user\" as user_created ON business_relation_sector.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON business_relation_sector.rec_modified_by = user_modified.id "+
-		"		INNER JOIN organization as organization ON business_relation_sector.organization_id = organization.id "+
-		"	WHERE business_relation_sector.code=$1 and business_relation_sector.client_id=$2", code, org.ClientID)
+		"business_relation_type.code as business_relation_type_code"+
+		"	FROM profile_questionnaire_header "+
+		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
+		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
+		"		INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id "+
+		"		INNER JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
+		"	WHERE profile_questionnaire_header.code=$1 and profile_questionnaire_header.client_id=$2", code, org.ClientID)
 
 	if err != nil && err == sql.ErrNoRows {
 		log.Error(err)
@@ -247,7 +259,7 @@ func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQues
 		log.Error(err)
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
-	return ProfileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
+	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
 func DeleteProfileQuestionnaireHeaderById(orgID string, ids []string) TransactionalInformation {
@@ -258,8 +270,8 @@ func DeleteProfileQuestionnaireHeaderById(orgID string, ids []string) Transactio
 	}
 	defer db.Close()
 
-	query, args, err := sqlx.In("DELETE FROM business_relation_sector "+
-		" WHERE business_relation_sector.id IN (?) and business_relation_sector.organization_id=?", ids, orgID)
+	query, args, err := sqlx.In("DELETE FROM profile_questionnaire_header "+
+		" WHERE profile_questionnaire_header.id IN (?) and profile_questionnaire_header.organization_id=?", ids, orgID)
 	query = sqlx.Rebind(sqlx.DOLLAR, query)
 	_, err = db.Exec(query, args...)
 	if err != nil && err == sql.ErrNoRows {

@@ -100,7 +100,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_profile_questionnaire_line_no
     (profile_questionnaire_header_id, line_no)
     TABLESPACE pg_default;
 
-CREATE TABLE IF EXISTS rating
+CREATE TABLE IF NOT EXISTS rating
 (
     id uuid NOT NULL,
     profile_questionnaire_line_id uuid NOT NULL,
