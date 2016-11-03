@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS profile_questionnaire_header
     description character varying NOT NULL,
     priority smallint NOT NULL,
     contact_type smallint NOT NULL,
-    business_relation_type_id uuid NOT NULL,
+    business_relation_type_id uuid,
     rec_created_at timestamp with time zone NOT NULL,
     rec_modified_at timestamp with time zone NOT NULL,
     status smallint NOT NULL,

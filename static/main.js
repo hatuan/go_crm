@@ -41,7 +41,8 @@ require.config({
         'organizationsService': 'app/organization/organizationsService',
         'usersService': 'app/user/usersService',
         'businessRelationTypesService': 'app/contactManager/businessRelationTypesService',
-        'businessRelationSectorsService': 'app/contactManager/businessRelationSectorsService'
+        'businessRelationSectorsService': 'app/contactManager/businessRelationSectorsService',
+        'profileQuestionnairesService': 'app/contactManager/profileQuestionnairesService',
     },
     // Add angular modules that does not support AMD out of the box, put it in a shim
     shim: {

@@ -19,7 +19,7 @@ type ProfileQuestionnaireHeader struct {
 	Description              string                     `db:"description"`
 	Priority                 int8                       `db:"priority"`
 	ContactType              int8                       `db:"contact_type"`
-	BusinessRelationTypeID   string                     `db:"business_relation_type_id"`
+	BusinessRelationTypeID   *string                    `db:"business_relation_type_id"`
 	BusinessRelationTypeCode string                     `db:"business_relation_type_code"`
 	ProfileQuestionnaireLine []ProfileQuestionnaireLine `db:"-" json:"omitempty"`
 	RecCreatedByID           string                     `db:"rec_created_by"`
@@ -100,12 +100,12 @@ func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infini
 		" user_created.name as rec_created_by_user, " +
 		" user_modified.name as rec_modified_by_user, " +
 		" organization.name as organization, " +
-		" business_relation_type.code as business_relation_type_code" +
+		" COALESCE(business_relation_type.code, '') as business_relation_type_code" +
 		" FROM profile_questionnaire_header " +
 		" INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id " +
 		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id " +
-		" INNER JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "
+		" LEFT JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "
 
 	sqlWhere := " WHERE profile_questionnaire_header.organization_id = $1"
 	if len(searchCondition) > 0 {
@@ -156,9 +156,14 @@ func PostProfileQuestionnaireHeader(profileQuestionnaireHeader ProfileQuestionna
 	if profileQuestionnaireHeader.ID == "" {
 		profileQuestionnaireHeader.ID = uuid.NewV4().String()
 		profileQuestionnaireHeader.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO profile_questionnaire_header(id, code, decription, priority, contact_type, business_relation_type_id, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :decription, :priority, :contact_type, :business_relation_type_id, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
-		_, err := stmt.Exec(profileQuestionnaireHeader)
+		stmt, err := db.PrepareNamed("INSERT INTO profile_questionnaire_header(id, code, description, priority, contact_type, business_relation_type_id, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:id, :code, :description, :priority, :contact_type, :business_relation_type_id, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
+		if err != nil {
+			log.Error(err)
+			return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+
+		_, err = stmt.Exec(profileQuestionnaireHeader)
 		if err != nil {
 			log.Error(err)
 			return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
@@ -167,7 +172,7 @@ func PostProfileQuestionnaireHeader(profileQuestionnaireHeader ProfileQuestionna
 	} else {
 		stmt, _ := db.PrepareNamed("UPDATE profile_questionnaire_header SET " +
 			"code = :code," +
-			"decription = :decription," +
+			"description = :description," +
 			"priority = :priority," +
 			"contact_type = :contact_type," +
 			"business_relation_type_id = :business_relation_type_id, " +
@@ -209,12 +214,12 @@ func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, T
 		"user_created.name as rec_created_by_user,"+
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization,"+
-		"business_relation_type.code as business_relation_type_code"+
+		"COALESCE(business_relation_type.code, '') as business_relation_type_code"+
 		"	FROM profile_questionnaire_header "+
 		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
 		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id "+
-		"		INNER JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
+		"		LEFT JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
 		"	WHERE profile_questionnaire_header.id=$1", id)
 
 	if err != nil && err == sql.ErrNoRows {
@@ -244,12 +249,12 @@ func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQues
 		"user_created.name as rec_created_by_user,"+
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization"+
-		"business_relation_type.code as business_relation_type_code"+
+		"COALESCE(business_relation_type.code, '') as business_relation_type_code"+
 		"	FROM profile_questionnaire_header "+
 		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
 		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id "+
-		"		INNER JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
+		"		LEFT JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
 		"	WHERE profile_questionnaire_header.code=$1 and profile_questionnaire_header.client_id=$2", code, org.ClientID)
 
 	if err != nil && err == sql.ErrNoRows {

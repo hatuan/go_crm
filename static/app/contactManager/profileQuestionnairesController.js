@@ -3,13 +3,13 @@
  */
 "use strict";
 
-define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'businessRelationTypesService'], function (angularAMD, $) {
-    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'businessRelationTypesService'];
+define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'profileQuestionnairesService'], function (angularAMD, $) {
+    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'profileQuestionnairesService'];
 
-    var businessRelationTypesController = function ($scope, $rootScope, $state, $window, moment, alertsService, businessRelationTypesService) {
+    var profileQuestionnairesController = function ($scope, $rootScope, $state, $window, moment, alertsService, profileQuestionnairesService) {
 
         $scope.initializeController = function () {
-            $rootScope.applicationModule = "BusinessRelationTypes";
+            $rootScope.applicationModule = "ProfileQuestionnaires";
             $rootScope.alerts = [];
 
             $scope.Search = "";
@@ -24,27 +24,27 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'businessR
 
             $scope.searchConditionObjects = [];
             $scope.searchConditionObjects.push({
-                ID: "business_relation_type.code",
+                ID: "profile_questionnaire_header.code",
                 Name: "Code",
                 Type: "CODE", //CODE, FREE, DATE
-                ValueIn: "BusinessRelationType",
+                ValueIn: "ProfileQuestionnaire",
                 Value: ""
             },
             {
-                ID: "business_relation_type.name",
-                Name: "Name",
+                ID: "profile_questionnaire_header.description",
+                Name: "Description",
                 Type: "FREE", //CODE, FREE, DATE
                 ValueIn: "",
                 Value: ""
             });
 
-            $scope.BusinessRelationTypes = [];
+            $scope.ProfileQuestionnaires = [];
             $scope.FilteredItems = [];
-            $scope.getBusinessRelationTypes();
+            $scope.getProfileQuestionnaires();
         };
 
         $scope.refresh = function () {
-            $scope.getBusinessRelationTypes();
+            $scope.getProfileQuestionnaires();
         }
 
         $scope.showSearch = function () {
@@ -61,10 +61,10 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'businessR
         $scope.delete = function () {
             if($scope.Selection.length <= 0)
                 return;
-            var deleteBusinessRelationTypes = $scope.createDeleteBusinessRelationTypeObject()
-            businessRelationTypesService.deleteBusinessRelationType(deleteBusinessRelationTypes, 
+            var deleteProfileQuestionnaires = $scope.createDeleteProfileQuestionnaireObject()
+            profileQuestionnairesService.deleteProfileQuestionnaire(deleteProfileQuestionnaires, 
                 function (response, status) {
-                    $scope.getBusinessRelationTypes();
+                    $scope.getProfileQuestionnaires();
                 }, 
                 function (response, status){
                     alertsService.RenderErrorMessage(response.Error);
@@ -81,43 +81,43 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'businessR
              }
         };
 
-        $scope.getBusinessRelationTypes = function (searchSqlCondition) {
+        $scope.getProfileQuestionnaires = function (searchSqlCondition) {
             if(!angular.isUndefinedOrNull(searchSqlCondition))
                 $scope.Search = searchSqlCondition;
-            var businessRelationTypeInquiry = $scope.createBusinessRelationTypeObject();
-            businessRelationTypesService.getBusinessRelationTypes(businessRelationTypeInquiry, $scope.businessRelationTypesInquiryCompleted, $scope.businessRelationTypesInquiryError);
+            var profileQuestionnaireInquiry = $scope.createProfileQuestionnaireObject();
+            profileQuestionnairesService.getProfileQuestionnaires(profileQuestionnaireInquiry, $scope.profileQuestionnairesInquiryCompleted, $scope.profileQuestionnairesInquiryError);
         };
 
-        $scope.businessRelationTypesInquiryCompleted = function (response, status) {
+        $scope.profileQuestionnairesInquiryCompleted = function (response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
-            $scope.BusinessRelationTypes = response.Data.BusinessRelationTypes;
+            $scope.ProfileQuestionnaires = response.Data.ProfileQuestionnaires;
             $scope.TotalRows = response.TotalRows;
             $scope.Selection = [];
             $scope.FilteredItems = [];
         };
 
-        $scope.businessRelationTypesInquiryError = function (response, status) {
+        $scope.profileQuestionnairesInquiryError = function (response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 
-        $scope.createBusinessRelationTypeObject = function () {
-            var businessRelationTypeInquiry = new Object();
+        $scope.createProfileQuestionnaireObject = function () {
+            var profileQuestionnaireInquiry = new Object();
 
-            businessRelationTypeInquiry.Search = $scope.Search;
-            businessRelationTypeInquiry.SortExpression = $scope.SortExpression;
-            businessRelationTypeInquiry.SortDirection = $scope.SortDirection;
-            businessRelationTypeInquiry.FetchSize = $scope.FetchSize;
+            profileQuestionnaireInquiry.Search = $scope.Search;
+            profileQuestionnaireInquiry.SortExpression = $scope.SortExpression;
+            profileQuestionnaireInquiry.SortDirection = $scope.SortDirection;
+            profileQuestionnaireInquiry.FetchSize = $scope.FetchSize;
 
-            return businessRelationTypeInquiry;
+            return profileQuestionnaireInquiry;
         }
 
-        $scope.createDeleteBusinessRelationTypeObject = function() {
-            var deleteBusinessRelationTypes = new Object();
-            deleteBusinessRelationTypes.ID = $scope.Selection.join(",");
-            return deleteBusinessRelationTypes;
+        $scope.createDeleteProfileQuestionnaireObject = function() {
+            var deleteProfileQuestionnaires = new Object();
+            deleteProfileQuestionnaires.ID = $scope.Selection.join(",");
+            return deleteProfileQuestionnaires;
         }
     };
 
-    businessRelationTypesController.$inject = injectParams;
-    angularAMD.controller('BusinessRelationTypesController', businessRelationTypesController);
+    profileQuestionnairesController.$inject = injectParams;
+    angularAMD.controller('ProfileQuestionnairesController', profileQuestionnairesController);
 });

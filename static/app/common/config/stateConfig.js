@@ -100,9 +100,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/businessrelationsector",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactmanager/businessRelationSectors.html',
+                        templateUrl: 'app/contactManager/businessRelationSectors.html',
                         controller: 'BusinessRelationSectorsController',
-                        controllerUrl: 'app/contactmanager/businessRelationSectorsController',
+                        controllerUrl: 'app/contactManager/businessRelationSectorsController',
                     })
                 },
                 resolve: {
@@ -116,6 +116,35 @@ define(['angularAMD'], function (angularAMD) {
                         templateUrl: 'app/contactManager/businessRelationSectorMaintenance.html',
                         controller: 'BusinessRelationSectorMaintenanceController',
                         controllerUrl: 'app/contactManager/businessRelationSectorMaintenanceController',
+                    })
+                },
+                params: {
+                    id: null
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            .state('profileQuestionnaire', {
+                url: "/profilequestionnaire",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactManager/profileQuestionnaires.html',
+                        controller: 'ProfileQuestionnairesController',
+                        controllerUrl: 'app/contactManager/profileQuestionnairesController',
+                    })
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            .state('profileQuestionnaireMaintenance', {
+                url: "/profileQuestionnaireMaintenance",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactManager/profileQuestionnaireMaintenance.html',
+                        controller: 'ProfileQuestionnaireMaintenanceController',
+                        controllerUrl: 'app/contactManager/profileQuestionnaireMaintenanceController',
                     })
                 },
                 params: {

@@ -1,0 +1,52 @@
+<div class="container-fluid body-content" ng-init="initializeController()">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="pull-left">
+                    Profile Questionnaires
+                </h2>
+            </div>
+        </div>
+    </div>
+    <div class="btn-toolbar margin-bottom-15" role="toolbar" aria-label="Toolbar">
+        <div class="btn-group" role="group" aria-label="First group">
+            <a class="btn btn-default" role="button" id="btn-toolbar-refresh" ng-click="refresh()"><span class="glyphicon glyphicon-refresh"></span></a>
+            <a class="btn btn-default" role="button" ui-sref="profileQuestionnaireMaintenance({id: ''})"><span class="glyphicon glyphicon-plus"></span></a>
+            <a class="btn btn-default" ng-class="{'active':Search!=''}" aria-pressed="Search!=''" role="button" id="btn-toolbar-search" ng-click="showSearch()"><span class="glyphicon glyphicon-search"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-delete" ng-click="delete()"><span class="glyphicon glyphicon-remove"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-check-all" ng-click="selectAll()"><span class="glyphicon glyphicon-ok"></span></a>
+            <a class="btn btn-default" role="button" id="btn-toolbar-help"><span class="glyphicon glyphicon-question-sign"></span></a>
+        </div>
+    </div>
+    <div class="margin-bottom-15" uib-collapse="!isSearched">
+		<div class="well" search-form search-condition-objects="searchConditionObjects" search-callback="getProfileQuestionnaires(param)"/>
+	</div>
+    <div class="row">
+        <div class="col-md-6 margin-bottom-15">
+            <div class="table-responsive constrained">
+                <table class="table table-bordered table-striped" style="table-layout: fixed;">
+                    <thead>
+                        <tr>
+                            <th style="text-align: center; width: 15px; min-width: 15px;"></th>
+                            <th class="col-md-1">Code</th>
+                            <th class="col-md-2">Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="profileQuestionnaire in (FilteredItems = (ProfileQuestionnaires|limitTo: PageSize: (CurrentPage - 1) * PageSize))">
+                            <td style="text-align: center;" ng-click="toggleSelection(profileQuestionnaire.ID)"><input type="checkbox" id="{{profileQuestionnaire.ID}}" value="{{profileQuestionnaire.ID}}" ng-checked="Selection.indexOf(profileQuestionnaire.ID) > -1"/></td>
+                            <td><a ui-sref="profileQuestionnaireMaintenance({id: '{{profileQuestionnaire.ID}}'})">{{profileQuestionnaire.Code}}</a</td>
+                            <td><div ng-bind="profileQuestionnaire.Description"></div></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <uib-pagination class="margin-bottom-15" total-items="TotalRows" ng-model="CurrentPage" items-per-page='PageSize'/>
+    <div class="margin-bottom-15">
+        <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
+            <div ng-bind-html="MessageBox"></div>
+        </alert>
+    </div>
+</div>
