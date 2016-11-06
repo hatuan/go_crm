@@ -26,7 +26,7 @@
 </head>
 <body ng-controller="indexController" ng-init="initializeController()" ng-cloak>
     <div ng-include="'/app/main/navbar.html'"></div>
-    <div ui-view="master"></div>
+    <div ui-view="master" class="container-fluid body-content"></div>
 
     <script src="/bower_components/cldrjs/dist/cldr.js"></script>
     <script src="/bower_components/cldrjs/dist/cldr/event.js"></script>

@@ -1,4 +1,4 @@
-<div class="container-fluid body-content" ng-init="initializeController()">
+<div ng-init="initializeController()">
     <div class="page-header">
         <div class="row">
             <div class="col-sm-8">
@@ -13,42 +13,62 @@
                 </div>
             </div>
         </div>
-        </div>
     </div>
-    <br/>
-    <form ng-submit="update(ProfileQuestionnaireMaintenanceForm)" id="ProfileQuestionnaireMaintenanceForm" name="ProfileQuestionnaireMaintenanceForm" class="form-horizontal" role="form"
-        ng-validate="validationOptions">
+</div>
+<br/>
+<div class="container col-xs-12 col-sm-4">
+    <form ng-submit="update(ProfileQuestionnaireMaintenanceForm)" id="ProfileQuestionnaireMaintenanceForm1" name="ProfileQuestionnaireMaintenanceForm"
+        role="form" ng-validate="validationOptions">
         <div class="form-group has-feedback">
-            <label class="col-xs-2 control-label" for="Code">Code</label>
-            <div class="col-xs-2">
-                <input type="text" class="form-control" name="Code" id="Code" ng-model="Code" capitalize/>
-            </div>
+            <label class="control-label" for="Code">Code</label>
+            <input type="text" class="form-control" name="Code" id="Code" ng-model="Code" capitalize/>
         </div>
 
         <div class="form-group has-feedback">
-            <label class="col-xs-2 control-label" for="Description">Description</label>
-            <div class="col-xs-2">
-                <input type="text" class="form-control" name="Description" id="Description" ng-model="Description"/>
-            </div>
-        </div>
-        <div class="form-group has-feedback">
-            <label class="col-xs-2 control-label" for="Status">Status</label>
-            <div class="col-xs-2">
-                <select class="form-control" id="Status" name="Status" ng-model="Status" ng-options="s.Code as s.Name for s in Constants.Status"/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-xs-2 control-label" for="Created">Created</label>
-            <div class="col-xs-2">
-                <input type="text" class="form-control" name="Created" id="Created" value="{{RecCreatedByUser}} - {{RecCreated | amDateFormat:'DD/MM/YYYY HH:MM'}}" disabled/>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="col-xs-2 control-label" for="Modified">Modified</label>
-            <div class="col-xs-2">
-                <input type="text" class="form-control" name="Modified" id="Modified" value="{{RecModifiedByUser}} - {{RecModified | amDateFormat:'DD/MM/YYYY HH:MM'}}" disabled/>
-            </div>
+            <label class="control-label" for="Description">Description</label>
+                <input type="text" class="form-control" name="Description" id="Description" ng-model="Description" />
         </div>
 
+        <div class="form-group has-feedback">
+            <label class="control-label" for="Status">Status</label>
+                <select class="form-control" id="Status" name="Status" ng-model="Status" ng-options="s.Code as s.Name for s in Constants.Status" />
+        </div>
+        <div class="form-group">
+            <label class="control-label" for="Created">Created</label>
+                <input type="text" class="form-control" name="Created" id="Created" value="{{RecCreatedByUser}} - {{RecCreated | amDateFormat:'DD/MM/YYYY HH:MM'}}"
+                    disabled/>
+        </div>
+        <div class="form-group">
+            <label class="ontrol-label" for="Modified">Modified</label>
+                <input type="text" class="form-control" name="Modified" id="Modified" value="{{RecModifiedByUser}} - {{RecModified | amDateFormat:'DD/MM/YYYY HH:MM'}}"
+                    disabled/>
+            
+        </div>
     </form>
+</div>
+<div class="container col-xs-12 col-sm-4">
+    <form ng-submit="update(ProfileQuestionnaireMaintenanceForm)" id="ProfileQuestionnaireMaintenanceForm2" name="ProfileQuestionnaireMaintenanceForm"
+        role="form" ng-validate="validationOptions">
+        <div class="form-group has-feedback">
+            <label class="control-label" for="ContactType">Contact Type</label>
+            <div class="">
+                <select class="form-control" id="ContactType" name="ContactType" ng-model="ContactType" ng-options="s.Code as s.Name for s in Constants.ContactTypes" />
+            </div>
+        </div>
+
+        <div class="form-group has-feedback">
+            <label class="control-label" for="BusinessRelationTypeCode">Business Relation Code</label>
+            <div class="">
+                <input type="text" class="form-control" name="BusinessRelationTypeCode" id="BusinessRelationTypeCode" ng-model="BusinessRelationTypeCode" />
+            </div>
+        </div>
+
+        <div class="form-group has-feedback">
+            <label class="control-label" for="Priority">Priority</label>
+            <div class="">
+                <select class="form-control" id="Piority" name="Piority" ng-model="Priority" ng-options="s.Code as s.Name for s in Constants.Priorities" />
+            </div>
+        </div>
+    </form>
+</div>
 </div>

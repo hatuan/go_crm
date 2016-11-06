@@ -22,8 +22,8 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'profileQuestionnairesServ
                 $scope.ID = "";
                 $scope.Code = "";
                 $scope.Description = "";
-                $scope.Priority = 0;
-                $scope.ContactType = 0;
+                $scope.Priority = $scope.Constants.Priorities[2].Code;
+                $scope.ContactType = $scope.Constants.ContactTypes[0].Code;
                 $scope.BusinessRelationTypeID = "";
                 $scope.BusinessRelationTypeCode = "";
 
@@ -80,9 +80,6 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'profileQuestionnairesServ
                                 return $rootScope.currentUser.ID
                             }, 
                             Table: "profile_questionnaire_header",
-                            //RecID: $scope.ID 
-                            //Don't use. $scope.ID = "" when set validationOptions. 
-                            //Use function to get current $scope.ID
                             RecID: function() { 
                                 return $scope.ID 
                             }
@@ -91,7 +88,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'profileQuestionnairesServ
                 },
                 Description: {
                     required: true
-                }
+                },
             }
         };
 

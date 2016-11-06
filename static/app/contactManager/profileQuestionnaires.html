@@ -1,4 +1,4 @@
-<div class="container-fluid body-content" ng-init="initializeController()">
+<div ng-init="initializeController()">
     <div class="page-header">
         <div class="row">
             <div class="col-sm-8">
@@ -22,8 +22,8 @@
 		<div class="well" search-form search-condition-objects="searchConditionObjects" search-callback="getProfileQuestionnaires(param)"/>
 	</div>
     <div class="row">
-        <div class="col-md-6 margin-bottom-15">
-            <div class="table-responsive constrained">
+        <div class="col-xs-12 col-md-6 margin-bottom-15">
+            <div class="table-responsive">
                 <table class="table table-bordered table-striped" style="table-layout: fixed;">
                     <thead>
                         <tr>
@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <uib-pagination class="margin-bottom-15" total-items="TotalRows" ng-model="CurrentPage" items-per-page='PageSize'/>
+    <uib-pagination class="margin-bottom-15" total-items="TotalRows" ng-model="CurrentPage" items-per-page='PageSize' ng-show="TotalRows > PageSize"/>
     <div class="margin-bottom-15">
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             <div ng-bind-html="MessageBox"></div>
