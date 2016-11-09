@@ -14,6 +14,7 @@ require.config({
         'jquery': 'bower_components/jquery/dist/jquery.min',
         'jquery.validate': 'bower_components/jquery-validation/dist/jquery.validate.min',
         'jquery-validation-globalize': 'bower_components/jquery-validation-globalize/jquery.validate.globalize.min',
+        'jquery-ui': 'bower_components/jquery-ui/jquery-ui.min',
         'bootstrap': 'bower_components/bootstrap/dist/js/bootstrap.min',
         'blockUI': 'bower_components/angular-block-ui/dist/angular-block-ui.min',
         'ui.router': 'bower_components/angular-ui-router/release/angular-ui-router.min',
@@ -47,6 +48,7 @@ require.config({
     // Add angular modules that does not support AMD out of the box, put it in a shim
     shim: {
         'jquery.validate': { deps: ["jquery"] },
+        'jquery-ui': { deps: ["jquery"] },
         'angular': { deps: ["jquery"], 'exports': 'angular' },
         'angularAMD': ['angular'],
         'bootstrap': ['jquery'],
