@@ -16,7 +16,7 @@ import (
 type BusinessRelationType struct {
 	ID                string     `db:"id"`
 	Code              string     `db:"code"`
-	Name              string     `db:"name"`
+	Name              string     `db:"description"`
 	RecCreatedByID    string     `db:"rec_created_by"`
 	RecCreatedByUser  string     `db:"rec_created_by_user"`
 	RecCreated        *Timestamp `db:"rec_created_at"`

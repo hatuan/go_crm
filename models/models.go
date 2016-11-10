@@ -173,3 +173,49 @@ func (c *ErrorCollector) Error() (errs []string) {
 
 	return errs
 }
+
+type AutoCompleteDTO struct {
+	ID          string `db:"id"`
+	Code        string `db:"code"`
+	Description string `db:"description"`
+}
+
+func AutoComplete(object, term, orgID string) ([]AutoCompleteDTO, error) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	autoCompleteDTOs := []AutoCompleteDTO{}
+
+	orgs, err := GetOrgAndRootByID(orgID)
+	if err != nil && err == sql.ErrNoRows {
+		return []AutoCompleteDTO{}, nil
+	} else if err != nil {
+		log.Error(err)
+		return []AutoCompleteDTO{}, err
+	}
+
+	object = template.HTMLEscapeString(object)
+	term = term + ":*"
+	orgIDs := []string{}
+
+	for _, org := range orgs {
+		orgIDs = append(orgIDs, org.ID)
+	}
+	strSQL := fmt.Sprintf("SELECT id, code, description FROM %s WHERE id IN (SELECT id FROM textsearch WHERE textsearch_object=? AND organization_id IN (?)  AND client_id = ? AND textsearch_value @@ to_tsquery(?))", object)
+
+	query, args, err := sqlx.In(strSQL, object, orgIDs, orgs[0].ClientID, term)
+
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+	err = db.Select(&autoCompleteDTOs, query, args...)
+
+	if err != nil && err == sql.ErrNoRows {
+		return []AutoCompleteDTO{}, nil
+	} else if err != nil {
+		log.Error(err)
+		return []AutoCompleteDTO{}, err
+	}
+	return autoCompleteDTOs, nil
+}

@@ -4,6 +4,8 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
 	"net/http"
+
+	"github.com/gorilla/context"
 )
 
 func API_Check_Unique(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -47,5 +49,31 @@ func API_Check_Unique(w http.ResponseWriter, r *http.Request, next http.HandlerF
 		} else {
 			JSONResponse(w, nil, http.StatusOK)
 		}
+	}
+}
+
+func AutoComplete(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	requestUser := context.Get(r, "user").(models.User)
+
+	switch {
+	case r.Method == "GET":
+		user, err := models.GetUser(requestUser.ID)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		object := r.URL.Query().Get("object")
+		term := r.URL.Query().Get("term")
+
+		autoCompleteDTOs, err := models.AutoComplete(object, term, user.OrganizationID)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, err.Error(), http.StatusOK)
+			return
+		}
+
+		JSONResponse(w, autoCompleteDTOs, http.StatusOK)
 	}
 }

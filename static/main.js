@@ -44,6 +44,7 @@ require.config({
         'businessRelationTypesService': 'app/contactManager/businessRelationTypesService',
         'businessRelationSectorsService': 'app/contactManager/businessRelationSectorsService',
         'profileQuestionnairesService': 'app/contactManager/profileQuestionnairesService',
+        'autoComplete': 'app/common/directives/autoComplete'
     },
     // Add angular modules that does not support AMD out of the box, put it in a shim
     shim: {

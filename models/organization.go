@@ -84,3 +84,21 @@ func GetOrganizationByID(id string) (Organization, error) {
 	}
 	return organization, nil
 }
+
+// GetOrgAndRootByID returns the Organization that the given id and RootOrganization. If no Organization is found, an error is thrown.
+func GetOrgAndRootByID(id string) ([]Organization, error) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	organizations := []Organization{}
+	err = db.Select(&organizations, "SELECT * FROM organization WHERE id = $1 UNION SELECT * FROM organization WHERE code = '*' AND client_id = (SELECT client_id FROM organization WHERE id = $1)", id)
+	if err == sql.ErrNoRows {
+		return organizations, ErrOrganizationNotFound
+	} else if err != nil {
+		return organizations, err
+	}
+	return organizations, nil
+}
