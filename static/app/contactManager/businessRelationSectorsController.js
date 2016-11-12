@@ -31,8 +31,8 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.Search', 'businessR
                 Value: ""
             },
             {
-                ID: "business_relation_sector.name",
-                Name: "Name",
+                ID: "business_relation_sector.description",
+                Name: "Description",
                 Type: "FREE", //CODE, FREE, DATE
                 ValueIn: "",
                 Value: ""

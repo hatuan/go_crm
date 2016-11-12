@@ -3,7 +3,7 @@
  */
 "use strict";
 
-define(['angularAMD', 'ajaxService', 'alertsService', 'profileQuestionnairesService'], function (angularAMD, $) {
+define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService'], function (angularAMD, $) {
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
 
     var profileQuestionnaireMaintenanceController = function ($scope, $rootScope, $state, $window, moment, alertsService, profileQuestionnairesService, $stateParams, Constants) {

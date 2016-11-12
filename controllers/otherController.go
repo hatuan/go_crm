@@ -70,7 +70,7 @@ func AutoComplete(w http.ResponseWriter, r *http.Request, next http.HandlerFunc)
 		autoCompleteDTOs, err := models.AutoComplete(object, term, user.OrganizationID)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, err.Error(), http.StatusOK)
+			JSONResponse(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 

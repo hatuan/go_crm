@@ -29,14 +29,14 @@
                         <tr>
                             <th style="text-align: center; width: 15px; min-width: 15px;"></th>
                             <th class="col-md-1">Code</th>
-                            <th class="col-md-2">Name</th>
+                            <th class="col-md-2">Description</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr ng-repeat="businessRelationType in (FilteredItems = (BusinessRelationTypes|limitTo: PageSize: (CurrentPage - 1) * PageSize))">
                             <td style="text-align: center;" ng-click="toggleSelection(businessRelationType.ID)"><input type="checkbox" id="{{businessRelationType.ID}}" value="{{businessRelationType.ID}}" ng-checked="Selection.indexOf(businessRelationType.ID) > -1"/></td>
                             <td><a ui-sref="businessRelationTypeMaintenance({id: '{{businessRelationType.ID}}'})">{{businessRelationType.Code}}</a</td>
-                            <td><div ng-bind="businessRelationType.Name"></div></td>
+                            <td><div ng-bind="businessRelationType.Description"></div></td>
                         </tr>
                     </tbody>
                 </table>

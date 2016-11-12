@@ -21,7 +21,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'businessRelationSectorsSe
             if (businessRelationSectorID == "") {
                 $scope.ID = "";
                 $scope.Code = "";
-                $scope.Name = "";
+                $scope.Description = "";
                 $scope.Status = $scope.Constants.Status[1].Code;
                 $scope.ClientID = "";
                 $scope.OrganizationID = "";
@@ -41,7 +41,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'businessRelationSectorsSe
         $scope.businessRelationSectorCompleted = function (response, status) {
             $scope.ID = response.Data.BusinessRelationSector.ID;
             $scope.Code = response.Data.BusinessRelationSector.Code;
-            $scope.Name = response.Data.BusinessRelationSector.Name;
+            $scope.Description = response.Data.BusinessRelationSector.Description;
             $scope.Status = response.Data.BusinessRelationSector.Status;
             $scope.Version = response.Data.BusinessRelationSector.Version;
             $scope.ClientID = response.Data.BusinessRelationSector.ClientID;
@@ -80,7 +80,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'businessRelationSectorsSe
                         }
                     }
                 },
-                Name: {
+                Description: {
                     required: true
                 }
             }
@@ -116,7 +116,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'businessRelationSectorsSe
             var businessRelationSector = new Object();
             businessRelationSector.ID = $scope.ID;
             businessRelationSector.Code = $scope.Code;
-            businessRelationSector.Name = $scope.Name;
+            businessRelationSector.Description = $scope.Description;
             businessRelationSector.Version = $scope.Version;
 
             businessRelationSector.Status = $scope.Status;

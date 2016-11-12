@@ -1,25 +1,37 @@
 /**
  * Created by tuanha-01 on 2016-11-09.
  */
-define(['angularAMD'], function (angularAMD) {
+define(['angularAMD', 'jquery-ui'], function (angularAMD) {
 
     var injectParams = ['$http', '$interpolate', '$parse'];
+    
+    // Usage:
 
-    var autoCompleteDirective = function ($http, $interpolate, $parse) {
+    //  <input type="text" class="form-control" autocomplete ng-model="criteria.employeeNumber" autocomplete-object="business_relation_type" autocomplete-id="BusinessRelationTypeID" />
+
+    //  <input type="text" class="form-control" autocomplete url="/some/url" allow-custom-entry="true" ng-model="criteria.employeeNumber"  autocomplete-object="business_relation_type" autocomplete-id="BusinessRelationTypeID" autocomplete-value="Code" />
+
+    //  <input type="text" class="form-control" autocomplete url="/some/url" label="{{lastName}}, {{firstName}} ({{username}})" ng-model="criteria.employeeNumber"  autocomplete-object="business_relation_type" autocomplete-id="BusinessRelationTypeID" autocomplete-value="Code" />
+
+    var autocompleteDirective = function ($http, $interpolate, $parse) {
         return {
             restrict: 'A',
-            require: 'ngModel',
+            require: ['ngModel'],
             compile: function (elem, attrs) {
                 var
                     modelAccessor = $parse(attrs.ngModel),
                     labelExpression = "{{Code}} - {{Description}}",
-                    url = "/api/autocomplete";
+                    url = "/api/autocomplete",
+                    autocompleteObject = attrs.autocompleteObject,
+                    autocompleteValue = attrs.autocompleteValue,
+                    autocompleteIdAccessor = $parse(attrs.autocompleteId),
+                    autocompleteUrl = attrs.autocompleteUrl;
 
-                if (attrs.label) {
-                    labelExpression = attrs.label;
+                if (attrs.autocompleteLabel) {
+                    labelExpression = attrs.autocompleteLabel;
                 }
-                if (attrs.url) {
-                    url = attrs.url;
+                if (attrs.autocompleteUrl) {
+                    url = attrs.autocompleteUrl;
                 }
                 return function (scope, element, attrs) {
                     var
@@ -31,50 +43,52 @@ define(['angularAMD'], function (angularAMD) {
                             $http({
                                 url: url,
                                 method: 'GET',
-                                params: { object:attrs.object, term: request.term }
-                            })
-                                .success(function (data) {
+                                params: { object:autocompleteObject, term: request.term }
+                            }).success(function (data) {
                                     mappedItems = $.map(data, function (item) {
                                         var result = {};
                                         if (typeof item === 'string') {
                                             result.label = item;
                                             result.value = item;
+                                            result.id = "";
                                             return result;
                                         }
 
                                         result.label = $interpolate(labelExpression)(item);
 
-                                        if (attrs.value) {
-                                            result.value = item[attrs.value];
-                                        }
-                                        else {
-                                            result.value = item;
+                                        if (autocompleteValue) {
+                                            result.value = item[autocompleteValue];
+                                        } else {
+                                            result.value = item["Code"];
                                         }
 
+                                        if(item["ID"]) {
+                                            result.id = item["ID"];
+                                        } else {
+                                            result.id = "";
+                                        }        
                                         return result;
                                     });
 
                                     return response(mappedItems);
                                 });
                         },
-
                         select: function (event, ui) {
                             scope.$apply(function (scope) {
                                 modelAccessor.assign(scope, ui.item.value);
+                                autocompleteIdAccessor.assign(scope, ui.item.id);
                             });
 
                             if (attrs.onSelect) {
                                 scope.$apply(attrs.onSelect);
                             }
 
-                            element.val(ui.item.label);
+                            element.val(ui.item.value);
 
                             event.preventDefault();
                         },
-
                         change: function () {
-                            var
-                                currentValue = element.val(),
+                            var currentValue = element.val(),
                                 matchingItem = null;
 
                             if (allowCustomEntry) {
@@ -83,8 +97,8 @@ define(['angularAMD'], function (angularAMD) {
 
                             if (mappedItems) {
                                 for (var i = 0; i < mappedItems.length; i++) {
-                                    if (mappedItems[i].label === currentValue) {
-                                        matchingItem = mappedItems[i].label;
+                                    if (mappedItems[i].value === currentValue) {
+                                        matchingItem = mappedItems[i].value;
                                         break;
                                     }
                                 }
@@ -93,6 +107,7 @@ define(['angularAMD'], function (angularAMD) {
                             if (!matchingItem) {
                                 scope.$apply(function (scope) {
                                     modelAccessor.assign(scope, null);
+                                    autocompleteIdAccessor.assign(scope, null);
                                 });
                             }
                         }
@@ -102,7 +117,7 @@ define(['angularAMD'], function (angularAMD) {
         }
     };
 
-    autoCompleteDirective.$inject = injectParams;
+    autocompleteDirective.$inject = injectParams;
 
-    angularAMD.directive('autoComplete', autoCompleteDirective)
+    angularAMD.directive('autocomplete', autocompleteDirective)
 });

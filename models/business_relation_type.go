@@ -16,7 +16,7 @@ import (
 type BusinessRelationType struct {
 	ID                string     `db:"id"`
 	Code              string     `db:"code"`
-	Name              string     `db:"description"`
+	Description       string     `db:"description"`
 	RecCreatedByID    string     `db:"rec_created_by"`
 	RecCreatedByUser  string     `db:"rec_created_by_user"`
 	RecCreated        *Timestamp `db:"rec_created_at"`
@@ -33,8 +33,8 @@ type BusinessRelationType struct {
 // ErrBusinessRelationTypeNotFound indicates there was no BusinessRelationType
 var ErrBusinessRelationTypeNotFound = errors.New("BusinessRelationType not found")
 
-// ErrBusinessRelationTypeNameNotSpecified indicates there was no name given by the user
-var ErrBusinessRelationTypeNameNotSpecified = errors.New("BusinessRelationType's name not specified")
+// ErrBusinessRelationTypeDescriptionNotSpecified indicates there was no name given by the user
+var ErrBusinessRelationTypeDescriptionNotSpecified = errors.New("BusinessRelationType's description not specified")
 
 // ErrBusinessRelationTypeCodeNotSpecified indicates there was no code given by the user
 var ErrBusinessRelationTypeCodeNotSpecified = errors.New("BusinessRelationType's code not specified")
@@ -55,8 +55,8 @@ func (c *BusinessRelationType) Validate() map[string]InterfaceArray {
 	if c.Code == "" {
 		validationErrors["Code"] = append(validationErrors["Code"], ErrBusinessRelationTypeCodeNotSpecified.Error())
 	}
-	if c.Name == "" {
-		validationErrors["Name"] = append(validationErrors["Name"], ErrBusinessRelationTypeNameNotSpecified.Error())
+	if c.Description == "" {
+		validationErrors["Description"] = append(validationErrors["Description"], ErrBusinessRelationTypeDescriptionNotSpecified.Error())
 	}
 	if c.Code != "" {
 		db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
@@ -151,8 +151,8 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 	if businessRelationType.ID == "" {
 		businessRelationType.ID = uuid.NewV4().String()
 		businessRelationType.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_type(id, code, name, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :name, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
+		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_type(id, code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:id, :code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
 		_, err := stmt.Exec(businessRelationType)
 		if err != nil {
 			log.Error(err)
@@ -162,7 +162,7 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 	} else {
 		stmt, _ := db.PrepareNamed("UPDATE business_relation_type SET " +
 			"code = :code," +
-			"name = :name," +
+			"description = :description," +
 			"status = :status," +
 			"version = :version + 1," +
 			"rec_modified_by = :rec_modified_by, rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")

@@ -16,7 +16,7 @@ import (
 type BusinessRelationSector struct {
 	ID                string     `db:"id"`
 	Code              string     `db:"code"`
-	Name              string     `db:"description"`
+	Description       string     `db:"description"`
 	RecCreatedByID    string     `db:"rec_created_by"`
 	RecCreatedByUser  string     `db:"rec_created_by_user"`
 	RecCreated        *Timestamp `db:"rec_created_at"`
@@ -33,8 +33,8 @@ type BusinessRelationSector struct {
 // ErrBusinessRelationSectorNotFound indicates there was no BusinessRelationSector
 var ErrBusinessRelationSectorNotFound = errors.New("BusinessRelationSector not found")
 
-// ErrBusinessRelationSectorNameNotSpecified indicates there was no name given by the user
-var ErrBusinessRelationSectorNameNotSpecified = errors.New("BusinessRelationSector's name not specified")
+// ErrBusinessRelationSectorDescriptionNotSpecified indicates there was no name given by the user
+var ErrBusinessRelationSectorDescriptionNotSpecified = errors.New("BusinessRelationSector's description not specified")
 
 // ErrBusinessRelationSectorCodeNotSpecified indicates there was no code given by the user
 var ErrBusinessRelationSectorCodeNotSpecified = errors.New("BusinessRelationSector's code not specified")
@@ -55,8 +55,8 @@ func (c *BusinessRelationSector) Validate() map[string]InterfaceArray {
 	if c.Code == "" {
 		validationErrors["Code"] = append(validationErrors["Code"], ErrBusinessRelationSectorCodeNotSpecified.Error())
 	}
-	if c.Name == "" {
-		validationErrors["Name"] = append(validationErrors["Name"], ErrBusinessRelationSectorNameNotSpecified.Error())
+	if c.Description == "" {
+		validationErrors["Description"] = append(validationErrors["Description"], ErrBusinessRelationSectorDescriptionNotSpecified.Error())
 	}
 	if c.Code != "" {
 		db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
@@ -147,8 +147,8 @@ func PostBusinessRelationSector(businessRelationSector BusinessRelationSector) (
 	if businessRelationSector.ID == "" {
 		businessRelationSector.ID = uuid.NewV4().String()
 		businessRelationSector.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_sector(id, code, name, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :name, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
+		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_sector(id, code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:id, :code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
 		_, err := stmt.Exec(businessRelationSector)
 		if err != nil {
 			log.Error(err)
@@ -158,7 +158,7 @@ func PostBusinessRelationSector(businessRelationSector BusinessRelationSector) (
 	} else {
 		stmt, _ := db.PrepareNamed("UPDATE business_relation_sector SET " +
 			"code = :code," +
-			"name = :name," +
+			"description = :description," +
 			"status = :status," +
 			"version = :version + 1," +
 			"rec_modified_by = :rec_modified_by, rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
