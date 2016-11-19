@@ -32,30 +32,21 @@ CREATE OR REPLACE FUNCTION textsearch_udate_trigger()
 $BODY$
 DECLARE
 BEGIN
-	IF TG_TABLE_NAME = 'business_relation_type' THEN
-		IF (TG_OP = 'DELETE') THEN
-            DELETE FROM textsearch WHERE textsearch_object = TG_TABLE_NAME AND id = OLD.id;
-            RETURN OLD;
-        ELSE
-			INSERT INTO textsearch(id, textsearch_object, textsearch_value, client_id, organization_id) VALUES
-			(NEW.id, TG_TABLE_NAME, to_tsvector(coalesce(NEW.code, '') || ' ' || coalesce(NEW.description, '')), NEW.client_id, NEW.organization_id)
-            ON CONFLICT ON CONSTRAINT pk_textsearch DO UPDATE SET textsearch_value = to_tsvector(coalesce(NEW.code, '') || ' ' || coalesce(NEW.description, ''));   
-            
+    CASE TG_TABLE_NAME
+        WHEN 'xxxx' THEN
             RETURN NEW;
-        END IF;
-	END IF;
-    IF TG_TABLE_NAME = 'business_relation_sector' THEN
-		IF (TG_OP = 'DELETE') THEN
-            DELETE FROM textsearch WHERE textsearch_object = TG_TABLE_NAME AND id = OLD.id;
-            RETURN OLD;
         ELSE
-            INSERT INTO textsearch(id, textsearch_object, textsearch_value, client_id, organization_id) VALUES
-			(NEW.id, TG_TABLE_NAME, to_tsvector(coalesce(NEW.code, '') || ' ' || coalesce(NEW.description, '')), NEW.client_id, NEW.organization_id)
-            ON CONFLICT ON CONSTRAINT pk_textsearch DO UPDATE SET textsearch_value = to_tsvector(coalesce(NEW.code, '') || ' ' || coalesce(NEW.description, ''));
-
-            RETURN NEW;
-        END IF;
-	END IF;
+            IF (TG_OP = 'DELETE') THEN
+                DELETE FROM textsearch WHERE textsearch_object = TG_TABLE_NAME AND id = OLD.id;
+                RETURN OLD;
+            ELSE
+                INSERT INTO textsearch(id, textsearch_object, textsearch_value, client_id, organization_id) VALUES
+                (NEW.id, TG_TABLE_NAME, to_tsvector(coalesce(NEW.code, '') || ' ' || coalesce(NEW.description, '')), NEW.client_id, NEW.organization_id)
+                ON CONFLICT ON CONSTRAINT pk_textsearch DO UPDATE SET textsearch_value = to_tsvector(coalesce(NEW.code, '') || ' ' || coalesce(NEW.description, ''));   
+                
+                RETURN NEW;
+            END IF;    
+    END CASE;
 	RETURN NULL; -- result is ignored since this is an AFTER trigger
 END
 
