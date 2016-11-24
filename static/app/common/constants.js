@@ -10,6 +10,10 @@ define(['angular'], function (angular) {
             {Code : 0, Name: 'Deactive'},
             {Code : 1, Name: 'Active'},
         ],
+        BooleanTypes: [
+            {Code : 0, Name: ''},
+            {Code : 1, Name: 'Yes'},
+        ],
         Priorities:[
             {Code : 0, Name: 'Very Low'},
             {Code : 1, Name: 'Low'},
@@ -21,7 +25,10 @@ define(['angular'], function (angular) {
             {Code : 0, Name: ''},
             {Code : 1, Name: 'Companies'},
             {Code : 2, Name: 'People'},
-        ]
-
+        ],
+        ProfileQuestionaireLineTypes: [
+            {Code : 0, Name: 'Question'},
+            {Code : 1, Name: 'Answer'},
+        ],
     })
 });

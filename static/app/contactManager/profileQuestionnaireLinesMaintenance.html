@@ -50,51 +50,36 @@
                 </div>
             </div>
             <div class="grid-body">
-                <div class="rows" ng-show="ProfileQuestionnaireLines.length > 0">
-                    <div class="grid-row" ng-repeat="profileQuestionnaireLine in profileQuestionnaireLines track by $index" data-idx="$index">
+                <div class="rows" ng-show="ProfileQuestionnaireLines.length != 0">
+                    <div class="grid-row" ng-repeat="profileQuestionnaireLine in ProfileQuestionnaireLines track by $index" data-idx="{{$index + 1}}" ng-class="{'bold': profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code}" >
                         <div class="data-row row sortable-handle editable-row">
-                            <div class="row-index col col-xs-1">$index</div>
+                            <div class="row-index col col-xs-1">{{$index + 1}}</div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="Type[]" ng-model="profileQuestionnaireLine.Type">
-                                    <option value="0">Question</option>
-                                    <option value="1">Answers</option>
-                                </select>
+                                <select class="form-control" name="Type[]" id="Type_{{$index + 1}}" ng-model="profileQuestionnaireLine.Type" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineTypes"/>
                             </div>
                             <div class="col grid-static-col col-xs-3">
-                                <input type="text" class="form-control" name="Description[]" ng-model="profileQuestionnaireLine.Description"/>
+                                <input type="text" class="form-control" name="Description[]" id="Description_{{$index + 1}}" ng-model="profileQuestionnaireLine.Description"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="MultipleAnswers[]" ng-model="profileQuestionnaireLine.MultipleAnswers">
-                                    <option value="0"></option>
-                                    <option value="1">Yes</option>
-                                </select>
+                                <select class="form-control" name="MultipleAnswers[]" id="MultipleAnswers_{{$index + 1}}" ng-model="profileQuestionnaireLine.MultipleAnswers" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="Piority[]" ng-model="profileQuestionnaireLine.Piority">
-                                    <option value="0">Very Low</option>
-                                    <option value="1">Low</option>
-                                    <option value="2">Normal</option>
-                                    <option value="3">Hight</option>
-                                    <option value="4">Very Hight</option>
-                                </select>
+                                <select class="form-control" name="Priority[]" id="Priority_{{$index + 1}}" ng-model="profileQuestionnaireLine.Priority" ng-options="s.Code as s.Name for s in Constants.Priorities" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="AutoContactClassification[]" ng-model="profileQuestionnaireLine.AutoContactClassification">
-                                    <option value="0"></option>
-                                    <option value="1">Yes</option>
-                                </select>
+                                <select class="form-control" name="AutoContactClassification[]" id="AutoContactClassification_{{$index + 1}}" ng-model="profileQuestionnaireLine.AutoContactClassification" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" name="FromValue[]" ng-model="profileQuestionnaireLine.FromValue"/>
+                                <input type="text" class="form-control" name="FromValue[]" id="FromValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.FromValue" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" name="ToValue[]" ng-model="profileQuestionnaireLine.ToValue"/>
+                                <input type="text" class="form-control" name="ToValue[]" id="ToValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.ToValue" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" ng-model="profileQuestionnaireLine.NoContacts" disabled/>
+                                <input type="text" class="form-control" name="NoContacts[]" id="NoContacts_{{$index + 1}}" ng-model="profileQuestionnaireLine.NoContacts" disabled/>
                             </div>
                             <div class="col col-xs-1">
-                                <a class="close btn-open-row" ng-click="lineDetail(profileQuestionnaireLine)"><span class="fa fa-ellipsis-h"></span></a>
+                                <a class="close btn-open-row" ng-click="lineDetail(profileQuestionnaireLine)" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"><span class="fa fa-ellipsis-h"></span></a>
                             </div>
                         </div>
                     </div>
@@ -103,7 +88,7 @@
                 <div class="small form-clickable-section grid-footer">
                     <div class="row">
                         <div class="col-sm-6 grid-buttons">
-                            <button type="reset" class="btn btn-xs btn-default grid-add-row"> Add new row</button>
+                            <button type="reset" class="btn btn-xs btn-default grid-add-row" ng-click="addLines()"> Add new row</button>
                         </div>
                     </div>
                 </div>

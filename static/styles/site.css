@@ -358,6 +358,10 @@ small, .small {
     font-size: 85%;
 }
 
+.bold {
+  font-weight: bold;
+}
+
 .close {
     float: right;
     font-size: 21px;
