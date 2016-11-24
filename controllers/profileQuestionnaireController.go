@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/gorilla/context"
+	"github.com/gorilla/mux"
 )
 
 func API_ProfileQuestionnaires(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
@@ -104,5 +105,23 @@ func API_ProfileQuestionnaire_Id(w http.ResponseWriter, r *http.Request, next ht
 			return
 		}
 		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"ProfileQuestionnaire": profileQuestionnaire}, IsAuthenticated: true}, http.StatusOK)
+	}
+}
+
+func API_ProfileQuestionnaireLines_By_HeaderId(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+	switch {
+	case r.Method == "GET":
+		params := mux.Vars(r)
+		HeaderID := params["headerid"]
+		if HeaderID == "" {
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrIDParameterNotFound.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
+			return
+		}
+		profileQuestionnaireLines, tranInfo := models.GetProfileQuestionnaireLinesByHeaderID(HeaderID)
+		if !tranInfo.ReturnStatus {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
+			return
+		}
+		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"ProfileQuestionnaireLines": profileQuestionnaireLines}, IsAuthenticated: true}, http.StatusOK)
 	}
 }

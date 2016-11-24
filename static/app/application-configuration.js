@@ -3,8 +3,9 @@
  */
 "use strict";
 
-define(['angularAMD', 'jquery', 'jquery.validate', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'ngInfiniteScroll', 'myApp.navBar', 'myApp.Capitalize', 'myApp.Constants'], function (angularAMD) {
-    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'infinite-scroll', 'myApp.NavBar', 'myApp.Capitalize', 'myApp.Constants']);
+define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'ngInfiniteScroll', 'bootstrap-switch', 'angular-bootstrap-switch', 'myApp.navBar', 'myApp.Capitalize', 'myApp.Constants'], function (angularAMD) {
+    
+    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'infinite-scroll', 'frapontillo.bootstrap-switch', 'myApp.NavBar', 'myApp.Capitalize', 'myApp.Constants']);
 
     app.config(function (blockUIConfig) {
 

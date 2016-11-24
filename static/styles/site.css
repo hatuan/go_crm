@@ -226,3 +226,117 @@ html, body {
 .row+.row{
   margin-top: 10px;
 }
+
+
+.form-grid {
+    border: 1px solid #d1d8dd;
+    border-radius: 3px;
+}
+
+.grid-heading-row {
+    border-bottom: 1px solid #d1d8dd;
+    background-color: #F7FAFC;
+    font-weight: bold;
+}
+
+.control-label, .grid-heading-row {
+    color: #8D99A6;
+    font-size: 12px;
+}
+
+.grid-row:last-child {
+    border: none;
+}
+.grid-row {
+    padding: 0px 15px;
+    border-bottom: 1px solid #d1d8dd;
+    -webkit-transition: 0.2s;
+    -o-transition: 0.2s;
+    transition: 0.2s;
+}
+
+.form-grid .data-row.sortable-handle {
+    cursor: move;
+}
+
+.row {
+    margin-right: -15px;
+    margin-left: -15px;
+}
+
+.grid-row > .row .col {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+.row-index {
+    text-align: right;
+}
+.grid-static-col, .row-index {
+    height: 39px;
+    padding: 10px 15px;
+    max-height: 200px;
+    border-right: 1px solid #d1d8dd;
+    margin-bottom: -1px;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: middle;
+}
+
+.grid-body {
+    background-color: #fff;
+}
+
+.grid-body .editable-row .grid-static-col {
+    padding: 0 !important;
+}
+
+.grid-body .editable-row .checkbox {
+    margin: 0;
+    text-align: center;
+}
+
+.grid-body .editable-row textarea {
+    height: 38px !important;
+}
+
+.grid-body .editable-row .form-control {
+    border: 0 none;
+    border-radius: 0;
+    height: 38px;
+    padding-bottom: 9px;
+    padding-top: 8px;
+}
+
+.grid-body .editable-row .link-btn {
+    top: 8px;
+}
+
+.grid-body .editable-row .form-control:focus {
+    border-color: #8d99a6;
+    z-index: 2;
+}
+.grid-body .editable-row .has-error .form-control {
+    z-index: 1;
+}
+.grid-body .editable-row .has-error .form-control:focus {
+    border-color: #ff5858;
+}
+
+small, .small {
+    font-size: 85%;
+}
+
+.grid-footer {
+    background-color: #fff;
+}
+
+.form-clickable-section {
+    border-top: 1px solid #d1d8dd;
+    padding: 10px 15px;
+    background-color: #F7FAFC;
+}

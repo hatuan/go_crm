@@ -12,7 +12,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             $rootScope.applicationModule = "ProfileQuestionnaireMaintenance";
             $rootScope.alerts = [];
 
-            var profileQuestionnaireID = ($stateParams.id || "");
+            var profileQuestionnaireID = ($stateParams.ID || "");
             
             $scope.ID = profileQuestionnaireID;
                         
@@ -104,6 +104,14 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
                 $state.go('profileQuestionnaire', { profileQuestionnaireID : $scope.ID });
             }, 10);
         };
+
+        $scope.linesMaintenance = function(form){
+            if(form.validate()) {
+                setTimeout(function() {
+                    $state.go('profileQuestionnaireLinesMaintenance', { headerID : $scope.ID });
+                }, 10);
+            }
+        }
 
         $scope.profileQuestionnaireUpdateCompleted = function (response, status) {
             $scope.ID = response.Data.ProfileQuestionnaire.ID;

@@ -14,25 +14,25 @@ import (
 )
 
 type ProfileQuestionnaireHeader struct {
-	ID                       string                     `db:"id"`
-	Code                     string                     `db:"code"`
-	Description              string                     `db:"description"`
-	Priority                 int8                       `db:"priority"`
-	ContactType              int8                       `db:"contact_type"`
-	BusinessRelationTypeID   *string                    `db:"business_relation_type_id"`
-	BusinessRelationTypeCode string                     `db:"business_relation_type_code"`
-	ProfileQuestionnaireLine []ProfileQuestionnaireLine `db:"-" json:"omitempty"`
-	RecCreatedByID           string                     `db:"rec_created_by"`
-	RecCreatedByUser         string                     `db:"rec_created_by_user"`
-	RecCreated               *Timestamp                 `db:"rec_created_at"`
-	RecModifiedByID          string                     `db:"rec_modified_by"`
-	RecModifiedByUser        string                     `db:"rec_modified_by_user"`
-	RecModified              *Timestamp                 `db:"rec_modified_at"`
-	Status                   int8                       `db:"status"`
-	Version                  int16                      `db:"version"`
-	ClientID                 string                     `db:"client_id"`
-	OrganizationID           string                     `db:"organization_id"`
-	Organization             string                     `db:"organization"`
+	ID                        string                     `db:"id"`
+	Code                      string                     `db:"code"`
+	Description               string                     `db:"description"`
+	Priority                  int8                       `db:"priority"`
+	ContactType               int8                       `db:"contact_type"`
+	BusinessRelationTypeID    *string                    `db:"business_relation_type_id"`
+	BusinessRelationTypeCode  string                     `db:"business_relation_type_code"`
+	ProfileQuestionnaireLines []ProfileQuestionnaireLine `db:"-"`
+	RecCreatedByID            string                     `db:"rec_created_by"`
+	RecCreatedByUser          string                     `db:"rec_created_by_user"`
+	RecCreated                *Timestamp                 `db:"rec_created_at"`
+	RecModifiedByID           string                     `db:"rec_modified_by"`
+	RecModifiedByUser         string                     `db:"rec_modified_by_user"`
+	RecModified               *Timestamp                 `db:"rec_modified_at"`
+	Status                    int8                       `db:"status"`
+	Version                   int16                      `db:"version"`
+	ClientID                  string                     `db:"client_id"`
+	OrganizationID            string                     `db:"organization_id"`
+	Organization              string                     `db:"organization"`
 }
 
 // ErrProfileQuestionnaireHeaderNotFound indicates there was no ProfileQuestionnaireHeader
@@ -86,6 +86,19 @@ func (c *ProfileQuestionnaireHeader) Validate() map[string]InterfaceArray {
 	}
 
 	return validationErrors
+}
+
+func (c *ProfileQuestionnaireHeader) getDetails() []string {
+
+	profileQuestionnaireLines, transactionInformation := GetProfileQuestionnaireLinesByHeaderID(c.ID)
+
+	if !transactionInformation.ReturnStatus {
+		log.Error(transactionInformation.ReturnMessage)
+		return transactionInformation.ReturnMessage
+	}
+
+	c.ProfileQuestionnaireLines = profileQuestionnaireLines
+	return nil
 }
 
 func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]ProfileQuestionnaireHeader, TransactionalInformation) {
@@ -223,11 +236,14 @@ func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, T
 		"	WHERE profile_questionnaire_header.id=$1", id)
 
 	if err != nil && err == sql.ErrNoRows {
-		log.Error(err)
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireHeaderNotFound.Error()}}
 	} else if err != nil {
 		log.Error(err)
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	errs := profileQuestionnaireHeader.getDetails()
+	if errs != nil {
+		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: errs}
 	}
 	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
@@ -263,6 +279,10 @@ func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQues
 	} else if err != nil {
 		log.Error(err)
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	errs := profileQuestionnaireHeader.getDetails()
+	if errs != nil {
+		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: errs}
 	}
 	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }

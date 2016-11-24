@@ -1,0 +1,107 @@
+<div ng-init="initializeController()">
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-8">
+                <h2 class="pull-left">
+                    {{title}} Profile Questionnaire Lines Maintenance
+                </h2>
+            </div>
+            <div class="pull-right">
+                <div style="bottom: 15px; position: relative; top: 15px">
+                    <a class="btn btn-primary" id="save-button" ng-click="update(ProfileQuestionnaireMaintenanceForm)"><span class="fa fa-floppy-o fa-lg"></span>&nbsp; Save</a>
+                    <a class="btn btn-primary" id="cancel-button" ng-click="cancel()">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="form-grid">
+            <div class="grid-heading-row">
+                <div class="grid-row">
+                    <div class="data-row row sortable-handle">
+                        <div class="row-index col col-xs-1">&nbsp;</div>
+                        <div class="col grid-static-col ellipsis col-xs-1">Type</div>
+                        <div class="col grid-static-col ellipsis col-xs-3">
+                            Description
+                        </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            Multiple Answers
+                        </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            Priority
+                        </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            Auto Contact Classification
+                        </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            From Value
+                        </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            To Value
+                        </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            No Of Contacts
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-body">
+                <div class="rows">
+                    <div class="grid-row" data-idx="1">
+                        <div class="data-row row sortable-handle editable-row">
+                            <div class="row-index col col-xs-1">1</div>
+                            <div class="col grid-static-col col-xs-1">
+                                <select class="form-control" name="Type">
+                                    <option value="0">Question</option>
+                                    <option value="1">Answers</option>
+                                </select>
+                            </div>
+                            <div class="col grid-static-col col-xs-3">
+                                <input type="text" class="form-control" aria-label=""/>
+                            </div>
+                            <div class="col grid-static-col col-xs-1">
+                                <select class="form-control" name="MultipleAnswer">
+                                    <option value="0"></option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col grid-static-col col-xs-1">
+                                <select class="form-control" name="Piority">
+                                    <option value="0">Very Low</option>
+                                    <option value="1">Low</option>
+                                    <option value="2">Normal</option>
+                                    <option value="3">Hight</option>
+                                    <option value="4">Very Hight</option>
+                                </select>
+                            </div>
+                            <div class="col grid-static-col col-xs-1">
+                                <select class="form-control" name="AutoContactClassification">
+                                    <option value="0"></option>
+                                    <option value="1">Yes</option>
+                                </select>
+                            </div>
+                            <div class="col grid-static-col col-xs-1">
+                                <input type="text" class="form-control" />
+                            </div>
+                            <div class="col grid-static-col col-xs-1">
+                                <input type="text" class="form-control" />
+                            </div>
+                            <div class="col grid-static-col col-xs-1">
+                                <input type="text" class="form-control" disabled/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="grid-empty text-center hide">No Data</div>
+                <div class="small form-clickable-section grid-footer">
+                    <div class="row">
+                        <div class="col-sm-6 grid-buttons">
+                            <button type="reset" class="btn btn-xs btn-default grid-add-row"> Add new row</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

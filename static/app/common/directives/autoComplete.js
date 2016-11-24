@@ -22,7 +22,7 @@ define(['angularAMD', 'jquery-ui'], function (angularAMD) {
                     modelAccessor = $parse(attrs.ngModel),
                     labelExpression = "{{Code}} - {{Description}}",
                     url = "/api/autocomplete",
-                    autocompleteObject = attrs.autocompleteObject,
+                    uiAutocomplete = attrs.uiAutocomplete,
                     autocompleteValue = attrs.autocompleteValue,
                     autocompleteIdAccessor = $parse(attrs.autocompleteId),
                     autocompleteUrl = attrs.autocompleteUrl;
@@ -43,7 +43,7 @@ define(['angularAMD', 'jquery-ui'], function (angularAMD) {
                             $http({
                                 url: url,
                                 method: 'GET',
-                                params: { object:autocompleteObject, term: request.term }
+                                params: { object:uiAutocomplete, term: request.term }
                             }).success(function (data) {
                                     mappedItems = $.map(data, function (item) {
                                         var result = {};
@@ -119,5 +119,5 @@ define(['angularAMD', 'jquery-ui'], function (angularAMD) {
 
     autocompleteDirective.$inject = injectParams;
 
-    angularAMD.directive('autocomplete', autocompleteDirective)
+    angularAMD.directive('uiAutocomplete', autocompleteDirective)
 });

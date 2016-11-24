@@ -35,7 +35,7 @@
                     <tbody>
                         <tr ng-repeat="profileQuestionnaire in (FilteredItems = (ProfileQuestionnaires|limitTo: PageSize: (CurrentPage - 1) * PageSize))">
                             <td style="text-align: center;" ng-click="toggleSelection(profileQuestionnaire.ID)"><input type="checkbox" id="{{profileQuestionnaire.ID}}" value="{{profileQuestionnaire.ID}}" ng-checked="Selection.indexOf(profileQuestionnaire.ID) > -1"/></td>
-                            <td><a ui-sref="profileQuestionnaireMaintenance({id: '{{profileQuestionnaire.ID}}'})">{{profileQuestionnaire.Code}}</a</td>
+                            <td><a ui-sref="profileQuestionnaireMaintenance({ID: '{{profileQuestionnaire.ID}}'})">{{profileQuestionnaire.Code}}</a</td>
                             <td><div ng-bind="profileQuestionnaire.Description"></div></td>
                         </tr>
                     </tbody>

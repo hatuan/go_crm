@@ -16,6 +16,7 @@ import (
 
 type ProfileQuestionnaireLine struct {
 	ID                             string          `db:"id"`
+	Type                           int8            `db:"type"`
 	ProfileQuestionnaireHeaderID   string          `db:"profile_questionnaire_header_id"`
 	ProfileQuestionnaireHeaderCode string          `db:"profile_questionnaire_header_code"`
 	LineNo                         int64           `db:"line_no"`
@@ -84,7 +85,7 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 	sqlString := "SELECT profile_questionnaire_line.*, " +
 		" user_created.name as rec_created_by_user, " +
 		" user_modified.name as rec_modified_by_user, " +
-		" organization.name as organization" +
+		" organization.name as organization, " +
 		" profile_questionnaire_header.code as profile_questionnaire_header_code" +
 		" FROM profile_questionnaire_line " +
 		" INNER JOIN \"user\" as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
@@ -115,15 +116,46 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 	sqlString += sqlWhere + sqlOrder + sqlLimit
 	log.Debug(sqlString)
 
-	ProfileQuestionnaireLines := []ProfileQuestionnaireLine{}
-	err = db.Select(&ProfileQuestionnaireLines, sqlString, orgID)
+	profileQuestionnaireLines := []ProfileQuestionnaireLine{}
+	err = db.Select(&profileQuestionnaireLines, sqlString, orgID)
 
 	if err != nil {
 		log.Error(err)
-		return ProfileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 
-	return ProfileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(ProfileQuestionnaireLines)) + " records found"}}
+	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
+}
+
+func GetProfileQuestionnaireLinesByHeaderID(headerID string) ([]ProfileQuestionnaireLine, TransactionalInformation) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	sqlString := "SELECT profile_questionnaire_line.*, " +
+		" user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, " +
+		" organization.name as organization, " +
+		" profile_questionnaire_header.code as profile_questionnaire_header_code" +
+		" FROM profile_questionnaire_line " +
+		" INNER JOIN \"user\" as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
+		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
+		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
+		" WHERE profile_questionnaire_line.profile_questionnaire_header_id = $1"
+
+	profileQuestionnaireLines := []ProfileQuestionnaireLine{}
+	err = db.Select(&profileQuestionnaireLines, sqlString, headerID)
+
+	if err != nil {
+		log.Error(err)
+		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+
+	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
 }
 
 func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireLine) (ProfileQuestionnaireLine, TransactionalInformation) {

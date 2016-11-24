@@ -8,67 +8,74 @@
             </div>
             <div class="pull-right">
                 <div style="bottom: 15px; position: relative; top: 15px">
+                    <a class="btn btn-primary" id="questionaireLines-button" ng-click="linesMaintenance(ProfileQuestionnaireMaintenanceForm)"><span class="fa fa-list fa-lg"></span>&nbsp; Questionaire Lines</a>
                     <a class="btn btn-primary" id="save-button" ng-click="update(ProfileQuestionnaireMaintenanceForm)"><span class="fa fa-floppy-o fa-lg"></span>&nbsp; Save</a>
                     <a class="btn btn-primary" id="cancel-button" ng-click="cancel()">Cancel</a>
                 </div>
             </div>
         </div>
     </div>
-</div>
-<br/>
-<div class="container col-xs-12 col-sm-4">
-    <form ng-submit="update(ProfileQuestionnaireMaintenanceForm)" id="ProfileQuestionnaireMaintenanceForm1" name="ProfileQuestionnaireMaintenanceForm"
-        role="form" ng-validate="validationOptions">
-        <div class="form-group has-feedback">
-            <label class="control-label" for="Code">Code</label>
-            <input type="text" class="form-control" name="Code" id="Code" ng-model="Code" capitalize/>
-        </div>
 
-        <div class="form-group has-feedback">
-            <label class="control-label" for="Description">Description</label>
-                <input type="text" class="form-control" name="Description" id="Description" ng-model="Description" />
-        </div>
+    <div class="container-fluid">
+        <div class="row">
+            <form ng-submit="update(ProfileQuestionnaireMaintenanceForm)" id="ProfileQuestionnaireMaintenanceForm" name="ProfileQuestionnaireMaintenanceForm"
+                role="form" ng-validate="validationOptions">
+                <div class="col-xs-12 col-sm-4">
 
-        <div class="form-group has-feedback">
-            <label class="control-label" for="Status">Status</label>
-                <select class="form-control" id="Status" name="Status" ng-model="Status" ng-options="s.Code as s.Name for s in Constants.Status" />
-        </div>
-        <div class="form-group">
-            <label class="control-label" for="Created">Created</label>
-                <input type="text" class="form-control" name="Created" id="Created" value="{{RecCreatedByUser}} - {{RecCreated | amDateFormat:'DD/MM/YYYY HH:MM'}}"
-                    disabled/>
-        </div>
-        <div class="form-group">
-            <label class="ontrol-label" for="Modified">Modified</label>
-                <input type="text" class="form-control" name="Modified" id="Modified" value="{{RecModifiedByUser}} - {{RecModified | amDateFormat:'DD/MM/YYYY HH:MM'}}"
-                    disabled/>
-            
-        </div>
-    </form>
-</div>
-<div class="container col-xs-12 col-sm-4">
-    <form ng-submit="update(ProfileQuestionnaireMaintenanceForm)" id="ProfileQuestionnaireMaintenanceForm2" name="ProfileQuestionnaireMaintenanceForm"
-        role="form" ng-validate="validationOptions">
-        <div class="form-group has-feedback">
-            <label class="control-label" for="ContactType">Contact Type</label>
-            <div class="">
-                <select class="form-control" id="ContactType" name="ContactType" ng-model="ContactType" ng-options="s.Code as s.Name for s in Constants.ContactTypes" />
-            </div>
-        </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="Code">Code</label>
+                        <input type="text" class="form-control" name="Code" id="Code" ng-model="Code" capitalize required/>
+                    </div>
 
-        <div class="form-group has-feedback">
-            <label class="control-label" for="BusinessRelationTypeCode">Business Relation Code</label>
-            <div class="">
-                <input type="text" class="form-control" name="BusinessRelationTypeCode" id="BusinessRelationTypeCode" autocomplete autocomplete-object="business_relation_type" autocomplete-id="BusinessRelationTypeID" ng-model="BusinessRelationTypeCode" />
-            </div>
-        </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="Description">Description</label>
+                        <input type="text" class="form-control" name="Description" id="Description" ng-model="Description" />
+                    </div>
 
-        <div class="form-group has-feedback">
-            <label class="control-label" for="Priority">Priority</label>
-            <div class="">
-                <select class="form-control" id="Piority" name="Piority" ng-model="Priority" ng-options="s.Code as s.Name for s in Constants.Priorities" />
-            </div>
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="Status">Status</label>
+                        <select class="form-control" id="Status" name="Status" ng-model="Status" ng-options="s.Code as s.Name for s in Constants.Status"
+                        />
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="Created">Created</label>
+                        <input type="text" class="form-control" name="Created" id="Created" value="{{RecCreatedByUser}} - {{RecCreated | amDateFormat:'DD/MM/YYYY HH:MM'}}"
+                            disabled/>
+                    </div>
+                    <div class="form-group">
+                        <label class="ontrol-label" for="Modified">Modified</label>
+                        <input type="text" class="form-control" name="Modified" id="Modified" value="{{RecModifiedByUser}} - {{RecModified | amDateFormat:'DD/MM/YYYY HH:MM'}}"
+                            disabled/>
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-4">
+
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="ContactType">Contact Type</label>
+                        <div class="">
+                            <select class="form-control" id="ContactType" name="ContactType" ng-model="ContactType" ng-options="s.Code as s.Name for s in Constants.ContactTypes"
+                            />
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="BusinessRelationTypeCode">Business Relation Code</label>
+                        <div class="">
+                            <input type="text" class="form-control" name="BusinessRelationTypeCode" id="BusinessRelationTypeCode" capitalize ui-autocomplete="business_relation_type"
+                                autocomplete-id="BusinessRelationTypeID" ng-model="BusinessRelationTypeCode" />
+                        </div>
+                    </div>
+
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="Priority">Priority</label>
+                        <div class="">
+                            <select class="form-control" id="Piority" name="Piority" ng-model="Priority" ng-options="s.Code as s.Name for s in Constants.Priorities"
+                            />
+                        </div>
+                    </div>
+
+                </div>
+            </form>
         </div>
-    </form>
-</div>
+    </div>
 </div>

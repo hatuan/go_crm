@@ -148,12 +148,29 @@ define(['angularAMD'], function (angularAMD) {
                     })
                 },
                 params: {
-                    id: null
+                    ID: null
                 },
                 resolve: {
                     redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
                 }
-            });
+            })
+            .state('profileQuestionnaireLinesMaintenance', {
+                url: "/profileQuestionnaireLinesMaintenance",
+                views: {
+                    "master": angularAMD.route({
+                        templateUrl: 'app/contactManager/profileQuestionnaireLinesMaintenance.html',
+                        controller: 'ProfileQuestionnaireLinesMaintenanceController',
+                        controllerUrl: 'app/contactManager/profileQuestionnaireLinesMaintenanceController',
+                    })
+                },
+                params: {
+                    headerID: null
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            ;
 
         function _skipIfAuthenticated($q, $state, $auth) {
             var defer = $q.defer();
