@@ -43,31 +43,34 @@
                         <div class="col grid-static-col ellipsis col-xs-1">
                             No Of Contacts
                         </div>
+                        <div class="col grid-static-col ellipsis col-xs-1">
+                            &nbsp;
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="grid-body">
-                <div class="rows">
-                    <div class="grid-row" data-idx="1">
+                <div class="rows" ng-show="ProfileQuestionnaireLines.length > 0">
+                    <div class="grid-row" ng-repeat="profileQuestionnaireLine in profileQuestionnaireLines track by $index" data-idx="$index">
                         <div class="data-row row sortable-handle editable-row">
-                            <div class="row-index col col-xs-1">1</div>
+                            <div class="row-index col col-xs-1">$index</div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="Type">
+                                <select class="form-control" name="Type[]" ng-model="profileQuestionnaireLine.Type">
                                     <option value="0">Question</option>
                                     <option value="1">Answers</option>
                                 </select>
                             </div>
                             <div class="col grid-static-col col-xs-3">
-                                <input type="text" class="form-control" aria-label=""/>
+                                <input type="text" class="form-control" name="Description[]" ng-model="profileQuestionnaireLine.Description"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="MultipleAnswer">
+                                <select class="form-control" name="MultipleAnswers[]" ng-model="profileQuestionnaireLine.MultipleAnswers">
                                     <option value="0"></option>
                                     <option value="1">Yes</option>
                                 </select>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="Piority">
+                                <select class="form-control" name="Piority[]" ng-model="profileQuestionnaireLine.Piority">
                                     <option value="0">Very Low</option>
                                     <option value="1">Low</option>
                                     <option value="2">Normal</option>
@@ -76,24 +79,27 @@
                                 </select>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="AutoContactClassification">
+                                <select class="form-control" name="AutoContactClassification[]" ng-model="profileQuestionnaireLine.AutoContactClassification">
                                     <option value="0"></option>
                                     <option value="1">Yes</option>
                                 </select>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" name="FromValue[]" ng-model="profileQuestionnaireLine.FromValue"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" />
+                                <input type="text" class="form-control" name="ToValue[]" ng-model="profileQuestionnaireLine.ToValue"/>
                             </div>
                             <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" disabled/>
+                                <input type="text" class="form-control" ng-model="profileQuestionnaireLine.NoContacts" disabled/>
+                            </div>
+                            <div class="col col-xs-1">
+                                <a class="close btn-open-row" ng-click="lineDetail(profileQuestionnaireLine)"><span class="fa fa-ellipsis-h"></span></a>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="grid-empty text-center hide">No Data</div>
+                <div class="grid-empty text-center" ng-show="ProfileQuestionnaireLines.length == 0">No Data</div>
                 <div class="small form-clickable-section grid-footer">
                     <div class="row">
                         <div class="col-sm-6 grid-buttons">

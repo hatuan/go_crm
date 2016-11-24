@@ -247,12 +247,18 @@ html, body {
 .grid-row:last-child {
     border: none;
 }
+
 .grid-row {
     padding: 0px 15px;
     border-bottom: 1px solid #d1d8dd;
     -webkit-transition: 0.2s;
     -o-transition: 0.2s;
     transition: 0.2s;
+}
+
+.grid-row:hover, .grid-row:focused {
+    background-color: #f5f5f5;
+    border-left: 5px solid #3572b0;
 }
 
 .form-grid .data-row.sortable-handle {
@@ -268,9 +274,11 @@ html, body {
     padding-left: 10px;
     padding-right: 10px;
 }
+
 .row-index {
     text-align: right;
 }
+
 .grid-static-col, .row-index {
     height: 39px;
     padding: 10px 15px;
@@ -327,8 +335,8 @@ html, body {
     border-color: #ff5858;
 }
 
-small, .small {
-    font-size: 85%;
+.grid-body .btn-open-row {
+    padding-top: 5px;
 }
 
 .grid-footer {
@@ -339,4 +347,28 @@ small, .small {
     border-top: 1px solid #d1d8dd;
     padding: 10px 15px;
     background-color: #F7FAFC;
+}
+
+.grid-empty, .list-loading {
+    padding: 10px 15px;
+    color: #d1d8dd;
+}
+
+small, .small {
+    font-size: 85%;
+}
+
+.close {
+    float: right;
+    font-size: 21px;
+    font-weight: bold;
+    line-height: 1;
+    color: #000;
+    text-shadow: 0 1px 0 #fff;
+    filter: alpha(opacity=20);
+    opacity: .2;
+}
+
+.text-center {
+    text-align: center;
 }
