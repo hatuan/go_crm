@@ -4,7 +4,7 @@
 "use strict";
 
 define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'ngInfiniteScroll', 'bootstrap-switch', 'angular-bootstrap-switch', 'myApp.navBar', 'myApp.Capitalize', 'myApp.Constants'], function (angularAMD) {
-    
+
     var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'infinite-scroll', 'frapontillo.bootstrap-switch', 'myApp.NavBar', 'myApp.Capitalize', 'myApp.Constants']);
 
     app.config(function (blockUIConfig) {
@@ -41,11 +41,27 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
 
     app.config(['$validatorProvider', function ($validatorProvider) {
         $validatorProvider.setDefaults({
+            highlight: function (element) {
+                $(element).closest('.form-group').addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element).closest('.form-group').removeClass('has-error');
+            },
             errorElement: 'span',
+            errorClass: 'has-block',
+            errorPlacement: function (error, element) {
+                return true;
+
+                //if (element.parent('.input-group').length) {
+                //    error.insertAfter(element.parent());
+                //} else {
+                //    error.insertAfter(element);
+                //}
+            },
             /* http://stackoverflow.com/questions/21813868/adding-jquery-validation-to-kendo-ui-elements */
             /* http://lukaszledochowski.blogspot.nl/2015/02/validation-using-aspnet-mvc-kendo-ui.html */
+            /* https://github.com/jpkleemans/angular-validate */
             ignore: []
-
         });
     }]);
 
@@ -151,7 +167,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
         });
     }]);
 
-    angular.isUndefinedOrNull = function(val) {
+    angular.isUndefinedOrNull = function (val) {
         return angular.isUndefined(val) || val === null;
     }
 

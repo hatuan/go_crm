@@ -159,7 +159,7 @@
     src: url('/assets/fonts/Roboto-ThinItalic-webfont.eot?#iefix') format('embedded-opentype'),
          url('/assets/fonts/Roboto-ThinItalic-webfont.woff') format('woff'),
          url('/assets/fonts/Roboto-ThinItalic-webfont.ttf') format('truetype'),
-         url('/assets/fonts/Roboto-ThinItalic-webfont.svg#RobotoThinItalic') format('svg'); (under the Apache Software License). 
+         url('/assets/fonts/Roboto-ThinItalic-webfont.svg#RobotoThinItalic') format('svg');
     font-weight: 200;
     font-style: italic;
 }

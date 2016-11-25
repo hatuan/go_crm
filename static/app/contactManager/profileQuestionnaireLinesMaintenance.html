@@ -8,7 +8,7 @@
             </div>
             <div class="pull-right">
                 <div style="bottom: 15px; position: relative; top: 15px">
-                    <a class="btn btn-primary" id="save-button" ng-click="update(ProfileQuestionnaireMaintenanceForm)"><span class="fa fa-floppy-o fa-lg"></span>&nbsp; Save</a>
+                    <a class="btn btn-primary" id="save-button" ng-click="update(ProfileQuestionnaireLinesMaintenanceForm)"><span class="fa fa-floppy-o fa-lg"></span>&nbsp; Save</a>
                     <a class="btn btn-primary" id="cancel-button" ng-click="cancel()">Cancel</a>
                 </div>
             </div>
@@ -51,38 +51,72 @@
             </div>
             <div class="grid-body">
                 <div class="rows" ng-show="ProfileQuestionnaireLines.length != 0">
-                    <div class="grid-row" ng-repeat="profileQuestionnaireLine in ProfileQuestionnaireLines track by $index" data-idx="{{$index + 1}}" ng-class="{'bold': profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code}" >
-                        <div class="data-row row sortable-handle editable-row">
-                            <div class="row-index col col-xs-1">{{$index + 1}}</div>
-                            <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="Type[]" id="Type_{{$index + 1}}" ng-model="profileQuestionnaireLine.Type" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineTypes"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-3">
-                                <input type="text" class="form-control" name="Description[]" id="Description_{{$index + 1}}" ng-model="profileQuestionnaireLine.Description"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="MultipleAnswers[]" id="MultipleAnswers_{{$index + 1}}" ng-model="profileQuestionnaireLine.MultipleAnswers" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="Priority[]" id="Priority_{{$index + 1}}" ng-model="profileQuestionnaireLine.Priority" ng-options="s.Code as s.Name for s in Constants.Priorities" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-1">
-                                <select class="form-control" name="AutoContactClassification[]" id="AutoContactClassification_{{$index + 1}}" ng-model="profileQuestionnaireLine.AutoContactClassification" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" name="FromValue[]" id="FromValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.FromValue" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" name="ToValue[]" id="ToValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.ToValue" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"/>
-                            </div>
-                            <div class="col grid-static-col col-xs-1">
-                                <input type="text" class="form-control" name="NoContacts[]" id="NoContacts_{{$index + 1}}" ng-model="profileQuestionnaireLine.NoContacts" disabled/>
-                            </div>
-                            <div class="col col-xs-1">
-                                <a class="close btn-open-row" ng-click="lineDetail(profileQuestionnaireLine)" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"><span class="fa fa-ellipsis-h"></span></a>
+                    <form ng-submit="update(ProfileQuestionnaireLinesMaintenanceForm)" id="ProfileQuestionnaireLinesMaintenanceForm" name="ProfileQuestionnaireLinesMaintenanceForm"
+                        role="form" ng-validate="validationOptions">
+                        <div class="grid-row" ng-repeat="profileQuestionnaireLine in ProfileQuestionnaireLines track by $index" data-idx="{{$index + 1}}"
+                            ng-class="{'bold': profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code}"
+                            ng-init="profileQuestionnaireLine.LineNo = $index + 1">
+                            <div class="data-row row sortable-handle editable-row">
+                                <div class="row-index col col-xs-1">{{$index + 1}}</div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <select class="form-control" name="Type[]" id="Type_{{$index + 1}}" ng-model="profileQuestionnaireLine.Type" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineTypes"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-3">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="Description[]" id="Description_{{$index + 1}}" ng-model="profileQuestionnaireLine.Description"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <select class="form-control" name="MultipleAnswers[]" id="MultipleAnswers_{{$index + 1}}" ng-model="profileQuestionnaireLine.MultipleAnswers"
+                                            ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <select class="form-control" name="Priority[]" id="Priority_{{$index + 1}}" ng-model="profileQuestionnaireLine.Priority"
+                                            ng-options="s.Code as s.Name for s in Constants.Priorities" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <select class="form-control" name="AutoContactClassification[]" id="AutoContactClassification_{{$index + 1}}" ng-model="profileQuestionnaireLine.AutoContactClassification"
+                                            ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="FromValue[]" id="FromValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.FromValue"
+                                            ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="ToValue[]" id="ToValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.ToValue"
+                                            ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="NoContacts[]" id="NoContacts_{{$index + 1}}" ng-model="profileQuestionnaireLine.NoContacts"
+                                            disabled/>
+                                    </div>
+                                </div>
+                                <div class="col col-xs-1">
+                                    <a class="close btn-open-row" ng-click="lineDetail(profileQuestionnaireLine)" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"><span class="fa fa-ellipsis-h"></span></a>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
                 <div class="grid-empty text-center" ng-show="ProfileQuestionnaireLines.length == 0">No Data</div>
                 <div class="small form-clickable-section grid-footer">

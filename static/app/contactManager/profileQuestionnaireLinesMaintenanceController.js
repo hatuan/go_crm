@@ -11,9 +11,9 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
         $scope.initializeController = function () {
             $rootScope.applicationModule = "ProfileQuestionnaireLinesMaintenance";
             $rootScope.alerts = [];
-            
+
             $scope.profileQuestionnaireHeaderID = ($stateParams.headerID || "");
-                        
+
             $scope.Constants = Constants;
 
             $scope.ProfileQuestionnaireLines = [];
@@ -36,54 +36,42 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
 
         $scope.validationOptions = {
             rules: {
-                Code: {
-                    required: true,
-                    "remote": {
-                        url: "api/check-unique",
-                        type: "post",
-                        //dataType: 'json', //dataType is json but don't have any effect. 
-                        data: {
-                            UserID : function() {
-                                return $rootScope.currentUser.ID
-                            }, 
-                            Table: "profile_questionnaire_header",
-                            RecID: function() { 
-                                return $scope.ID 
-                            }
-                        }
-                    }
-                },
-                Description: {
+                "Description[]": {
                     required: true
                 },
             }
         };
 
         $scope.update = function (form) {
-            if(form.validate()) {
-                
+            if (form.validate({
+                errorPlacement: function (error, element) {
+                    return true;
+                }
+            })) {
+
             }
         };
 
         $scope.cancel = function (form) {
-           setTimeout(function() {
-                $state.go('profileQuestionnaireMaintenance', { ID : $scope.profileQuestionnaireHeaderID });
+            setTimeout(function () {
+                $state.go('profileQuestionnaireMaintenance', { ID: $scope.profileQuestionnaireHeaderID });
             }, 10);
         };
-        
-        $scope.addLines = function(){
+
+        $scope.addLines = function () {
             var profileQuestionnaireLine = $scope.createProfileQuestionnaireLineObject();
-            $scope.ProfileQuestionnaireLines.push(profileQuestionnaireLine); 
+            $scope.ProfileQuestionnaireLines.push(profileQuestionnaireLine);
         }
 
-        $scope.lineDetail = function(profileQuestionnaireLine){
-             
+        $scope.lineDetail = function (profileQuestionnaireLine) {
+
         }
 
         $scope.createProfileQuestionnaireLineObject = function () {
             var profileQuestionnaireLine = new Object();
             profileQuestionnaireLine.ID = "";
             profileQuestionnaireLine.Type = $scope.Constants.ProfileQuestionaireLineTypes[0].Code;
+            profileQuestionnaireLine.ProfileQuestionnaireHeaderID = $scope.profileQuestionnaireHeaderID;
             profileQuestionnaireLine.Description = "";
             profileQuestionnaireLine.Priority = $scope.Constants.Priorities[2].Code;
             profileQuestionnaireLine.MultipleAnswers = $scope.Constants.BooleanTypes[0].Code;

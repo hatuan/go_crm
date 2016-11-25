@@ -105,6 +105,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             }, 10);
         };
 
+        //go to Profile Questionnaire Lines Maintenance
         $scope.linesMaintenance = function(form){
             if(form.validate()) {
                 setTimeout(function() {
