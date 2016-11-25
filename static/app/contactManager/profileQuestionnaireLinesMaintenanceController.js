@@ -26,7 +26,13 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
         $scope.getProfileQuestionnaireLinesCompleted = function (response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
 
-            $scope.ProfileQuestionnaireLines = response.Data.ProfileQuestionnaireLines;
+            var profileQuestionnaireLines = response.Data.ProfileQuestionnaireLines;
+            for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
+                profileQuestionnaireLines[i].RecCreated = new moment.unix(profileQuestionnaireLines[i].RecCreated).toDate();
+                profileQuestionnaireLines[i].RecModified = new moment.unix(profileQuestionnaireLines[i].RecModified).toDate();
+            }
+
+            $scope.ProfileQuestionnaireLines = profileQuestionnaireLines;
             $scope.TotalRows = response.TotalRows;
         };
 
@@ -48,9 +54,30 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
                     return true;
                 }
             })) {
+                var profileQuestionnaire = new Object();
+                profileQuestionnaire.HeaderID = $scope.profileQuestionnaireHeaderID
 
+                var profileQuestionnaireLines = $scope.ProfileQuestionnaireLines;
+                for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
+                    profileQuestionnaireLines[i].RecCreated = new moment(profileQuestionnaireLines[i].RecCreated).unix();
+                    profileQuestionnaireLines[i].RecModified = new moment(profileQuestionnaireLines[i].RecModified).unix();
+                }
+
+                profileQuestionnairesService.updateProfileQuestionnaireLines(profileQuestionnaire, profileQuestionnaireLines, $scope.profileQuestionnaireLinesUpdateCompleted, $scope.profileQuestionnaireLinesUpdateError)
             }
         };
+
+        $scope.profileQuestionnaireLinesUpdateCompleted = function (response, status) {
+            alertsService.RenderSuccessMessage(response.ReturnMessage);
+            
+            setTimeout(function() {
+                $state.go('profileQuestionnaireMaintenance', { ID: $scope.profileQuestionnaireHeaderID });
+            }, 1000);
+        };
+
+        $scope.profileQuestionnaireLinesUpdateError = function (response, status) {
+            alertsService.RenderErrorMessage(response.Error);
+        }
 
         $scope.cancel = function (form) {
             setTimeout(function () {
@@ -83,8 +110,8 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             profileQuestionnaireLine.EndingDateFormula = "";
             profileQuestionnaireLine.ClassificationMethod = 0;
             profileQuestionnaireLine.SortingMethod = 0;
-            profileQuestionnaireLine.FromValue = "";
-            profileQuestionnaireLine.ToValue = "";
+            profileQuestionnaireLine.FromValue = 0;
+            profileQuestionnaireLine.ToValue = 0;
 
             profileQuestionnaireLine.Status = $scope.Constants.Status[1].Code;
             profileQuestionnaireLine.ClientID = "";

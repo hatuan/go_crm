@@ -91,7 +91,8 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 		" INNER JOIN \"user\" as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
 		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
-		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id "
+		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
+		" ORDER BY profile_questionnaire_line.line_no"
 
 	sqlWhere := " WHERE profile_questionnaire_line.organization_id = $1"
 	if len(searchCondition) > 0 {
@@ -145,7 +146,8 @@ func GetProfileQuestionnaireLinesByHeaderID(headerID string) ([]ProfileQuestionn
 		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
 		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
-		" WHERE profile_questionnaire_line.profile_questionnaire_header_id = $1"
+		" WHERE profile_questionnaire_line.profile_questionnaire_header_id = $1" +
+		" ORDER BY profile_questionnaire_line.line_no"
 
 	profileQuestionnaireLines := []ProfileQuestionnaireLine{}
 	err = db.Select(&profileQuestionnaireLines, sqlString, headerID)
@@ -173,12 +175,12 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 	if profileQuestionnaireLine.ID == "" {
 		profileQuestionnaireLine.ID = uuid.NewV4().String()
 		profileQuestionnaireLine.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO profile_questionnaire_line(id, profile_questionnaire_header_id, line_no," +
+		stmt, _ := db.PrepareNamed("INSERT INTO profile_questionnaire_line(id, type, profile_questionnaire_header_id, line_no," +
 			" description, multiple_answers, auto_contact_classification, priority," +
 			" customer_class_field, vendor_class_field, contact_class_field," +
 			" starting_date_formula, ending_date_formula, classification_method, sorting_method, from_value, to_value," +
 			" rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :profile_questionnaire_header_id, :line_no," +
+			" VALUES (:id, :type, :profile_questionnaire_header_id, :line_no," +
 			" :description, :multiple_answers, :auto_contact_classification, :priority," +
 			" :customer_class_field, :vendor_class_field, :contact_class_field," +
 			" :starting_date_formula, :ending_date_formula, :classification_method, :sorting_method, :from_value, :to_value, " +
@@ -191,25 +193,26 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 
 	} else {
 		stmt, _ := db.PrepareNamed("UPDATE profile_questionnaire_line SET " +
-			"code = :code," +
-			"profile_questionnaire_header_id = :profile_questionnaire_header_id," +
-			"decription = :decription," +
-			"multiple_answers = :multiple_answers," +
-			"auto_contact_classification = :auto_contact_classification," +
-			"priority = :priority," +
-			"customer_class_field = :customer_class_field," +
-			"vendor_class_field = :vendor_class_field," +
-			"contact_class_field = :contact_class_field," +
-			"starting_date_formula = :starting_date_formula, " +
-			"ending_date_formula = :ending_date_formula, " +
-			"classification_method = :classification_method, " +
-			"sorting_method = :sorting_method, " +
-			"from_value = :from_value, " +
-			"to_value = :to_value, " +
-			"status = :status," +
-			"version = :version + 1," +
-			"rec_modified_by = :rec_modified_by," +
-			"rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
+			" type = :type, " +
+			" code = :code, " +
+			" profile_questionnaire_header_id = :profile_questionnaire_header_id, " +
+			" decription = :decription, " +
+			" multiple_answers = :multiple_answers, " +
+			" auto_contact_classification = :auto_contact_classification, " +
+			" priority = :priority, " +
+			" customer_class_field = :customer_class_field, " +
+			" vendor_class_field = :vendor_class_field, " +
+			" contact_class_field = :contact_class_field, " +
+			" starting_date_formula = :starting_date_formula, " +
+			" ending_date_formula = :ending_date_formula, " +
+			" classification_method = :classification_method, " +
+			" sorting_method = :sorting_method, " +
+			" from_value = :from_value, " +
+			" to_value = :to_value, " +
+			" status = :status," +
+			" version = :version + 1," +
+			" rec_modified_by = :rec_modified_by," +
+			" rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
 
 		result, err := stmt.Exec(profileQuestionnaireLine)
 		if err != nil {
@@ -228,6 +231,72 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 
 	profileQuestionnaireLine, _ = GetProfileQuestionnaireLineByID(profileQuestionnaireLine.ID)
 	return profileQuestionnaireLine, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
+}
+
+func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []ProfileQuestionnaireLine) ([]ProfileQuestionnaireLine, TransactionalInformation) {
+	validationErrors := make(map[string]InterfaceArray)
+	for key, profileQuestionnaireLine := range profileQuestionnaireLines {
+		if lineValidateErrs := profileQuestionnaireLine.Validate(); len(lineValidateErrs) != 0 {
+			validationErrors["ProfileQuestionnaireLine"+strconv.Itoa(key)] = append(validationErrors["ProfileQuestionnaireLine"+strconv.Itoa(key)], lineValidateErrs)
+		}
+	}
+	if len(validationErrors) != 0 {
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineValidate.Error()}, ValidationErrors: validationErrors}
+	}
+
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+	tx := db.MustBegin()
+
+	for _, profileQuestionnaireLine := range profileQuestionnaireLines {
+		stmt, _ := tx.PrepareNamed("INSERT INTO profile_questionnaire_line AS profile(id, type, profile_questionnaire_header_id, line_no," +
+			" description, multiple_answers, auto_contact_classification, priority," +
+			" customer_class_field, vendor_class_field, contact_class_field," +
+			" starting_date_formula, ending_date_formula, classification_method, sorting_method, from_value, to_value," +
+			" rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:id, :type, :profile_questionnaire_header_id, :line_no," +
+			" :description, :multiple_answers, :auto_contact_classification, :priority," +
+			" :customer_class_field, :vendor_class_field, :contact_class_field," +
+			" :starting_date_formula, :ending_date_formula, :classification_method, :sorting_method, :from_value, :to_value, " +
+			" :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) " +
+			" ON CONFLICT ON CONSTRAINT pk_profile_questionnaire_line DO UPDATE SET " +
+			" type = EXCLUDED.type, " +
+			" profile_questionnaire_header_id = EXCLUDED.profile_questionnaire_header_id, " +
+			" description = EXCLUDED.description, " +
+			" multiple_answers = EXCLUDED.multiple_answers, " +
+			" auto_contact_classification = EXCLUDED.auto_contact_classification, " +
+			" priority = EXCLUDED.priority, " +
+			" customer_class_field = EXCLUDED.customer_class_field, " +
+			" vendor_class_field = EXCLUDED.vendor_class_field, " +
+			" contact_class_field = EXCLUDED.contact_class_field, " +
+			" starting_date_formula = EXCLUDED.starting_date_formula, " +
+			" ending_date_formula = EXCLUDED.ending_date_formula, " +
+			" classification_method = EXCLUDED.classification_method, " +
+			" sorting_method = EXCLUDED.sorting_method, " +
+			" from_value = EXCLUDED.from_value, " +
+			" to_value = EXCLUDED.to_value, " +
+			" status = EXCLUDED.status, " +
+			" version = :version + 1, " +
+			" rec_modified_by = EXCLUDED.rec_modified_by, " +
+			" rec_modified_at = EXCLUDED.rec_modified_at WHERE profile.version = :version")
+
+		result := stmt.MustExec(profileQuestionnaireLine)
+
+		changes, _ := result.RowsAffected()
+
+		if changes == 0 {
+			tx.Rollback()
+			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineNotFound.Error()}}
+		}
+	}
+	tx.Commit()
+
+	profileQuestionnaireLines, _ = GetProfileQuestionnaireLinesByHeaderID(HeaderID)
+	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
 // GetProfileQuestionnaireLineByID returns the ProfileQuestionnaireLine that the given id corresponds to. If no ProfileQuestionnaireLine is found, an
