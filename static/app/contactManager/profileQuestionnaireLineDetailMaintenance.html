@@ -1,32 +1,87 @@
-<div ng-init="initializeController()">
-    <div class="modal-header">
-        <h3 class="modal-title" id="modal-title">{{ProfileQuestionnaireLine.Description}} - Profile Questionnaire Line Detail</h3>
-    </div>
-    <div class="modal-body" id="modal-body">
-        <form id="ProfileQuestionnaireLineDetailMaintenanceForm" name="ProfileQuestionnaireLineDetailMaintenanceForm"
+<div class="modal-header">
+    <h3 class="modal-title" id="modal-title">{{ProfileQuestionnaireLine.Description}} - Profile Questionnaire Line Detail</h3>
+</div>
+<div class="modal-body row" id="modal-body">
+    <div class="col-xs-12">
+        <form class="form-horizontal" id="ProfileQuestionnaireLineDetailMaintenanceForm" name="ProfileQuestionnaireLineDetailMaintenanceForm"
             role="form" ng-validate="validationOptions">
-            <div class="col-xs-12 col-sm-4">
-
-                <div class="form-group has-feedback">
-                    <label class="control-label" for="Description">Description</label>
-                    <input type="text" class="form-control" name="Description" id="Description" ng-model="ProfileQuestionnaireLine.Description" required/>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="Description">Description</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="Description" id="Description" ng-model="ProfileQuestionnaireLine.Description"
+                        required/>
                 </div>
+            </div>
 
-                <div class="form-group has-feedback">
-                    <label class="control-label" for="MultipleAnswers">MultipleAnswers</label>
-                    <select class="form-control" id="MultipleAnswers" name="MultipleAnswers" ng-model="ProfileQuestionnaireLine.MultipleAnswers" ng-options="s.Code as s.Name for s in Constants.BooleanTypes"
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="MultipleAnswers">Multiple Answers</label>
+                <div class="col-xs-6">
+                    <select class="form-control" id="MultipleAnswers" name="MultipleAnswers" ng-model="ProfileQuestionnaireLine.MultipleAnswers"
+                        ng-options="s.Code as s.Name for s in Constants.BooleanTypes" />
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="AutoContactClassification">Auto Contact Classification</label>
+                <div class="col-xs-6">
+                    <select class="form-control" id="AutoContactClassification" name="AutoContactClassification" ng-model="ProfileQuestionnaireLine.AutoContactClassification"
+                        ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-change="autoContactClassificationChange()"
                     />
                 </div>
-                <div class="form-group has-feedback">
-                    <label class="control-label" for="AutoContactClassification">AutoContactClassification</label>
-                    <select class="form-control" id="AutoContactClassification" name="AutoContactClassification" ng-model="ProfileQuestionnaireLine.AutoContactClassification" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-change="autoContactClassificationChange" />
-
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="CustomerClassField">Customer Class. Field</label>
+                <div class="col-xs-6">
+                    <select class="form-control" id="CustomerClassField" name="CustomerClassField" ng-model="ProfileQuestionnaireLine.CustomerClassField"
+                    />
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="VendorClassField">Vendor Class. Field</label>
+                <div class="col-xs-6">
+                    <select class="form-control" id="VendorClassField" name="VendorClassField" ng-model="ProfileQuestionnaireLine.VendorClassField"
+                    />
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="ContactClassField">Contact Class Field</label>
+                <div class="col-xs-6">
+                        <select class="form-control col-xs-4" id="ContactClassField" name="ContactClassField" ng-model="ProfileQuestionnaireLine.ContactClassField"/>
+                </div>
+                <div class="col-xs-1" style="padding-left:0px">
+                    <button type="button" class="btn btn-default btn-sm">Points</button>
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="StartingDateFormula">Starting Date Formula</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="StartingDateFormula" id="StartingDateFormula" ng-model="ProfileQuestionnaireLine.StartingDateFormula"
+                    />
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="EndingDateFormula">Ending Date Formula</label>
+                <div class="col-xs-6">
+                    <input type="text" class="form-control" name="EndingDateFormula" id="EndingDateFormula" ng-model="ProfileQuestionnaireLine.EndingDateFormula"
+                    />
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="ClassificationMethod">Classification Method</label>
+                <div class="col-xs-6">
+                    <select class="form-control" id="ClassificationMethod" name="ClassificationMethod" ng-model="ProfileQuestionnaireLine.ClassificationMethod"
+                    />
+                </div>
+            </div>
+            <div class="form-group has-feedback">
+                <label class="control-label col-xs-4" for="SortingMethod">Sorting Method</label>
+                <div class="col-xs-6">
+                    <select class="form-control" id="SortingMethod" name="SortingMethod" ng-model="ProfileQuestionnaireLine.SortingMethod" />
                 </div>
             </div>
         </form>
     </div>
-    <div class="modal-footer">
-        <button class="btn btn-primary" type="button" ng-click="ok()">OK</button>
-        <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
-    </div>
+</div>
+<div class="modal-footer">
+    <button class="btn btn-primary" type="button" ng-click="ok(ProfileQuestionnaireLineDetailMaintenanceForm)">OK</button>
+    <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
 </div>

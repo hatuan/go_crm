@@ -7,12 +7,8 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModalInstance', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants', 'profileQuestionnaireLine'];
 
     var profileQuestionnaireLineDetailMaintenanceController = function ($scope, $rootScope, $state, $window, moment, $uibModalInstance, alertsService, profileQuestionnairesService, $stateParams, Constants, profileQuestionnaireLine) {
-
-        $scope.initializeController = function () {
-            $scope.Constants = Constants;
-            $scope.ProfileQuestionnaireLine = profileQuestionnaireLine;
-
-        };
+        $scope.Constants = Constants;
+        $scope.ProfileQuestionnaireLine = profileQuestionnaireLine;
 
         $scope.validationOptions = {
             rules: {
@@ -22,8 +18,10 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             }
         };
 
-        $scope.ok = function () {
-            $uibModalInstance.close($scope.ProfileQuestionnaireLine);
+        $scope.ok = function (form) {
+            if(form.validate()) {
+                $uibModalInstance.close($scope.ProfileQuestionnaireLine);
+            }
         };
 
         $scope.cancel = function () {

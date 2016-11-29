@@ -3,7 +3,7 @@
  */
 "use strict";
 
-define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManager/profileQuestionnaireLineDetailMaintenanceController'], function (angularAMD, $) {
+define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManager/profileQuestionnaireLineDetailMaintenanceController'], function (angularAMD, $) {
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModal', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
 
     var profileQuestionnaireLinesMaintenanceController = function ($scope, $rootScope, $state, $window, moment, $uibModal, alertsService, profileQuestionnairesService, $stateParams, Constants) {
@@ -107,27 +107,36 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             var parentElem = parentSelector ?
                 angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
 
+                
             var modalInstance = $uibModal.open({
                 animation: true,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
                 templateUrl: 'app/contactManager/profileQuestionnaireLineDetailMaintenance.html',
                 controller: 'profileQuestionnaireLineDetailMaintenanceController',
-                appendTo: parentElem,
                 resolve: {
                     profileQuestionnaireLine: function () {
-                        return _profileQuestionnaireLine;
+                        var __profileQuestionnaireLine = $.extend({}, _profileQuestionnaireLine) ;
+                        return __profileQuestionnaireLine;
                     }
                 }
             });
-
-            modalInstance.result.then(function (profileQuestionnaireLine) {
-                _profileQuestionnaireLine = profileQuestionnaireLine;
+            modalInstance.rendered.then(function (result) {
+                $('.modal .modal-body').css('overflow-y', 'auto');
+                $('.modal .modal-body').css('max-height', $(window).height()*0.7);
+                $('.modal .modal-body').css('height', $(window).height()*0.7);
+                $('.modal .modal-body').css('margin-right', 0);
+            });
+            modalInstance.result.then(function (editProfileQuestionnaireLine) {
+                _profileQuestionnaireLine.Description = editProfileQuestionnaireLine.Description;
+                _profileQuestionnaireLine.MultipleAnswers = editProfileQuestionnaireLine.MultipleAnswers;
+                _profileQuestionnaireLine.AutoContactClassification = editProfileQuestionnaireLine.AutoContactClassification;
             }, function () {
                 //dismissed 
             })['finally'](function () {
                 modalInstance = undefined  // <--- This fixes
             });
+            
         }
 
         $scope.insertLine = function (_profileQuestionnaireLine) {
