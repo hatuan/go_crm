@@ -3,10 +3,10 @@
  */
 "use strict";
 
-define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService'], function (angularAMD, $) {
-    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
+define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManager/profileQuestionnaireLineDetailMaintenanceController'], function (angularAMD, $) {
+    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModal', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
 
-    var profileQuestionnaireLinesMaintenanceController = function ($scope, $rootScope, $state, $window, moment, alertsService, profileQuestionnairesService, $stateParams, Constants) {
+    var profileQuestionnaireLinesMaintenanceController = function ($scope, $rootScope, $state, $window, moment, $uibModal, alertsService, profileQuestionnairesService, $stateParams, Constants) {
 
         $scope.initializeController = function () {
             $rootScope.applicationModule = "ProfileQuestionnaireLinesMaintenance";
@@ -17,6 +17,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             $scope.Constants = Constants;
 
             $scope.ProfileQuestionnaireLines = [];
+            $scope.ProfileQuestionnaireLineDeletes = [];
 
             var getProfileQuestionnaireLines = new Object();
             getProfileQuestionnaireLines.HeaderID = $scope.profileQuestionnaireHeaderID
@@ -33,6 +34,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             }
 
             $scope.ProfileQuestionnaireLines = profileQuestionnaireLines;
+            $scope.ProfileQuestionnaireLineDeletes = [];
             $scope.TotalRows = response.TotalRows;
         };
 
@@ -45,6 +47,12 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
                 "Description[]": {
                     required: true
                 },
+                "FromValue[]": {
+                    number: true
+                },
+                "ToValue[]": {
+                    number: true
+                }
             }
         };
 
@@ -61,6 +69,11 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
                 for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
                     profileQuestionnaireLines[i].RecCreated = new moment(profileQuestionnaireLines[i].RecCreated).unix();
                     profileQuestionnaireLines[i].RecModified = new moment(profileQuestionnaireLines[i].RecModified).unix();
+
+                    if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].FromValue) || profileQuestionnaireLines[i].FromValue == "")
+                        profileQuestionnaireLines[i].FromValue = 0;
+                    if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].ToValue) || profileQuestionnaireLines[i].ToValue == "")
+                        profileQuestionnaireLines[i].ToValue = 0;
                 }
 
                 profileQuestionnairesService.updateProfileQuestionnaireLines(profileQuestionnaire, profileQuestionnaireLines, $scope.profileQuestionnaireLinesUpdateCompleted, $scope.profileQuestionnaireLinesUpdateError)
@@ -69,8 +82,8 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
 
         $scope.profileQuestionnaireLinesUpdateCompleted = function (response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
-            
-            setTimeout(function() {
+
+            setTimeout(function () {
                 $state.go('profileQuestionnaireMaintenance', { ID: $scope.profileQuestionnaireHeaderID });
             }, 1000);
         };
@@ -90,7 +103,38 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             $scope.ProfileQuestionnaireLines.push(profileQuestionnaireLine);
         }
 
-        $scope.lineDetail = function (profileQuestionnaireLine) {
+        $scope.detailLine = function (_profileQuestionnaireLine, parentSelector) {
+            var parentElem = parentSelector ?
+                angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
+
+            var modalInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'app/contactManager/profileQuestionnaireLineDetailMaintenance.html',
+                controller: 'profileQuestionnaireLineDetailMaintenanceController',
+                appendTo: parentElem,
+                resolve: {
+                    profileQuestionnaireLine: function () {
+                        return _profileQuestionnaireLine;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (profileQuestionnaireLine) {
+                _profileQuestionnaireLine = profileQuestionnaireLine;
+            }, function () {
+                //dismissed 
+            })['finally'](function () {
+                modalInstance = undefined  // <--- This fixes
+            });
+        }
+
+        $scope.insertLine = function (_profileQuestionnaireLine) {
+
+        }
+
+        $scope.removeLine = function (_profileQuestionnaireLine) {
 
         }
 
