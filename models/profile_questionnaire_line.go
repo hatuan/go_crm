@@ -235,10 +235,13 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 
 func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []ProfileQuestionnaireLine) ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	validationErrors := make(map[string]InterfaceArray)
+	_ids := []string{}
+
 	for key, profileQuestionnaireLine := range profileQuestionnaireLines {
 		if lineValidateErrs := profileQuestionnaireLine.Validate(); len(lineValidateErrs) != 0 {
 			validationErrors["ProfileQuestionnaireLine"+strconv.Itoa(key)] = append(validationErrors["ProfileQuestionnaireLine"+strconv.Itoa(key)], lineValidateErrs)
 		}
+		_ids = append(_ids, profileQuestionnaireLine.ID)
 	}
 	if len(validationErrors) != 0 {
 		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineValidate.Error()}, ValidationErrors: validationErrors}
@@ -266,6 +269,7 @@ func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []
 			" ON CONFLICT ON CONSTRAINT pk_profile_questionnaire_line DO UPDATE SET " +
 			" type = EXCLUDED.type, " +
 			" profile_questionnaire_header_id = EXCLUDED.profile_questionnaire_header_id, " +
+			" line_no = EXCLUDED.line_no, " +
 			" description = EXCLUDED.description, " +
 			" multiple_answers = EXCLUDED.multiple_answers, " +
 			" auto_contact_classification = EXCLUDED.auto_contact_classification, " +
@@ -293,6 +297,15 @@ func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []
 			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineNotFound.Error()}}
 		}
 	}
+
+	query, args, err := sqlx.In("DELETE FROM profile_questionnaire_line WHERE profile_questionnaire_header_id = ? AND id NOT IN (?)", HeaderID, _ids)
+	if err != nil {
+		tx.Rollback()
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+	_ = tx.MustExec(query, args...)
+
 	tx.Commit()
 
 	profileQuestionnaireLines, _ = GetProfileQuestionnaireLinesByHeaderID(HeaderID)

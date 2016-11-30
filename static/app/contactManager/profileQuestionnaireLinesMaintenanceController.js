@@ -147,12 +147,24 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             
         }
 
-        $scope.insertLine = function (_profileQuestionnaireLine) {
+        $scope.insertLine = function (_profileQuestionnaireLine, _index) {
+            var _insertProfileQuestionnaireLine = $scope.createProfileQuestionnaireLineObject();
+            _insertProfileQuestionnaireLine.LineNo = _index;
 
+            for(var _i = _index; _i <= $scope.ProfileQuestionnaireLines.length; _i++) {
+                $scope.ProfileQuestionnaireLines[_i - 1].LineNo = _i + 1;
+            }
+            $scope.ProfileQuestionnaireLines.splice(_index - 1, 0, _insertProfileQuestionnaireLine);
         }
 
-        $scope.removeLine = function (_profileQuestionnaireLine) {
+        $scope.removeLine = function (_profileQuestionnaireLine, _index) {
+            //TODO: Need check Profile Questionnaire Line is used before delete
 
+            for(var _i = _index + 1; _i <= $scope.ProfileQuestionnaireLines.length; _i++) {
+                $scope.ProfileQuestionnaireLines[_i - 1].LineNo = _i - 1;
+            }
+
+            $scope.ProfileQuestionnaireLines.splice(_index - 1, 1);
         }
 
         $scope.createProfileQuestionnaireLineObject = function () {

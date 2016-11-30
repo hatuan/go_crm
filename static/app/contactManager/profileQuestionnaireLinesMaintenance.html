@@ -118,9 +118,9 @@
                                         <a class="close btn-open-row" id="line-dropdown_{{$index}}" uib-dropdown-toggle><span class="fa fa-ellipsis-h"></span></a>
                                         <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="line-dropdown_{{$index}}">
                                             <li role="menuitem" ng-class="{'disabled': profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code}"><a ng-click="detailLine(profileQuestionnaireLine)">Detail</a></li>
-                                            <li role="menuitem"><a ng-click="insertLine(profileQuestionnaireLine)">Insert</a></li>
+                                            <li role="menuitem"><a ng-click="insertLine(profileQuestionnaireLine, $index + 1)">Insert</a></li>
                                             <li class="divider"></li>
-                                            <li role="menuitem"><a ng-click="removeLine(profileQuestionnaireLine)">Remove</a></li>
+                                            <li role="menuitem"><a ng-click="removeLine(profileQuestionnaireLine, $index + 1)">Remove</a></li>
                                         </ul>        
                                     </span>
                                 </div>
