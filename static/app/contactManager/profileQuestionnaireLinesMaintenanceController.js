@@ -131,6 +131,14 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                 _profileQuestionnaireLine.Description = editProfileQuestionnaireLine.Description;
                 _profileQuestionnaireLine.MultipleAnswers = editProfileQuestionnaireLine.MultipleAnswers;
                 _profileQuestionnaireLine.AutoContactClassification = editProfileQuestionnaireLine.AutoContactClassification;
+                _profileQuestionnaireLine.CustomerClassField = editProfileQuestionnaireLine.CustomerClassField;
+                _profileQuestionnaireLine.VendorClassField = editProfileQuestionnaireLine.VendorClassField;
+                _profileQuestionnaireLine.ContactClassField = editProfileQuestionnaireLine.ContactClassField;
+                _profileQuestionnaireLine.StartingDateFormula = editProfileQuestionnaireLine.StartingDateFormula;
+                _profileQuestionnaireLine.EndingDateFormula = editProfileQuestionnaireLine.EndingDateFormula;
+                _profileQuestionnaireLine.ClassificationMethod = editProfileQuestionnaireLine.ClassificationMethod;
+                _profileQuestionnaireLine.SortingMethod = editProfileQuestionnaireLine.SortingMethod;
+
             }, function () {
                 //dismissed 
             })['finally'](function () {
