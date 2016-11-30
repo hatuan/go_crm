@@ -43,7 +43,7 @@
             </div>
         </div>
     </div>
-    <uib-pagination class="margin-bottom-15" total-items="TotalRows" ng-model="CurrentPage" items-per-page='PageSize' ng-show="TotalRows > PageSize"/>
+    <ul uib-pagination class="margin-bottom-15" total-items="TotalRows" ng-model="CurrentPage" items-per-page='PageSize'></ul>
     <div class="margin-bottom-15">
         <alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">
             <div ng-bind-html="MessageBox"></div>
