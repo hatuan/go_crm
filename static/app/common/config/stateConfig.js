@@ -87,9 +87,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/businessRelationType",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/businessRelationTypes.html',
+                        templateUrl: 'app/contactManagement/businessRelationTypes.html',
                         controller: 'BusinessRelationTypesController',
-                        controllerUrl: 'app/contactManager/businessRelationTypesController',
+                        controllerUrl: 'app/contactManagement/businessRelationTypesController',
                     })
                 },
                 params: {
@@ -103,9 +103,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/businessRelationTypeMaintenance",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/businessRelationTypeMaintenance.html',
+                        templateUrl: 'app/contactManagement/businessRelationTypeMaintenance.html',
                         controller: 'BusinessRelationTypeMaintenanceController',
-                        controllerUrl: 'app/contactManager/businessRelationTypeMaintenanceController',
+                        controllerUrl: 'app/contactManagement/businessRelationTypeMaintenanceController',
                     })
                 },
                 params: {
@@ -119,9 +119,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/businessrelationsector",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/businessRelationSectors.html',
+                        templateUrl: 'app/contactManagement/businessRelationSectors.html',
                         controller: 'BusinessRelationSectorsController',
-                        controllerUrl: 'app/contactManager/businessRelationSectorsController',
+                        controllerUrl: 'app/contactManagement/businessRelationSectorsController',
                     })
                 },
                 resolve: {
@@ -132,9 +132,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/businessRelationSectorMaintenance",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/businessRelationSectorMaintenance.html',
+                        templateUrl: 'app/contactManagement/businessRelationSectorMaintenance.html',
                         controller: 'BusinessRelationSectorMaintenanceController',
-                        controllerUrl: 'app/contactManager/businessRelationSectorMaintenanceController',
+                        controllerUrl: 'app/contactManagement/businessRelationSectorMaintenanceController',
                     })
                 },
                 params: {
@@ -148,9 +148,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/profilequestionnaire",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/profileQuestionnaires.html',
+                        templateUrl: 'app/contactManagement/profileQuestionnaires.html',
                         controller: 'ProfileQuestionnairesController',
-                        controllerUrl: 'app/contactManager/profileQuestionnairesController',
+                        controllerUrl: 'app/contactManagement/profileQuestionnairesController',
                     })
                 },
                 resolve: {
@@ -161,9 +161,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/profileQuestionnaireMaintenance",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/profileQuestionnaireMaintenance.html',
+                        templateUrl: 'app/contactManagement/profileQuestionnaireMaintenance.html',
                         controller: 'ProfileQuestionnaireMaintenanceController',
-                        controllerUrl: 'app/contactManager/profileQuestionnaireMaintenanceController',
+                        controllerUrl: 'app/contactManagement/profileQuestionnaireMaintenanceController',
                     })
                 },
                 params: {
@@ -177,9 +177,9 @@ define(['angularAMD'], function (angularAMD) {
                 url: "/profileQuestionnaireLinesMaintenance",
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/contactManager/profileQuestionnaireLinesMaintenance.html',
+                        templateUrl: 'app/contactManagement/profileQuestionnaireLinesMaintenance.html',
                         controller: 'ProfileQuestionnaireLinesMaintenanceController',
-                        controllerUrl: 'app/contactManager/profileQuestionnaireLinesMaintenanceController',
+                        controllerUrl: 'app/contactManagement/profileQuestionnaireLinesMaintenanceController',
                     })
                 },
                 params: {

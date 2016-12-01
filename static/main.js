@@ -44,9 +44,9 @@ require.config({
         'myApp.navBar': 'app/main/navBarController',
         'organizationsService': 'app/organization/organizationsService',
         'usersService': 'app/user/usersService',
-        'businessRelationTypesService': 'app/contactManager/businessRelationTypesService',
-        'businessRelationSectorsService': 'app/contactManager/businessRelationSectorsService',
-        'profileQuestionnairesService': 'app/contactManager/profileQuestionnairesService',
+        'businessRelationTypesService': 'app/contactManagement/businessRelationTypesService',
+        'businessRelationSectorsService': 'app/contactManagement/businessRelationSectorsService',
+        'profileQuestionnairesService': 'app/contactManagement/profileQuestionnairesService',
         'myApp.autoComplete': 'app/common/directives/autoComplete'
     },
     // Add angular modules that does not support AMD out of the box, put it in a shim

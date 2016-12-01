@@ -3,7 +3,7 @@
  */
 "use strict";
 
-define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManager/profileQuestionnaireLineDetailMaintenanceController'], function (angularAMD, $) {
+define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManagement/profileQuestionnaireLineDetailMaintenanceController'], function (angularAMD, $) {
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModal', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
 
     var profileQuestionnaireLinesMaintenanceController = function ($scope, $rootScope, $state, $window, moment, $uibModal, alertsService, profileQuestionnairesService, $stateParams, Constants) {
@@ -112,7 +112,7 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                 animation: true,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
-                templateUrl: 'app/contactManager/profileQuestionnaireLineDetailMaintenance.html',
+                templateUrl: 'app/contactManagement/profileQuestionnaireLineDetailMaintenance.html',
                 controller: 'profileQuestionnaireLineDetailMaintenanceController',
                 resolve: {
                     profileQuestionnaireLine: function () {
