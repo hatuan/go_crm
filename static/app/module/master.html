@@ -5,8 +5,8 @@
     <div class="row">
         <div class="col-sm-3 col-xs-2">
             <ul class="nav nav-pills nav-stacked">
-                <li title="Contact Manager" ng-class="{'active' : activeTab == 1}"><a href="" data-toggle="tab" ng-click="setActiveTab(1)"><b>1.</b> <span class="hidden-xs">Contact Manager </span></a></li>
-                <li title="System" ng-class="{'active' : activeTab == 2}"><a href="" data-toggle="tab" ng-click="setActiveTab(2)"><b>2.</b> <span class="hidden-xs">System</span></a></li>
+                <li title="Contact Management" ng-class="{'active' : activeTab == 1}"><a href="" data-toggle="tab" ng-click="activeTab = 1"><b>1.</b> <span class="hidden-xs">Contact Management </span></a></li>
+                <li title="System" ng-class="{'active' : activeTab == 2}"><a href="" data-toggle="tab" ng-click="activeTab = 2"><b>2.</b> <span class="hidden-xs">System</span></a></li>
             </ul>
         </div>
 
@@ -14,14 +14,14 @@
 
             <!-- Tab panes -->
             <div class="tab-content">
-                <div class="tab-pane" id="ContactManager" ng-class="{'tab-pane active': activeTab === 1, 'tab-pane' : activeTab !== 1}">
+                <div class="tab-pane" id="ContactManagement" class="tab-pane" ng-class="{'active': activeTab === 1}">
                     <div class="panel panel-default">
-                        <div class="panel-heading">Contact Manager</div>
+                        <div class="panel-heading">Contact Management</div>
                         <div class="panel-body">
                             <div class="row">
                                 <div class="col-md-4">
                                     <ul class="nav nav-pills nav-stacked">
-                                        <li><a ui-sref="setup({setupModule: 'contactManager'})">Setup</a></li>
+                                        <li><a ui-sref="setup({setupModule: 'contactManagement'})">Setup</a></li>
                                         <li><a ui-sref="businessRelationType">Business Relation Type</a></li>
                                         <li><a ui-sref="businessRelationSector">Business Relation Sector</a></li>
                                     </ul>
@@ -36,7 +36,7 @@
                     </div>
                 </div>
 
-                <div class="tab-pane" id="System" ng-class="{'tab-pane active': activeTab === 2, 'tab-pane' : activeTab !== 2}">
+                <div class="tab-pane" id="System" class="tab-pane" ng-class="{'active': activeTab === 2}">
                     <div class="panel panel-default">
                         <div class="panel-heading">System</div>
                         <div class="panel-body">

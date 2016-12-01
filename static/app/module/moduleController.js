@@ -7,16 +7,13 @@ define(['application-configuration'], function (app) {
 
     var injectParams = ['$scope', '$rootScope'];
 
-    var MasterController = function ($scope, $rootScope) {
+    var moduleController = function ($scope, $rootScope) {
         $scope.initializeController = function () {
             $scope.activeTab = 1;
         };
-        $scope.setActiveTab = function(tabToSet) {
-            $scope.activeTab = tabToSet;
-        };
     }
 
-    MasterController.$inject = injectParams;
+    moduleController.$inject = injectParams;
 
-    app.register.controller('MasterController', MasterController);
+    app.register.controller('ModuleController', moduleController);
 });

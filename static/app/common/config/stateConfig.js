@@ -48,13 +48,32 @@ define(['angularAMD'], function (angularAMD) {
                     redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
                 }
             })
-            .state('master', {
-                url: '/master',
+            .state('module', {
+                abstract: true,
                 views: {
                     "master": angularAMD.route({
-                        templateUrl: 'app/main/master.html',
-                        controller: 'MasterController',
-                        controllerUrl: 'app/main/masterController',
+                        templateUrl: 'app/module/module.html',
+                        controller: 'ModuleController',
+                        controllerUrl: 'app/module/moduleController'
+                    })
+                },
+            })
+            .state('module.master', {
+                url: '/module/master',
+                views: {
+                    "master@module": angularAMD.route({
+                        templateUrl: 'app/module/master.html',
+                    })
+                },
+                resolve: {
+                    redirectIfNotAuthenticated: _redirectIfNotAuthenticated,
+                }
+            })
+            .state('module.contactManagement', {
+                url: '/module/contactmanagement',
+                views: {
+                    "master@module": angularAMD.route({
+                        templateUrl: 'app/module/contactManagement.html',
                     })
                 },
                 resolve: {
