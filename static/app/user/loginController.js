@@ -30,19 +30,29 @@ define(['application-configuration', 'alertsService'], function (app) {
                     // user so that we can flatten the promise chain
                     return $http.get("/api/token-auth");
                     //Handle error
-                }, function (error) {
+                }, function (response) {
                     // Because we returned the $http.get request in the $auth.login
                     // promise, we can chain the next promise to the end here
+                    
+                    // Show Message Alert
+                    if (response.status == 422) {
+                        toastr.error('Please Enter Your Email And Password');
+                    }
+                    else if (response.status == 401) {
+                        toastr.error(response.data.ReturnMessage[0]);
+                    }
                 })
                 .then(function (response) {
-                    toastr.success('You have successfully signed in!');
+                    if (response !== undefined) {
+                        toastr.success('You have successfully signed in!');
 
-                    $rootScope.authenticated = true;
-                    $rootScope.currentUser = response.data;
+                        $rootScope.authenticated = true;
+                        $rootScope.currentUser = (response !== undefined) ? response.data : {};
 
-                    setTimeout(function () {
-                        $state.go('preference');
-                    }, 10);
+                        setTimeout(function () {
+                            $state.go('preference');
+                        }, 10);
+                    }
                 })
                 .catch(function (error) {
                     $scope.clearValidationErrors();
