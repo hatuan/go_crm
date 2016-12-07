@@ -30,6 +30,7 @@ type User struct {
 	ID                  string        `db:"id"`
 	Name                string        `db:"name"`
 	Password            string        `json:"-" db:"password"`
+	Salt                string        `json:"-" db:"salt"`
 	Comment             string        `db:"comment"`
 	FullName            string        `db:"full_name"`
 	PasswordAnswer      string        `json:"-" db:"password_answer"`

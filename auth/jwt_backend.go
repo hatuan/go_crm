@@ -5,6 +5,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"erpvietnam/crm/crypto"
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
 	"erpvietnam/crm/settings"
@@ -81,8 +82,17 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userName string) (string,
 	return tokenString, nil
 }
 
-func (backend *JWTAuthenticationBackend) Authenticate(username, password string) bool {
-	return true //TODO Fix check user & password
+func (backend *JWTAuthenticationBackend) Authenticate(userName, password string) bool {
+	user, err := models.GetUserByUsername(userName)
+	if err != nil && err != models.ErrUsernameTaken {
+		log.Error(err)
+		return false
+	}
+	hashPassword := crypto.HashPassword(password, user.Salt)
+	if hashPassword == user.Password {
+		return true
+	}
+	return false
 }
 
 func (backend *JWTAuthenticationBackend) getTokenRemainingValidity(timestamp interface{}) int {
