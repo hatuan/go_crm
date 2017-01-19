@@ -4,6 +4,7 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
 	"net/http"
+	"strconv"
 
 	"github.com/gorilla/context"
 )
@@ -30,10 +31,19 @@ func API_Check_Unique(w http.ResponseWriter, r *http.Request, next http.HandlerF
 			JSONResponse(w, err.Error(), http.StatusOK)
 			return
 		}
-		userID := r.Form.Get("UserID")
+		userID, err := strconv.ParseInt(r.Form.Get("UserID"), 10, 64)
+		if err != nil {
+			log.Error(err.Error())
+			JSONResponse(w, err.Error(), http.StatusOK)
+			return
+		}
+
 		code := r.Form.Get("Code")
 		table := r.Form.Get("Table")
-		recID := r.Form.Get("RecID")
+		recID, err := strconv.ParseInt(r.Form.Get("RecID"), 10, 64)
+		if err != nil {
+			recID = int64(0)
+		}
 
 		user, err := models.GetUser(userID)
 
@@ -57,7 +67,7 @@ func AutoComplete(w http.ResponseWriter, r *http.Request, next http.HandlerFunc)
 
 	switch {
 	case r.Method == "GET":
-		user, err := models.GetUser(requestUser.ID)
+		user, err := models.GetUser(*requestUser.ID)
 		if err != nil {
 			log.Error(err.Error())
 			JSONResponse(w, err.Error(), http.StatusBadRequest)

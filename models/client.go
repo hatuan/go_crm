@@ -8,7 +8,6 @@ import (
 
 	"erpvietnam/crm/settings"
 	"errors"
-	"time"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
@@ -16,23 +15,23 @@ import (
 
 // Client represents the client model
 type Client struct {
-	ClientID                    string          `db:"id"`
+	ClientID                    *int64          `db:"id" json:",string"`
 	Name                        string          `db:"name"`
 	Version                     int16           `db:"version"`
 	IsActivated                 bool            `db:"is_activated"`
-	RecCreatedBy                string          `db:"rec_created_by"`
-	RecCreatedByUser            *User           `db:"-"`
-	RecCreatedAt                *time.Time      `db:"rec_created_at"`
-	RecModifiedBy               string          `db:"rec_modified_by"`
-	RecModifiedByUser           *User           `db:"-"`
-	RecModifiedAt               *time.Time      `db:"rec_modified_at"`
+	RecCreatedBy                int64           `db:"rec_created_by" json:",string"`
+	RecCreatedByUser            string          `db:"-"`
+	RecCreatedAt                *Timestamp      `db:"rec_created_at"`
+	RecModifiedBy               int64           `db:"rec_modified_by" json:",string"`
+	RecModifiedByUser           string          `db:"-"`
+	RecModifiedAt               *Timestamp      `db:"rec_modified_at"`
 	CultureID                   string          `db:"culture_id"`
 	AmountDecimalPlaces         int16           `db:"amount_decimal_places"`
-	AmountRoundingPrecision     decimal.Decimal `db:"amount_rounding_precision"`
+	AmountRoundingPrecision     decimal.Decimal `db:"amount_rounding_precision" json:",string"`
 	UnitAmountDecimalPlaces     int16           `db:"unit-amount_decimal_places"`
-	UnitAmountRoundingPrecision decimal.Decimal `db:"unit-amount_rounding_precision"`
-	CurrencyLCYId               string          `db:"currency_lcy_id"`
-	CurrencyLCY                 *Currency       `db:"-"`
+	UnitAmountRoundingPrecision decimal.Decimal `db:"unit-amount_rounding_precision" json:",string"`
+	CurrencyLCYId               int64           `db:"currency_lcy_id" json:",string"`
+	CurrencyLCY                 Currency        `db:"-"`
 	Organizations               []Organization  `db:"-"`
 }
 
@@ -64,7 +63,7 @@ func (c *Client) GetOrganizations() ([]Organization, error) {
 	return organizations, nil
 }
 
-func (c *Client) Get(id string) error {
+func (c *Client) Get(id int64) error {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)

@@ -1,8 +1,8 @@
 package models
 
 type UserInRole struct {
-	RoleID string `json:"role_id"`
-	Role   Role   `json:"role"`
-	UserID string `json:"user_id"`
-	User   User   `json:"user"`
+	RoleID int64 `db:"role_id" json:",string"`
+	Role   Role  `db:"-"`
+	UserID int64 `db:"user_id" json:",string"`
+	User   User  `db:"-"`
 }

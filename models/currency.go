@@ -1,18 +1,18 @@
 package models
 
 type Currency struct {
-	ID                string       `json:"id"`
-	Code              string       `json:"code"`
-	Name              string       `json:"name"`
-	RecCreatedByID    string       `json:"rec_created_by_id"`
-	RecCreatedByUser  User         `json:"rec_created_by_user" db:"-"`
-	RecCreated        *Timestamp   `json:"rec_created"`
-	RecModifiedByID   string       `json:"rec_modified_by_id"`
-	RecModifiedByUser User         `json:"rec_modified_by_user" db:"-"`
-	RecModified       *Timestamp   `json:"rec_modified"`
-	Status            int8         `json:"status"`
-	Version           int16        `json:"version"`
-	ClientID          string       `json:"client_id"`
-	OrganizationID    string       `json:"organization_id"`
-	Organization      Organization `json:"organization" db:"-"`
+	ID                *int64     `db:"id" json:",string"`
+	Code              string     `db:"code"`
+	Name              string     `db:"name"`
+	RecCreatedByID    int64      `db:"rec_created_by_id" json:",string"`
+	RecCreatedByUser  string     `db:"rec_created_by_user"`
+	RecCreated        *Timestamp `db:"rec_created"`
+	RecModifiedByID   int64      `db:"rec_modified_by_id" json:",string"`
+	RecModifiedByUser string     `db:"rec_modified_by_user"`
+	RecModified       *Timestamp `db:"rec_modified"`
+	Status            int8       `db:"status"`
+	Version           int16      `db:"version"`
+	ClientID          int64      `db:"client_id" json:",string"`
+	OrganizationID    int64      `db:"organization_id" json:",string"`
+	Organization      string     `db:"organization"`
 }

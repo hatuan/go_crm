@@ -11,19 +11,18 @@ import (
 )
 
 type Organization struct {
-	ID                string     `db:"id"`
+	ID                *int64     `db:"id" json:",string"`
 	Code              string     `db:"code"`
 	Name              string     `db:"name"`
-	RecCreatedByID    string     `db:"rec_created_by"`
-	RecCreatedByUser  *User      `db:"-"`
+	RecCreatedByID    int64      `db:"rec_created_by" json:",string"`
+	RecCreatedByUser  string     `db:"-"`
 	RecCreatedAt      *Timestamp `db:"rec_created_at"`
-	RecModifiedByID   string     `db:"rec_modified_by"`
-	RecModifiedByUser *User      `db:"-"`
+	RecModifiedByID   int64      `db:"rec_modified_by" json:",string"`
+	RecModifiedByUser string     `db:"-"`
 	RecModifiedAt     *Timestamp `db:"rec_modified_at"`
 	Status            int8       `db:"status"`
 	Version           int16      `db:"version"`
-	ClientID          string     `db:"client_id"`
-	Client            Client     `db:"-"`
+	ClientID          int64      `db:"client_id" json:",string"`
 }
 
 var ErrRootOrganizationNotFound = errors.New("Error RootOrganization Not Found")
@@ -51,7 +50,7 @@ func (o Organization) GetRootOrganization() (Organization, error) {
 }
 
 // Get returns the Organization that the given id corresponds to. If no Organization is found, an error is thrown.
-func (o *Organization) Get(id string) error {
+func (o *Organization) Get(id int64) error {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)
@@ -68,7 +67,7 @@ func (o *Organization) Get(id string) error {
 }
 
 // GetOrganizationByID returns the Organization that the given id corresponds to. If no Organization is found, an error is thrown.
-func GetOrganizationByID(id string) (Organization, error) {
+func GetOrganizationByID(id int64) (Organization, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)
@@ -86,7 +85,7 @@ func GetOrganizationByID(id string) (Organization, error) {
 }
 
 // GetOrgAndRootByID returns the Organization that the given id and RootOrganization. If no Organization is found, an error is thrown.
-func GetOrgAndRootByID(id string) ([]Organization, error) {
+func GetOrgAndRootByID(id int64) ([]Organization, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)

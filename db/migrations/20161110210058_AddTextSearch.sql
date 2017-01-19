@@ -6,11 +6,11 @@ ALTER TABLE business_relation_type RENAME COLUMN name TO description;
 
 CREATE TABLE IF NOT EXISTS textsearch
 (
-    id uuid NOT NULL,
+    id bigint NOT NULL DEFAULT id_generator(),
     textsearch_object character varying NOT NULL,
     textsearch_value tsvector NOT NULL,
-    client_id uuid NOT NULL,
-    organization_id uuid NOT NULL,
+    client_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
     CONSTRAINT pk_textsearch PRIMARY KEY (id)
 );
 

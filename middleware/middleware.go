@@ -41,7 +41,7 @@ func RequireTokenAuthentication(rw http.ResponseWriter, req *http.Request, next 
 		userClaimBytes := []byte(token.Claims.(*auth.MyCustomClaims).User)
 		json.Unmarshal(userClaimBytes, &userClaim)
 
-		user, err := models.GetUser(userClaim.ID)
+		user, err := models.GetUser(*userClaim.ID)
 		if err != nil {
 			response := []byte("{\"ReturnMessage\":\"" + err.Error() + "\"}\"")
 			rw.Header().Set("Content-Type", "application/json")

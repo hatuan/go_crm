@@ -12,19 +12,16 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'businessRelationTypesServ
             $rootScope.applicationModule = "BusinessRelationTypeMaintenance";
             $rootScope.alerts = [];
 
-            var businessRelationTypeID = ($stateParams.id || "");
+            var businessRelationTypeID = ($stateParams.id || null);
             
             $scope.ID = businessRelationTypeID;
                         
             $scope.Constants = Constants;
 
-            if (businessRelationTypeID == "") {
-                $scope.ID = "";
+            if (businessRelationTypeID == null) {
                 $scope.Code = "";
                 $scope.Description = "";
                 $scope.Status = $scope.Constants.Status[1].Code;
-                $scope.ClientID = "";
-                $scope.OrganizationID = "";
                 $scope.RecCreatedByID = $rootScope.currentUser.ID;
                 $scope.RecCreatedByUser = $rootScope.currentUser.Name;
                 $scope.RecCreated = new Date();

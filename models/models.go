@@ -83,16 +83,13 @@ type ApplicationModelDTO struct {
 const EmptyUUID = "00000000-0000-0000-0000-000000000000"
 
 // CheckUnique check unique of Code on each client
-func CheckUnique(table, ID, code, orgID string) (bool, error) {
+func CheckUnique(table string, ID int64, code string, orgID int64) (bool, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)
 	}
 	defer db.Close()
 
-	if ID == "" {
-		ID = EmptyUUID
-	}
 	org, _ := GetOrganizationByID(orgID)
 
 	table = template.HTMLEscapeString(table)
@@ -180,7 +177,7 @@ type AutoCompleteDTO struct {
 	Description string `db:"description"`
 }
 
-func AutoComplete(object, term, orgID string) ([]AutoCompleteDTO, error) {
+func AutoComplete(object, term string, orgID int64) ([]AutoCompleteDTO, error) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Fatal(err)
@@ -199,10 +196,10 @@ func AutoComplete(object, term, orgID string) ([]AutoCompleteDTO, error) {
 
 	object = template.HTMLEscapeString(object)
 	term = term + ":*"
-	orgIDs := []string{}
+	orgIDs := []int64{}
 
 	for _, org := range orgs {
-		orgIDs = append(orgIDs, org.ID)
+		orgIDs = append(orgIDs, *org.ID)
 	}
 	strSQL := fmt.Sprintf("SELECT id, code, description FROM %s WHERE id IN (SELECT id FROM textsearch WHERE textsearch_object=? AND organization_id IN (?)  AND client_id = ? AND textsearch_value @@ to_tsquery(?))", object)
 

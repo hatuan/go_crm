@@ -9,11 +9,11 @@ CREATE TABLE IF NOT EXISTS business_relation_sector
     rec_modified_at timestamp with time zone NOT NULL,
     status smallint NOT NULL,
     version bigint NOT NULL,
-    id uuid NOT NULL,
-    rec_modified_by uuid NOT NULL,
-    rec_created_by uuid NOT NULL,
-    client_id uuid NOT NULL,
-    organization_id uuid NOT NULL,
+    id bigint NOT NULL DEFAULT id_generator(),
+    rec_modified_by bigint NOT NULL,
+    rec_created_by bigint NOT NULL,
+    client_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
     CONSTRAINT pk_business_relation_sector PRIMARY KEY (id)
 );
 
@@ -30,11 +30,11 @@ CREATE TABLE IF NOT EXISTS business_relation_type
     rec_modified_at timestamp with time zone NOT NULL,
     status smallint NOT NULL,
     version bigint NOT NULL,
-    id uuid NOT NULL,
-    rec_modified_by uuid NOT NULL,
-    rec_created_by uuid NOT NULL,
-    client_id uuid NOT NULL,
-    organization_id uuid NOT NULL,
+    id bigint NOT NULL DEFAULT id_generator(),
+    rec_modified_by bigint NOT NULL,
+    rec_created_by bigint NOT NULL,
+    client_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
     CONSTRAINT pk_business_relation_type PRIMARY KEY (id)
 );
 
@@ -45,20 +45,20 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_business_relation_type_code
 
 CREATE TABLE IF NOT EXISTS profile_questionnaire_header
 (
-    id uuid NOT NULL,
+    id bigint NOT NULL DEFAULT id_generator(),
     code character varying NOT NULL,
     description character varying NOT NULL,
     priority smallint NOT NULL,
     contact_type smallint NOT NULL,
-    business_relation_type_id uuid,
+    business_relation_type_id bigint,
     rec_created_at timestamp with time zone NOT NULL,
     rec_modified_at timestamp with time zone NOT NULL,
     status smallint NOT NULL,
     version bigint NOT NULL,
-    rec_modified_by uuid NOT NULL,
-    rec_created_by uuid NOT NULL,
-    client_id uuid NOT NULL,
-    organization_id uuid NOT NULL,
+    rec_modified_by bigint NOT NULL,
+    rec_created_by bigint NOT NULL,
+    client_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
     CONSTRAINT pk_profile_questionnaire_header PRIMARY KEY (id)
 );
 CREATE UNIQUE INDEX IF NOT EXISTS idx_profile_questionnaire_header_code
@@ -68,13 +68,14 @@ CREATE UNIQUE INDEX IF NOT EXISTS idx_profile_questionnaire_header_code
 
 CREATE TABLE IF NOT EXISTS profile_questionnaire_line
 (
-    id uuid NOT NULL,
-    profile_questionnaire_header_id uuid NOT NULL,
+    id bigint NOT NULL DEFAULT id_generator(),
+    profile_questionnaire_header_id bigint NOT NULL,
     line_no bigint NOT NULL,
     description character varying NOT NULL, 
     multiple_answers smallint NOT NULL,
     auto_contact_classification smallint NOT NULL,
     priority smallint NOT NULL,
+    type smallint NOT NULL,
     customer_class_field smallint NOT NULL,
     vendor_class_field smallint NOT NULL,
     contact_class_field smallint NOT NULL,
@@ -88,32 +89,28 @@ CREATE TABLE IF NOT EXISTS profile_questionnaire_line
     rec_modified_at timestamp with time zone NOT NULL,
     status smallint NOT NULL,
     version bigint NOT NULL,
-    rec_modified_by uuid NOT NULL,
-    rec_created_by uuid NOT NULL,
-    client_id uuid NOT NULL,
-    organization_id uuid NOT NULL,
+    rec_modified_by bigint NOT NULL,
+    rec_created_by bigint NOT NULL,
+    client_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
     CONSTRAINT pk_profile_questionnaire_line PRIMARY KEY (id)
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS idx_profile_questionnaire_line_no
-    ON profile_questionnaire_line USING btree
-    (profile_questionnaire_header_id, line_no)
-    TABLESPACE pg_default;
 
 CREATE TABLE IF NOT EXISTS rating
 (
-    id uuid NOT NULL,
-    profile_questionnaire_line_id uuid NOT NULL,
-    rating_profile_questionnaire_line_id uuid NOT NULL,
+    id bigint NOT NULL DEFAULT id_generator(),
+    profile_questionnaire_line_id bigint NOT NULL,
+    rating_profile_questionnaire_line_id bigint NOT NULL,
     points numeric(38, 20) NOT NULL, 
     rec_created_at timestamp with time zone NOT NULL,
     rec_modified_at timestamp with time zone NOT NULL,
     status smallint NOT NULL,
     version bigint NOT NULL,
-    rec_modified_by uuid NOT NULL,
-    rec_created_by uuid NOT NULL,
-    client_id uuid NOT NULL,
-    organization_id uuid NOT NULL,
+    rec_modified_by bigint NOT NULL,
+    rec_created_by bigint NOT NULL,
+    client_id bigint NOT NULL,
+    organization_id bigint NOT NULL,
     CONSTRAINT pk_rating PRIMARY KEY (id)    
 );
 

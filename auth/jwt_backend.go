@@ -53,7 +53,7 @@ func (backend *JWTAuthenticationBackend) GenerateToken(userName string) (string,
 	}
 
 	userClaim := models.UserClaim{
-		ID:             user.ID,
+		ID:             *user.ID,
 		Name:           user.Name,
 		Comment:        user.Comment,
 		FullName:       user.FullName,

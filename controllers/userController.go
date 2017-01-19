@@ -5,22 +5,22 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/models"
 	"net/http"
+	"strconv"
 
 	ctx "github.com/gorilla/context"
 	"github.com/gorilla/mux"
-	"github.com/satori/go.uuid"
 )
 
 //API_Users_Id Get & Update User
 func API_Users_Id(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	vars := mux.Vars(r)
-	id, err := uuid.FromString(vars["id"])
+	id, err := strconv.ParseInt(vars["id"], 10, 64)
 	if err != nil {
 		log.Error(err.Error())
 		JSONResponse(w, models.User{}, http.StatusInternalServerError)
 		return
 	}
-	u, err := models.GetUser(id.String())
+	u, err := models.GetUser(id)
 	if err != nil {
 		log.Error(err.Error())
 		JSONResponse(w, u, http.StatusInternalServerError)
@@ -41,7 +41,7 @@ func API_User_Preference(w http.ResponseWriter, r *http.Request, next http.Handl
 	switch {
 
 	case r.Method == "GET":
-		user, err := models.GetUser(requestUser.ID)
+		user, err := models.GetUser(*requestUser.ID)
 		if err != nil {
 			log.Error(err.Error())
 			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"Preference": models.PreferenceDTO{}}}, http.StatusInternalServerError)

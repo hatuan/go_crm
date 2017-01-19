@@ -10,28 +10,27 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
-	uuid "github.com/satori/go.uuid"
 )
 
 type ProfileQuestionnaireHeader struct {
-	ID                        string                     `db:"id"`
+	ID                        *int64                     `db:"id" json:",string"`
 	Code                      string                     `db:"code"`
 	Description               string                     `db:"description"`
 	Priority                  int8                       `db:"priority"`
 	ContactType               int8                       `db:"contact_type"`
-	BusinessRelationTypeID    *string                    `db:"business_relation_type_id"`
+	BusinessRelationTypeID    *int64                     `db:"business_relation_type_id"  json:",string"`
 	BusinessRelationTypeCode  string                     `db:"business_relation_type_code"`
 	ProfileQuestionnaireLines []ProfileQuestionnaireLine `db:"-"`
-	RecCreatedByID            string                     `db:"rec_created_by"`
+	RecCreatedByID            int64                      `db:"rec_created_by" json:",string"`
 	RecCreatedByUser          string                     `db:"rec_created_by_user"`
 	RecCreated                *Timestamp                 `db:"rec_created_at"`
-	RecModifiedByID           string                     `db:"rec_modified_by"`
+	RecModifiedByID           int64                      `db:"rec_modified_by" json:",string"`
 	RecModifiedByUser         string                     `db:"rec_modified_by_user"`
 	RecModified               *Timestamp                 `db:"rec_modified_at"`
 	Status                    int8                       `db:"status"`
 	Version                   int16                      `db:"version"`
-	ClientID                  string                     `db:"client_id"`
-	OrganizationID            string                     `db:"organization_id"`
+	ClientID                  int64                      `db:"client_id" json:",string"`
+	OrganizationID            int64                      `db:"organization_id" json:",string"`
 	Organization              string                     `db:"organization"`
 }
 
@@ -71,9 +70,9 @@ func (c *ProfileQuestionnaireHeader) Validate() map[string]InterfaceArray {
 		}
 		defer db.Close()
 		var otherID string
-		ID := EmptyUUID
-		if c.ID != "" {
-			ID = c.ID
+		ID := int64(0)
+		if c.ID != nil {
+			ID = *c.ID
 		}
 		err = db.Get(&otherID, "SELECT id FROM profile_questionnaire_header WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
 		if err != nil && err != sql.ErrNoRows {
@@ -90,7 +89,7 @@ func (c *ProfileQuestionnaireHeader) Validate() map[string]InterfaceArray {
 
 func (c *ProfileQuestionnaireHeader) getDetails() []string {
 
-	profileQuestionnaireLines, transactionInformation := GetProfileQuestionnaireLinesByHeaderID(c.ID)
+	profileQuestionnaireLines, transactionInformation := GetProfileQuestionnaireLinesByHeaderID(*c.ID)
 
 	if !transactionInformation.ReturnStatus {
 		log.Error(transactionInformation.ReturnMessage)
@@ -101,7 +100,7 @@ func (c *ProfileQuestionnaireHeader) getDetails() []string {
 	return nil
 }
 
-func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]ProfileQuestionnaireHeader, TransactionalInformation) {
+func GetProfileQuestionnaireHeaders(orgID int64, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]ProfileQuestionnaireHeader, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -115,8 +114,8 @@ func GetProfileQuestionnaireHeaders(orgID string, searchCondition string, infini
 		" organization.name as organization, " +
 		" COALESCE(business_relation_type.code, '') as business_relation_type_code" +
 		" FROM profile_questionnaire_header " +
-		" INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id " +
-		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id " +
+		" INNER JOIN user_profile as user_created ON profile_questionnaire_header.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id " +
 		" LEFT JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "
 
@@ -166,20 +165,21 @@ func PostProfileQuestionnaireHeader(profileQuestionnaireHeader ProfileQuestionna
 	}
 	defer db.Close()
 
-	if profileQuestionnaireHeader.ID == "" {
-		profileQuestionnaireHeader.ID = uuid.NewV4().String()
+	if profileQuestionnaireHeader.ID == nil {
 		profileQuestionnaireHeader.Version = 1
-		stmt, err := db.PrepareNamed("INSERT INTO profile_questionnaire_header(id, code, description, priority, contact_type, business_relation_type_id, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :description, :priority, :contact_type, :business_relation_type_id, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
+		stmt, err := db.PrepareNamed("INSERT INTO profile_questionnaire_header(code, description, priority, contact_type, business_relation_type_id, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:code, :description, :priority, :contact_type, :business_relation_type_id, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
 		if err != nil {
 			log.Error(err)
 			return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 		}
-
-		_, err = stmt.Exec(profileQuestionnaireHeader)
+		var id int64
+		err = stmt.Get(&id, profileQuestionnaireHeader)
 		if err != nil {
 			log.Error(err)
 			return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		} else {
+			profileQuestionnaireHeader.ID = &id
 		}
 
 	} else {
@@ -208,13 +208,13 @@ func PostProfileQuestionnaireHeader(profileQuestionnaireHeader ProfileQuestionna
 		}
 	}
 
-	profileQuestionnaireHeader, _ = GetProfileQuestionnaireHeaderByID(profileQuestionnaireHeader.ID)
+	profileQuestionnaireHeader, _ = GetProfileQuestionnaireHeaderByID(*profileQuestionnaireHeader.ID)
 	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
 // GetProfileQuestionnaireHeaderByID returns the ProfileQuestionnaireHeader that the given id corresponds to. If no ProfileQuestionnaireHeader is found, an
 // error is thrown.
-func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, TransactionalInformation) {
+func GetProfileQuestionnaireHeaderByID(id int64) (ProfileQuestionnaireHeader, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -229,8 +229,8 @@ func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, T
 		"organization.name as organization,"+
 		"COALESCE(business_relation_type.code, '') as business_relation_type_code"+
 		"	FROM profile_questionnaire_header "+
-		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id "+
 		"		LEFT JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
 		"	WHERE profile_questionnaire_header.id=$1", id)
@@ -250,7 +250,7 @@ func GetProfileQuestionnaireHeaderByID(id string) (ProfileQuestionnaireHeader, T
 
 // GetProfileQuestionnaireHeaderByCode returns the ProfileQuestionnaireHeader that the given id corresponds to.
 // If no ProfileQuestionnaireHeader is found, an error is thrown.
-func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQuestionnaireHeader, TransactionalInformation) {
+func GetProfileQuestionnaireHeaderByCode(code string, orgID int64) (ProfileQuestionnaireHeader, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -267,8 +267,8 @@ func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQues
 		"organization.name as organization"+
 		"COALESCE(business_relation_type.code, '') as business_relation_type_code"+
 		"	FROM profile_questionnaire_header "+
-		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON profile_questionnaire_header.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON profile_questionnaire_header.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON profile_questionnaire_header.organization_id = organization.id "+
 		"		LEFT JOIN business_relation_type as business_relation_type ON profile_questionnaire_header.business_relation_type_id = business_relation_type.id "+
 		"	WHERE profile_questionnaire_header.code=$1 and profile_questionnaire_header.client_id=$2", code, org.ClientID)
@@ -287,7 +287,7 @@ func GetProfileQuestionnaireHeaderByCode(code string, orgID string) (ProfileQues
 	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
-func DeleteProfileQuestionnaireHeaderById(orgID string, ids []string) TransactionalInformation {
+func DeleteProfileQuestionnaireHeaderById(orgID int64, ids []string) TransactionalInformation {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)

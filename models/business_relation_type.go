@@ -10,23 +10,22 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
-	uuid "github.com/satori/go.uuid"
 )
 
 type BusinessRelationType struct {
-	ID                string     `db:"id"`
+	ID                *int64     `db:"id" json:",string"`
 	Code              string     `db:"code"`
 	Description       string     `db:"description"`
-	RecCreatedByID    string     `db:"rec_created_by"`
+	RecCreatedByID    int64      `db:"rec_created_by" json:",string"`
 	RecCreatedByUser  string     `db:"rec_created_by_user"`
 	RecCreated        *Timestamp `db:"rec_created_at"`
-	RecModifiedByID   string     `db:"rec_modified_by"`
+	RecModifiedByID   int64      `db:"rec_modified_by" json:",string"`
 	RecModifiedByUser string     `db:"rec_modified_by_user"`
 	RecModified       *Timestamp `db:"rec_modified_at"`
 	Status            int8       `db:"status"`
 	Version           int16      `db:"version"`
-	ClientID          string     `db:"client_id"`
-	OrganizationID    string     `db:"organization_id"`
+	ClientID          int64      `db:"client_id" json:",string"`
+	OrganizationID    int64      `db:"organization_id" json:",string"`
 	Organization      string     `db:"organization"`
 }
 
@@ -66,9 +65,9 @@ func (c *BusinessRelationType) Validate() map[string]InterfaceArray {
 		}
 		defer db.Close()
 		var otherID string
-		ID := EmptyUUID
-		if c.ID != "" {
-			ID = c.ID
+		ID := int64(0)
+		if c.ID != nil {
+			ID = *c.ID
 		}
 		err = db.Get(&otherID, "SELECT id FROM business_relation_type WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
 		if err != nil && err != sql.ErrNoRows {
@@ -82,7 +81,7 @@ func (c *BusinessRelationType) Validate() map[string]InterfaceArray {
 	return validationErrors
 }
 
-func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]BusinessRelationType, TransactionalInformation) {
+func GetBusinessRelationTypes(orgID int64, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]BusinessRelationType, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -93,8 +92,8 @@ func GetBusinessRelationTypes(orgID string, searchCondition string, infiniteScro
 	sqlString := "SELECT business_relation_type.*, user_created.name as rec_created_by_user, " +
 		" user_modified.name as rec_modified_by_user, organization.name as organization" +
 		" FROM business_relation_type " +
-		" INNER JOIN \"user\" as user_created ON business_relation_type.rec_created_by = user_created.id " +
-		" INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id " +
+		" INNER JOIN user_profile as user_created ON business_relation_type.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON business_relation_type.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "
 
 	sqlWhere := " WHERE business_relation_type.organization_id = $1"
@@ -148,15 +147,17 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 	}
 	defer db.Close()
 
-	if businessRelationType.ID == "" {
-		businessRelationType.ID = uuid.NewV4().String()
+	if businessRelationType.ID == nil {
 		businessRelationType.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_type(id, code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
-		_, err := stmt.Exec(businessRelationType)
+		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_type(code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
+		id := int64(0)
+		err := stmt.Get(&id, businessRelationType)
 		if err != nil {
 			log.Error(err)
 			return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		} else {
+			businessRelationType.ID = &id
 		}
 
 	} else {
@@ -181,13 +182,13 @@ func PostBusinessRelationType(businessRelationType BusinessRelationType) (Busine
 			return BusinessRelationType{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrBusinessRelationTypeNotFound.Error()}}
 		}
 	}
-	businessRelationType, _ = GetBusinessRelationTypeByID(businessRelationType.ID)
+	businessRelationType, _ = GetBusinessRelationTypeByID(*businessRelationType.ID)
 	return businessRelationType, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
 // GetBusinessRelationTypeByID returns the BusinessRelationType that the given id corresponds to. If no BusinessRelationType is found, an
 // error is thrown.
-func GetBusinessRelationTypeByID(id string) (BusinessRelationType, TransactionalInformation) {
+func GetBusinessRelationTypeByID(id int64) (BusinessRelationType, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -201,8 +202,8 @@ func GetBusinessRelationTypeByID(id string) (BusinessRelationType, Transactional
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization"+
 		"	FROM business_relation_type "+
-		"		INNER JOIN \"user\" as user_created ON business_relation_type.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON business_relation_type.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "+
 		"	WHERE business_relation_type.id=$1", id)
 	if err != nil && err == sql.ErrNoRows {
@@ -216,7 +217,7 @@ func GetBusinessRelationTypeByID(id string) (BusinessRelationType, Transactional
 
 // GetBusinessRelationTypeByCode returns the BusinessRelationType that the given id corresponds to.
 // If no BusinessRelationType is found, an error is thrown.
-func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationType, TransactionalInformation) {
+func GetBusinessRelationTypeByCode(code string, orgID int64) (BusinessRelationType, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -232,8 +233,8 @@ func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationT
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization"+
 		"	FROM business_relation_type "+
-		"		INNER JOIN \"user\" as user_created ON business_relation_type.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON business_relation_type.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON business_relation_type.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON business_relation_type.organization_id = organization.id "+
 		"	WHERE business_relation_type.code=$1 and business_relation_type.client_id=$2", code, org.ClientID)
 
@@ -246,7 +247,7 @@ func GetBusinessRelationTypeByCode(code string, orgID string) (BusinessRelationT
 	return businessRelationType, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
-func DeleteBusinessRelationTypeById(orgID string, ids []string) TransactionalInformation {
+func DeleteBusinessRelationTypeById(orgID int64, ids []string) TransactionalInformation {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)

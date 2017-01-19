@@ -10,16 +10,15 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
-	uuid "github.com/satori/go.uuid"
 	"github.com/shopspring/decimal"
 )
 
 type ProfileQuestionnaireLine struct {
-	ID                             string          `db:"id"`
+	ID                             *int64          `db:"id" json:",string"`
 	Type                           int8            `db:"type"`
-	ProfileQuestionnaireHeaderID   string          `db:"profile_questionnaire_header_id"`
+	ProfileQuestionnaireHeaderID   int64           `db:"profile_questionnaire_header_id" json:",string"`
 	ProfileQuestionnaireHeaderCode string          `db:"profile_questionnaire_header_code"`
-	LineNo                         int64           `db:"line_no"`
+	LineNo                         int64           `db:"line_no" json:",string"`
 	Description                    string          `db:"description"`
 	MultipleAnswers                int8            `db:"multiple_answers"`
 	AutoContactClassification      int8            `db:"auto_contact_classification"`
@@ -31,18 +30,18 @@ type ProfileQuestionnaireLine struct {
 	EndingDateFormula              string          `db:"ending_date_formula"`
 	ClassificationMethod           int8            `db:"classification_method"`
 	SortingMethod                  int8            `db:"sorting_method"`
-	FromValue                      decimal.Decimal `db:"from_value"`
-	ToValue                        decimal.Decimal `db:"to_value"`
-	RecCreatedByID                 string          `db:"rec_created_by"`
+	FromValue                      decimal.Decimal `db:"from_value" json:",string"`
+	ToValue                        decimal.Decimal `db:"to_value" json:",string"`
+	RecCreatedByID                 int64           `db:"rec_created_by" json:",string"`
 	RecCreatedByUser               string          `db:"rec_created_by_user"`
 	RecCreated                     *Timestamp      `db:"rec_created_at"`
-	RecModifiedByID                string          `db:"rec_modified_by"`
+	RecModifiedByID                int64           `db:"rec_modified_by" json:",string"`
 	RecModifiedByUser              string          `db:"rec_modified_by_user"`
 	RecModified                    *Timestamp      `db:"rec_modified_at"`
 	Status                         int8            `db:"status"`
 	Version                        int16           `db:"version"`
-	ClientID                       string          `db:"client_id"`
-	OrganizationID                 string          `db:"organization_id"`
+	ClientID                       int64           `db:"client_id" json:",string"`
+	OrganizationID                 int64           `db:"organization_id" json:",string"`
 	Organization                   string          `db:"organization"`
 }
 
@@ -88,8 +87,8 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 		" organization.name as organization, " +
 		" profile_questionnaire_header.code as profile_questionnaire_header_code" +
 		" FROM profile_questionnaire_line " +
-		" INNER JOIN \"user\" as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
-		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
+		" INNER JOIN user_profile as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
 		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
 		" ORDER BY profile_questionnaire_line.line_no"
@@ -128,7 +127,7 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
 }
 
-func GetProfileQuestionnaireLinesByHeaderID(headerID string) ([]ProfileQuestionnaireLine, TransactionalInformation) {
+func GetProfileQuestionnaireLinesByHeaderID(headerID int64) ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -142,8 +141,8 @@ func GetProfileQuestionnaireLinesByHeaderID(headerID string) ([]ProfileQuestionn
 		" organization.name as organization, " +
 		" profile_questionnaire_header.code as profile_questionnaire_header_code" +
 		" FROM profile_questionnaire_line " +
-		" INNER JOIN \"user\" as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
-		" INNER JOIN \"user\" as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
+		" INNER JOIN user_profile as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
 		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
 		" WHERE profile_questionnaire_line.profile_questionnaire_header_id = $1" +
@@ -172,23 +171,25 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 	}
 	defer db.Close()
 
-	if profileQuestionnaireLine.ID == "" {
-		profileQuestionnaireLine.ID = uuid.NewV4().String()
+	if profileQuestionnaireLine.ID == nil {
 		profileQuestionnaireLine.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO profile_questionnaire_line(id, type, profile_questionnaire_header_id, line_no," +
+		stmt, _ := db.PrepareNamed("INSERT INTO profile_questionnaire_line(type, profile_questionnaire_header_id, line_no," +
 			" description, multiple_answers, auto_contact_classification, priority," +
 			" customer_class_field, vendor_class_field, contact_class_field," +
 			" starting_date_formula, ending_date_formula, classification_method, sorting_method, from_value, to_value," +
 			" rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :type, :profile_questionnaire_header_id, :line_no," +
+			" VALUES (:type, :profile_questionnaire_header_id, :line_no," +
 			" :description, :multiple_answers, :auto_contact_classification, :priority," +
 			" :customer_class_field, :vendor_class_field, :contact_class_field," +
 			" :starting_date_formula, :ending_date_formula, :classification_method, :sorting_method, :from_value, :to_value, " +
-			" :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
-		_, err := stmt.Exec(profileQuestionnaireLine)
+			" :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
+		var id int64
+		err := stmt.Get(&id, profileQuestionnaireLine)
 		if err != nil {
 			log.Error(err)
 			return ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		} else {
+			profileQuestionnaireLine.ID = &id
 		}
 
 	} else {
@@ -229,19 +230,18 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 		}
 	}
 
-	profileQuestionnaireLine, _ = GetProfileQuestionnaireLineByID(profileQuestionnaireLine.ID)
+	profileQuestionnaireLine, _ = GetProfileQuestionnaireLineByID(*profileQuestionnaireLine.ID)
 	return profileQuestionnaireLine, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
-func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []ProfileQuestionnaireLine) ([]ProfileQuestionnaireLine, TransactionalInformation) {
+func PostProfileQuestionnaireLines(HeaderID int64, profileQuestionnaireLines []ProfileQuestionnaireLine) ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	validationErrors := make(map[string]InterfaceArray)
-	_ids := []string{}
+	_ids := []int64{}
 
 	for key, profileQuestionnaireLine := range profileQuestionnaireLines {
 		if lineValidateErrs := profileQuestionnaireLine.Validate(); len(lineValidateErrs) != 0 {
 			validationErrors["ProfileQuestionnaireLine"+strconv.Itoa(key)] = append(validationErrors["ProfileQuestionnaireLine"+strconv.Itoa(key)], lineValidateErrs)
 		}
-		_ids = append(_ids, profileQuestionnaireLine.ID)
 	}
 	if len(validationErrors) != 0 {
 		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineValidate.Error()}, ValidationErrors: validationErrors}
@@ -256,12 +256,12 @@ func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []
 	tx := db.MustBegin()
 
 	for _, profileQuestionnaireLine := range profileQuestionnaireLines {
-		stmt, _ := tx.PrepareNamed("INSERT INTO profile_questionnaire_line AS profile(id, type, profile_questionnaire_header_id, line_no," +
+		stmt, _ := tx.PrepareNamed("INSERT INTO profile_questionnaire_line AS profile(type, profile_questionnaire_header_id, line_no," +
 			" description, multiple_answers, auto_contact_classification, priority," +
 			" customer_class_field, vendor_class_field, contact_class_field," +
 			" starting_date_formula, ending_date_formula, classification_method, sorting_method, from_value, to_value," +
 			" rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :type, :profile_questionnaire_header_id, :line_no," +
+			" VALUES (:type, :profile_questionnaire_header_id, :line_no," +
 			" :description, :multiple_answers, :auto_contact_classification, :priority," +
 			" :customer_class_field, :vendor_class_field, :contact_class_field," +
 			" :starting_date_formula, :ending_date_formula, :classification_method, :sorting_method, :from_value, :to_value, " +
@@ -286,15 +286,16 @@ func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []
 			" status = EXCLUDED.status, " +
 			" version = :version + 1, " +
 			" rec_modified_by = EXCLUDED.rec_modified_by, " +
-			" rec_modified_at = EXCLUDED.rec_modified_at WHERE profile.version = :version")
+			" rec_modified_at = EXCLUDED.rec_modified_at WHERE profile.version = :version RETURNING id")
 
-		result := stmt.MustExec(profileQuestionnaireLine)
+		var id int64
+		err := stmt.Get(&id, profileQuestionnaireLine)
 
-		changes, _ := result.RowsAffected()
-
-		if changes == 0 {
+		if err != nil {
 			tx.Rollback()
 			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineNotFound.Error()}}
+		} else {
+			_ids = append(_ids, id)
 		}
 	}
 
@@ -314,7 +315,7 @@ func PostProfileQuestionnaireLines(HeaderID string, profileQuestionnaireLines []
 
 // GetProfileQuestionnaireLineByID returns the ProfileQuestionnaireLine that the given id corresponds to. If no ProfileQuestionnaireLine is found, an
 // error is thrown.
-func GetProfileQuestionnaireLineByID(id string) (ProfileQuestionnaireLine, TransactionalInformation) {
+func GetProfileQuestionnaireLineByID(id int64) (ProfileQuestionnaireLine, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -329,8 +330,8 @@ func GetProfileQuestionnaireLineByID(id string) (ProfileQuestionnaireLine, Trans
 		"organization.name as organization,"+
 		"profile_questionnaire_header.code as profile_questionnaire_header_code"+
 		"	FROM profile_questionnaire_line "+
-		"		INNER JOIN \"user\" as user_created ON profile_questionnaire_line.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON profile_questionnaire_line.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id "+
 		"		INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id "+
 		"	WHERE profile_questionnaire_line.id=$1", id)
@@ -345,7 +346,7 @@ func GetProfileQuestionnaireLineByID(id string) (ProfileQuestionnaireLine, Trans
 	return profileQuestionnaireLine, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
-func DeleteProfileQuestionnaireLineById(orgID string, ids []string) TransactionalInformation {
+func DeleteProfileQuestionnaireLineById(orgID string, ids []int64) TransactionalInformation {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)

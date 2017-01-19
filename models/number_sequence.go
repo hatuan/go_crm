@@ -10,11 +10,10 @@ import (
 	"strings"
 
 	"github.com/jmoiron/sqlx"
-	uuid "github.com/satori/go.uuid"
 )
 
 type NumberSequence struct {
-	ID                string     `db:"id"`
+	ID                *int64     `db:"id"  json:",string"`
 	Code              string     `db:"code"`
 	Description       string     `db:"description"`
 	CurrentNo         int        `db:"current_no"`
@@ -24,16 +23,16 @@ type NumberSequence struct {
 	IsDefault         bool       `db:"is_default"`
 	Manual            bool       `db:"manual"`
 	NoSequenceName    string     `db:"no_seq_name"`
-	RecCreatedByID    string     `db:"rec_created_by"`
+	RecCreatedByID    int64      `db:"rec_created_by" json:",string"`
 	RecCreatedByUser  string     `db:"rec_created_by_user"`
 	RecCreated        *Timestamp `db:"rec_created_at"`
-	RecModifiedByID   string     `db:"rec_modified_by"`
+	RecModifiedByID   int64      `db:"rec_modified_by" json:",string"`
 	RecModifiedByUser string     `db:"rec_modified_by_user"`
 	RecModified       *Timestamp `db:"rec_modified_at"`
 	Status            int8       `db:"status"`
 	Version           int16      `db:"version"`
-	ClientID          string     `db:"client_id"`
-	OrganizationID    string     `db:"organization_id"`
+	ClientID          int64      `db:"client_id" json:",string"`
+	OrganizationID    int64      `db:"organization_id" json:",string"`
 	Organization      string     `db:"organization"`
 }
 
@@ -73,9 +72,9 @@ func (c *NumberSequence) Validate() map[string]InterfaceArray {
 		}
 		defer db.Close()
 		var otherID string
-		ID := EmptyUUID
-		if c.ID != "" {
-			ID = c.ID
+		ID := int64(0)
+		if c.ID != nil {
+			ID = *c.ID
 		}
 		err = db.Get(&otherID, "SELECT id FROM number_sequence WHERE code = $1 AND id != $2 AND client_id = $3", c.Code, ID, c.ClientID)
 		if err != nil && err != sql.ErrNoRows {
@@ -100,8 +99,8 @@ func GetNumberSequences(orgID string, searchCondition string, infiniteScrollingI
 	sqlString := "SELECT number_sequence.*, user_created.name as rec_created_by_user, " +
 		" user_modified.name as rec_modified_by_user, organization.name as organization" +
 		" FROM number_sequence " +
-		" INNER JOIN \"user\" as user_created ON number_sequence.rec_created_by = user_created.id " +
-		" INNER JOIN \"user\" as user_modified ON number_sequence.rec_modified_by = user_modified.id " +
+		" INNER JOIN user_profile as user_created ON number_sequence.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON number_sequence.rec_modified_by = user_modified.id " +
 		" INNER JOIN organization as organization ON number_sequence.organization_id = organization.id "
 
 	sqlWhere := " WHERE number_sequence.organization_id = $1"
@@ -149,15 +148,17 @@ func PostNumberSequence(numberSequence NumberSequence) (NumberSequence, Transact
 	}
 	defer db.Close()
 
-	if numberSequence.ID == "" {
-		numberSequence.ID = uuid.NewV4().String()
+	if numberSequence.ID == nil {
 		numberSequence.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO number_sequence(id, code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:id, :code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id)")
-		_, err := stmt.Exec(numberSequence)
+		stmt, _ := db.PrepareNamed("INSERT INTO number_sequence(code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
+		id := int64(0)
+		err := stmt.Get(&id, numberSequence)
 		if err != nil {
 			log.Error(err)
 			return NumberSequence{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		} else {
+			numberSequence.ID = &id
 		}
 
 	} else {
@@ -182,13 +183,13 @@ func PostNumberSequence(numberSequence NumberSequence) (NumberSequence, Transact
 			return NumberSequence{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrNumberSequenceNotFound.Error()}}
 		}
 	}
-	numberSequence, _ = GetNumberSequenceByID(numberSequence.ID)
+	numberSequence, _ = GetNumberSequenceByID(*numberSequence.ID)
 	return numberSequence, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
 // GetNumberSequenceByID returns the NumberSequence that the given id corresponds to. If no NumberSequence is found, an
 // error is thrown.
-func GetNumberSequenceByID(id string) (NumberSequence, TransactionalInformation) {
+func GetNumberSequenceByID(id int64) (NumberSequence, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -202,8 +203,8 @@ func GetNumberSequenceByID(id string) (NumberSequence, TransactionalInformation)
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization"+
 		"	FROM number_sequence "+
-		"		INNER JOIN \"user\" as user_created ON number_sequence.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON number_sequence.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON number_sequence.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON number_sequence.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON number_sequence.organization_id = organization.id "+
 		"	WHERE number_sequence.id=$1", id)
 	if err != nil && err == sql.ErrNoRows {
@@ -217,7 +218,7 @@ func GetNumberSequenceByID(id string) (NumberSequence, TransactionalInformation)
 
 // GetNumberSequenceByCode returns the NumberSequence that the given id corresponds to.
 // If no NumberSequence is found, an error is thrown.
-func GetNumberSequenceByCode(code string, orgID string) (NumberSequence, TransactionalInformation) {
+func GetNumberSequenceByCode(code string, orgID int64) (NumberSequence, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -233,8 +234,8 @@ func GetNumberSequenceByCode(code string, orgID string) (NumberSequence, Transac
 		"user_modified.name as rec_modified_by_user,"+
 		"organization.name as organization"+
 		"	FROM number_sequence "+
-		"		INNER JOIN \"user\" as user_created ON number_sequence.rec_created_by = user_created.id "+
-		"		INNER JOIN \"user\" as user_modified ON number_sequence.rec_modified_by = user_modified.id "+
+		"		INNER JOIN user_profile as user_created ON number_sequence.rec_created_by = user_created.id "+
+		"		INNER JOIN user_profile as user_modified ON number_sequence.rec_modified_by = user_modified.id "+
 		"		INNER JOIN organization as organization ON number_sequence.organization_id = organization.id "+
 		"	WHERE number_sequence.code=$1 and number_sequence.client_id=$2", code, org.ClientID)
 
