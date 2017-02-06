@@ -72,6 +72,13 @@ func InitRoutes() *mux.Router {
 			negroni.HandlerFunc(controllers.AutoComplete),
 		))
 
+	//numbersequence api
+	//api.Handle("/numbersequence",
+	//	negroni.New(
+	//		negroni.HandlerFunc(middleware.RequireTokenAuthentication),
+	//		negroni.HandlerFunc(controllers.API_NumberSequence_Id),
+	//	))
+
 	//businessrelationtype api
 	api.Handle("/businessrelationtypes",
 		negroni.New(

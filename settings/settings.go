@@ -28,6 +28,7 @@ type settings struct {
 	ListenURL          string       `json:"listen_url"`
 	PrivateKeyPath     string       `json:"privatekey_path"`
 	PublicKeyPath      string       `json:"publickey_path"`
+	CertKeyPath        string       `json:"certkey_path"`
 	JWTExpirationDelta int          `json:"jwt_expiration_delta"`
 	Database           DatabaseInfo `json:"database"`
 }
@@ -51,14 +52,14 @@ func init() {
 }
 
 func LoadSettingsByEnv(env string) {
-	content, err := ioutil.ReadFile(environments[env])
+	content, err := ioutil.ReadFile(os.Getenv("GOPATH") + "/src/erpvietnam/crm/" + environments[env])
 	if err != nil {
-		log.Panic("Error while reading config file", err)
+		log.Panic("Error while reading config file ", err)
 		panic(err)
 	}
 	jsonErr := json.Unmarshal(content, &Settings)
 	if jsonErr != nil {
-		log.Panic("Error while parsing config file", jsonErr)
+		log.Panic("Error while parsing config file ", jsonErr)
 		panic(err)
 	}
 }

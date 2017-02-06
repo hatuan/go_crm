@@ -1,13 +1,14 @@
 package models
 
 import (
-	"biovegi/log"
-	"biovegi/settings"
 	"database/sql"
+	"erpvietnam/crm/log"
+	"erpvietnam/crm/settings"
 	"errors"
 	"fmt"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/jmoiron/sqlx"
 )
@@ -54,6 +55,9 @@ var ErrNumberSequenceFatal = errors.New("NumberSequence has fatal error")
 // ErrNumberSequenceValidate indicates there was validate error
 var ErrNumberSequenceValidate = errors.New("NumberSequence has validate error")
 
+// ErrNumberSequenceLen indicates if len of numberSequence is more than 15
+var ErrNumberSequenceLen = errors.New("NumberSequence cannot be extended to more than 15 characters")
+
 // Validate checks to make sure there are no invalid fields in a submitted
 func (c *NumberSequence) Validate() map[string]InterfaceArray {
 	validationErrors := make(map[string]InterfaceArray)
@@ -86,6 +90,84 @@ func (c *NumberSequence) Validate() map[string]InterfaceArray {
 		}
 	}
 	return validationErrors
+}
+
+// NextNo return string with format of noID
+func (c *NumberSequence) NextNo() (string, error) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	defer db.Close()
+
+	sqlString := "WITH UPDATED AS (UPDATE number_sequence SET current_no = current_no + 1 WHERE id = $1 RETURNING current_no)" +
+		" SELECT current_no FROM UPDATED"
+
+	err = db.Get(c.CurrentNo, sqlString, c.ID)
+	if err != nil {
+		log.Error(err)
+		return "", err
+	}
+	startPos, endPos := c.getIntergerPos(c.FormatNo)
+
+	return c.replaceNoText(c.FormatNo, c.CurrentNo, 0, startPos, endPos)
+}
+
+func (c *NumberSequence) getIntergerPos(no string) (startPos, endPos int) {
+	isDigit := false
+	startPos = 0
+	endPos = 0
+	if no != "" {
+		i := utf8.RuneCountInString(no) - 1
+		for i >= 0 && !(startPos != 0 && !isDigit) {
+			if currentRune, _ := utf8.DecodeRuneInString(no[i:]); currentRune == '0' {
+				isDigit = true
+			} else {
+				isDigit = false
+			}
+			if isDigit {
+				if endPos == 0 {
+					endPos = i
+				}
+				startPos = i
+			}
+			i--
+		}
+	}
+
+	return startPos, endPos
+}
+
+func (c *NumberSequence) replaceNoText(no string, newNo int, fixedLength int, startPos int, endPos int) (string, error) {
+	startNo := ""
+	endNo := ""
+	zeroNo := ""
+	var newLength, oldLength int
+	if startPos > 0 {
+		startNo = no[:startPos]
+	}
+	if endPos < utf8.RuneCountInString(no)-1 {
+		endNo = no[endPos:]
+	}
+	newLength = len(strconv.Itoa(newNo))
+	oldLength = endPos - startPos
+	if fixedLength > oldLength {
+		oldLength = fixedLength
+	}
+	if oldLength > newLength {
+		zeroNobytes := make([]byte, oldLength-newLength+1)
+		for i := range zeroNobytes {
+			zeroNobytes[i] = '0'
+		}
+
+		zeroNo = string(zeroNobytes)
+	}
+	if utf8.RuneCountInString(startNo)+utf8.RuneCountInString(zeroNo)+newLength+utf8.RuneCountInString(endNo) > 15 {
+		return "", ErrNumberSequenceLen
+	}
+
+	return startNo + zeroNo + strconv.Itoa(newNo) + endNo, nil
 }
 
 func GetNumberSequences(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]NumberSequence, TransactionalInformation) {
