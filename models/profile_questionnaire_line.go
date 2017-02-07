@@ -127,6 +127,42 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
 }
 
+func GetRatingsByHeaderID(headerID int64) ([]Rating, TransactionalInformation) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return []Rating{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	sqlString := "SELECT rating.*, " +
+		" user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, " +
+		" organization.name as organization, " +
+		" profile_questionnaire_header.code as profile_questionnaire_header_code, " +
+		" rating_profile_questionnaire_header.code as rating_profile_questionnaire_header_code" +
+		" FROM rating " +
+		" INNER JOIN user_profile as user_created ON rating.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON rating.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON rating.organization_id = organization.id " +
+		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON rating.profile_questionnaire_header_id = profile_questionnaire_header.id " +
+		" INNER JOIN profile_questionnaire_line as profile_questionnaire_line ON rating.profile_questionnaire_line_id = profile_questionnaire_line.id " +
+		" INNER JOIN profile_questionnaire_header as rating_profile_questionnaire_header ON rating.rating_profile_questionnaire_header_id = rating_profile_questionnaire_header.id " +
+		" INNER JOIN profile_questionnaire_line as rating_profile_questionnaire_line ON rating.rating_profile_questionnaire_line_id = rating_profile_questionnaire_line.id " +
+		" WHERE rating.profile_questionnaire_header_id = $1" +
+		" ORDER BY profile_questionnaire_header.code, profile_questionnaire_line.line_no, rating_profile_questionnaire_header.code, rating_profile_questionnaire_line.line_no"
+
+	ratings := []Rating{}
+	err = db.Select(&ratings, sqlString, headerID)
+
+	if err != nil {
+		log.Error(err)
+		return ratings, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+
+	return ratings, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(ratings)) + " records found"}}
+}
+
 func GetProfileQuestionnaireLinesByHeaderID(headerID int64) ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {

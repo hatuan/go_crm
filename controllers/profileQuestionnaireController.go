@@ -121,11 +121,20 @@ func API_ProfileQuestionnaireLines_By_HeaderId(w http.ResponseWriter, r *http.Re
 			return
 		}
 		profileQuestionnaireLines, tranInfo := models.GetProfileQuestionnaireLinesByHeaderID(HeaderID)
+
 		if !tranInfo.ReturnStatus {
 			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
 			return
 		}
-		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"ProfileQuestionnaireLines": profileQuestionnaireLines}, IsAuthenticated: true}, http.StatusOK)
+
+		ratings, tranInfo := models.GetRatingsByHeaderID(HeaderID)
+
+		if !tranInfo.ReturnStatus {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}, "Ratings": []models.Rating{}}}, http.StatusBadRequest)
+			return
+		}
+
+		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"ProfileQuestionnaireLines": profileQuestionnaireLines, "Ratings": ratings}, IsAuthenticated: true}, http.StatusOK)
 	case r.Method == "POST":
 		params := mux.Vars(r)
 		HeaderID, err := strconv.ParseInt(params["headerid"], 10, 64)

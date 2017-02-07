@@ -170,7 +170,7 @@ func (c *NumberSequence) replaceNoText(no string, newNo int, fixedLength int, st
 	return startNo + zeroNo + strconv.Itoa(newNo) + endNo, nil
 }
 
-func GetNumberSequences(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]NumberSequence, TransactionalInformation) {
+func GetNumberSequences(orgID int64, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]NumberSequence, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -232,8 +232,8 @@ func PostNumberSequence(numberSequence NumberSequence) (NumberSequence, Transact
 
 	if numberSequence.ID == nil {
 		numberSequence.Version = 1
-		stmt, _ := db.PrepareNamed("INSERT INTO number_sequence(code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
+		stmt, _ := db.PrepareNamed("INSERT INTO number_sequence(code, description, current_no, starting_no, ending_no, format_no, is_default, manual, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
+			" VALUES (:code, :description, 0, :starting_no, :ending_no, :format_no, :is_default, :manual, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
 		id := int64(0)
 		err := stmt.Get(&id, numberSequence)
 		if err != nil {
@@ -247,6 +247,11 @@ func PostNumberSequence(numberSequence NumberSequence) (NumberSequence, Transact
 		stmt, _ := db.PrepareNamed("UPDATE number_sequence SET " +
 			"code = :code," +
 			"description = :description," +
+			"starting_no = :starting_no, " +
+			"ending_no = :ending_no, " +
+			"format_no = :format_no, " +
+			"is_default = :is_default, " +
+			"manual = :manual," +
 			"status = :status," +
 			"version = :version + 1," +
 			"rec_modified_by = :rec_modified_by, rec_modified_at = :rec_modified_at WHERE id = :id AND version = :version")
@@ -330,7 +335,7 @@ func GetNumberSequenceByCode(code string, orgID int64) (NumberSequence, Transact
 	return numberSequence, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 
-func DeleteNumberSequenceById(orgID string, ids []string) TransactionalInformation {
+func DeleteNumberSequenceById(orgID int64, ids []string) TransactionalInformation {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)

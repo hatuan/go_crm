@@ -146,7 +146,7 @@ func PostBusinessRelationSector(businessRelationSector BusinessRelationSector) (
 	if businessRelationSector.ID == nil {
 		businessRelationSector.Version = 1
 		stmt, _ := db.PrepareNamed("INSERT INTO business_relation_sector(code, description, rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (, :code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
+			" VALUES (:code, :description, :rec_created_by, :rec_created_at, :rec_modified_by, :rec_modified_at, :status, :version, :client_id, :organization_id) RETURNING id")
 		var id int64
 		err := stmt.Get(&id, businessRelationSector)
 		if err != nil {

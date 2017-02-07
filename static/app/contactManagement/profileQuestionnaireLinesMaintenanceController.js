@@ -71,9 +71,9 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                     profileQuestionnaireLines[i].RecModified = new moment(profileQuestionnaireLines[i].RecModified).unix();
 
                     if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].FromValue) || profileQuestionnaireLines[i].FromValue == "")
-                        profileQuestionnaireLines[i].FromValue = 0;
+                        profileQuestionnaireLines[i].FromValue = "0";
                     if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].ToValue) || profileQuestionnaireLines[i].ToValue == "")
-                        profileQuestionnaireLines[i].ToValue = 0;
+                        profileQuestionnaireLines[i].ToValue = "0";
                 }
 
                 profileQuestionnairesService.updateProfileQuestionnaireLines(profileQuestionnaire, profileQuestionnaireLines, $scope.profileQuestionnaireLinesUpdateCompleted, $scope.profileQuestionnaireLinesUpdateError)
@@ -169,7 +169,6 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         $scope.createProfileQuestionnaireLineObject = function () {
             var profileQuestionnaireLine = new Object();
-            profileQuestionnaireLine.ID = "";
             profileQuestionnaireLine.Type = $scope.Constants.ProfileQuestionaireLineTypes[0].Code;
             profileQuestionnaireLine.ProfileQuestionnaireHeaderID = $scope.profileQuestionnaireHeaderID;
             profileQuestionnaireLine.Description = "";
@@ -183,12 +182,10 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             profileQuestionnaireLine.EndingDateFormula = "";
             profileQuestionnaireLine.ClassificationMethod = 0;
             profileQuestionnaireLine.SortingMethod = 0;
-            profileQuestionnaireLine.FromValue = 0;
-            profileQuestionnaireLine.ToValue = 0;
+            profileQuestionnaireLine.FromValue = "0";
+            profileQuestionnaireLine.ToValue = "0";
 
             profileQuestionnaireLine.Status = $scope.Constants.Status[1].Code;
-            profileQuestionnaireLine.ClientID = "";
-            profileQuestionnaireLine.OrganizationID = "";
             profileQuestionnaireLine.RecCreatedByID = $rootScope.currentUser.ID;
             profileQuestionnaireLine.RecCreatedByUser = $rootScope.currentUser.Name;
             profileQuestionnaireLine.RecCreated = new Date();

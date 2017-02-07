@@ -55,7 +55,7 @@
                         role="form" ng-validate="validationOptions">
                         <div class="grid-row" ng-repeat="profileQuestionnaireLine in ProfileQuestionnaireLines track by $index" data-idx="{{$index + 1}}"
                             ng-class="{'bold': profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code}"
-                            ng-init="profileQuestionnaireLine.LineNo = $index + 1">
+                            ng-init="profileQuestionnaireLine.LineNo = $index + 1 + ''">
                             <div class="data-row row sortable-handle editable-row">
                                 <div class="row-index col col-xs-1">
                                     {{$index + 1}}

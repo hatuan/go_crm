@@ -12,14 +12,13 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             $rootScope.applicationModule = "ProfileQuestionnaireMaintenance";
             $rootScope.alerts = [];
 
-            var profileQuestionnaireID = ($stateParams.ID || "");
+            var profileQuestionnaireID = ($stateParams.ID || null);
             
             $scope.ID = profileQuestionnaireID;
                         
             $scope.Constants = Constants;
 
-            if (profileQuestionnaireID == "") {
-                $scope.ID = "";
+            if (profileQuestionnaireID == null) {
                 $scope.Code = "";
                 $scope.Description = "";
                 $scope.Priority = $scope.Constants.Priorities[2].Code;
@@ -28,8 +27,6 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
                 $scope.BusinessRelationTypeCode = "";
 
                 $scope.Status = $scope.Constants.Status[1].Code;
-                $scope.ClientID = "";
-                $scope.OrganizationID = "";
                 $scope.RecCreatedByID = $rootScope.currentUser.ID;
                 $scope.RecCreatedByUser = $rootScope.currentUser.Name;
                 $scope.RecCreated = new Date();
