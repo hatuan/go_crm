@@ -3,19 +3,19 @@
  */
 "use strict";
 
-define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService'], function (angularAMD, $) {
+define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService'], function(angularAMD, $) {
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
 
-    var profileQuestionnaireMaintenanceController = function ($scope, $rootScope, $state, $window, moment, alertsService, profileQuestionnairesService, $stateParams, Constants) {
+    var profileQuestionnaireMaintenanceController = function($scope, $rootScope, $state, $window, moment, alertsService, profileQuestionnairesService, $stateParams, Constants) {
 
-        $scope.initializeController = function () {
+        $scope.initializeController = function() {
             $rootScope.applicationModule = "ProfileQuestionnaireMaintenance";
             $rootScope.alerts = [];
 
             var profileQuestionnaireID = ($stateParams.ID || null);
-            
+
             $scope.ID = profileQuestionnaireID;
-                        
+
             $scope.Constants = Constants;
 
             if (profileQuestionnaireID == null) {
@@ -40,13 +40,13 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             }
         };
 
-        $scope.profileQuestionnaireCompleted = function (response, status) {
+        $scope.profileQuestionnaireCompleted = function(response, status) {
             $scope.ID = response.Data.ProfileQuestionnaire.ID;
             $scope.Code = response.Data.ProfileQuestionnaire.Code;
             $scope.Description = response.Data.ProfileQuestionnaire.Description;
             $scope.Priority = response.Data.ProfileQuestionnaire.Priority;
             $scope.ContactType = response.Data.ProfileQuestionnaire.ContactType;
-            $scope.BusinessRelationTypeID = response.Data.ProfileQuestionnaire.BusinessRelationTypeID == null? "" : response.Data.ProfileQuestionnaire.BusinessRelationTypeID;
+            $scope.BusinessRelationTypeID = response.Data.ProfileQuestionnaire.BusinessRelationTypeID == null ? "" : response.Data.ProfileQuestionnaire.BusinessRelationTypeID;
             $scope.BusinessRelationTypeCode = response.Data.ProfileQuestionnaire.BusinessRelationTypeCode;
             $scope.Status = response.Data.ProfileQuestionnaire.Status;
             $scope.Version = response.Data.ProfileQuestionnaire.Version;
@@ -60,7 +60,7 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             $scope.RecModified = new moment.unix(response.Data.ProfileQuestionnaire.RecModified).toDate();
         };
 
-        $scope.profileQuestionnaireError = function (response, status) {
+        $scope.profileQuestionnaireError = function(response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 
@@ -73,12 +73,12 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
                         type: "post",
                         //dataType: 'json', //dataType is json but don't have any effect. 
                         data: {
-                            UserID : function() {
+                            UserID: function() {
                                 return $rootScope.currentUser.ID
-                            }, 
+                            },
                             Table: "profile_questionnaire_header",
-                            RecID: function() { 
-                                return $scope.ID 
+                            RecID: function() {
+                                return $scope.ID
                             }
                         }
                     }
@@ -89,42 +89,42 @@ define(['angularAMD', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'pro
             }
         };
 
-        $scope.update = function (form) {
-            if(form.validate()) {
+        $scope.update = function(form) {
+            if (form.validate()) {
                 var profileQuestionnaire = $scope.createProfileQuestionnaireObject();
                 profileQuestionnairesService.updateProfileQuestionnaire(profileQuestionnaire, $scope.profileQuestionnaireUpdateCompleted, $scope.profileQuestionnaireUpdateError)
             }
         };
 
-        $scope.cancel = function (form) {
-           setTimeout(function() {
-                $state.go('profileQuestionnaire', { profileQuestionnaireID : $scope.ID });
+        $scope.cancel = function(form) {
+            setTimeout(function() {
+                $state.go('profileQuestionnaire', { profileQuestionnaireID: $scope.ID });
             }, 10);
         };
 
         //go to Profile Questionnaire Lines Maintenance
-        $scope.linesMaintenance = function(form){
-            if(form.validate()) {
+        $scope.linesMaintenance = function(form) {
+            if (form.validate() && $scope.ID) {
                 setTimeout(function() {
-                    $state.go('profileQuestionnaireLinesMaintenance', { headerID : $scope.ID });
+                    $state.go('profileQuestionnaireLinesMaintenance', { headerID: $scope.ID, headerCode: $scope.Code });
                 }, 10);
             }
         }
 
-        $scope.profileQuestionnaireUpdateCompleted = function (response, status) {
+        $scope.profileQuestionnaireUpdateCompleted = function(response, status) {
             $scope.ID = response.Data.ProfileQuestionnaire.ID;
             alertsService.RenderSuccessMessage(response.ReturnMessage);
-            
+
             setTimeout(function() {
-                $state.go('profileQuestionnaire', { profileQuestionnaireID : $scope.ID });
+                $state.go('profileQuestionnaire', { profileQuestionnaireID: $scope.ID });
             }, 1000);
         };
 
-        $scope.profileQuestionnaireUpdateError = function (response, status) {
+        $scope.profileQuestionnaireUpdateError = function(response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 
-        $scope.createProfileQuestionnaireObject = function () {
+        $scope.createProfileQuestionnaireObject = function() {
             var profileQuestionnaire = new Object();
             profileQuestionnaire.ID = $scope.ID;
             profileQuestionnaire.Code = $scope.Code;

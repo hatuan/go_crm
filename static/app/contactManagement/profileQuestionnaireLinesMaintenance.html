@@ -51,77 +51,64 @@
             </div>
             <div class="grid-body">
                 <div class="rows" ng-show="ProfileQuestionnaireLines.length != 0">
-                    <form ng-submit="update(ProfileQuestionnaireLinesMaintenanceForm)" id="ProfileQuestionnaireLinesMaintenanceForm" name="ProfileQuestionnaireLinesMaintenanceForm"
-                        role="form" ng-validate="validationOptions">
-                        <div class="grid-row" ng-repeat="profileQuestionnaireLine in ProfileQuestionnaireLines track by $index" data-idx="{{$index + 1}}"
-                            ng-class="{'bold': profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code}"
-                            ng-init="profileQuestionnaireLine.LineNo = $index + 1 + ''">
+                    <form ng-submit="update(ProfileQuestionnaireLinesMaintenanceForm)" id="ProfileQuestionnaireLinesMaintenanceForm" name="ProfileQuestionnaireLinesMaintenanceForm" role="form" ng-validate="validationOptions">
+                        <div class="grid-row" ng-repeat="profileQuestionnaireLine in ProfileQuestionnaireLines track by $index" data-idx="{{$index + 1}}" ng-class="{'bold': profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code}" ng-init="profileQuestionnaireLine.LineNo = $index + 1 + ''">
                             <div class="data-row row sortable-handle editable-row">
                                 <div class="row-index col col-xs-1">
                                     {{$index + 1}}
-                                 </div>
+                                </div>
                                 <div class="col grid-static-col col-xs-1">
                                     <div class="form-group">
-                                        <select class="form-control" name="Type[]" id="Type_{{$index + 1}}" ng-model="profileQuestionnaireLine.Type" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineTypes"
-                                        />
+                                        <select class="form-control" name="Type[]" id="Type_{{$index + 1}}" ng-model="profileQuestionnaireLine.Type" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineTypes" />
                                     </div>
                                 </div>
                                 <div class="col grid-static-col col-xs-3">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="Description[]" id="Description_{{$index + 1}}" ng-model="profileQuestionnaireLine.Description"
+                                        <input type="text" class="form-control" name="Description[]" id="Description_{{$index + 1}}" ng-model="profileQuestionnaireLine.Description" />
+                                    </div>
+                                </div>
+                                <div class="col grid-static-col col-xs-1">
+                                    <div class="form-group">
+                                        <select class="form-control" name="MultipleAnswers[]" id="MultipleAnswers_{{$index + 1}}" ng-model="profileQuestionnaireLine.MultipleAnswers" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"
                                         />
                                     </div>
                                 </div>
                                 <div class="col grid-static-col col-xs-1">
                                     <div class="form-group">
-                                        <select class="form-control" name="MultipleAnswers[]" id="MultipleAnswers_{{$index + 1}}" ng-model="profileQuestionnaireLine.MultipleAnswers"
-                                            ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        <select class="form-control" name="Priority[]" id="Priority_{{$index + 1}}" ng-model="profileQuestionnaireLine.Priority" ng-options="s.Code as s.Name for s in Constants.Priorities" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
                                         />
                                     </div>
                                 </div>
                                 <div class="col grid-static-col col-xs-1">
                                     <div class="form-group">
-                                        <select class="form-control" name="Priority[]" id="Priority_{{$index + 1}}" ng-model="profileQuestionnaireLine.Priority"
-                                            ng-options="s.Code as s.Name for s in Constants.Priorities" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
+                                        <select class="form-control" name="AutoContactClassification[]" id="AutoContactClassification_{{$index + 1}}" ng-model="profileQuestionnaireLine.AutoContactClassification" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"
                                         />
                                     </div>
                                 </div>
                                 <div class="col grid-static-col col-xs-1">
                                     <div class="form-group">
-                                        <select class="form-control" name="AutoContactClassification[]" id="AutoContactClassification_{{$index + 1}}" ng-model="profileQuestionnaireLine.AutoContactClassification"
-                                            ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-show="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"
-                                        />
+                                        <input type="text" class="form-control" name="FromValue[]" id="FromValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.FromValue" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code" />
                                     </div>
                                 </div>
                                 <div class="col grid-static-col col-xs-1">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="FromValue[]" id="FromValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.FromValue"
-                                            ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
-                                        />
+                                        <input type="text" class="form-control" name="ToValue[]" id="ToValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.ToValue" ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code" />
                                     </div>
                                 </div>
                                 <div class="col grid-static-col col-xs-1">
                                     <div class="form-group">
-                                        <input type="text" class="form-control" name="ToValue[]" id="ToValue_{{$index + 1}}" ng-model="profileQuestionnaireLine.ToValue"
-                                            ng-show="profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code"
-                                        />
-                                    </div>
-                                </div>
-                                <div class="col grid-static-col col-xs-1">
-                                    <div class="form-group">
-                                        <input type="number" class="form-control" name="NoContacts[]" id="NoContacts_{{$index + 1}}" ng-model="profileQuestionnaireLine.NoContacts"
-                                            disabled/>
+                                        <input type="number" class="form-control" name="NoContacts[]" id="NoContacts_{{$index + 1}}" ng-model="profileQuestionnaireLine.NoContacts" disabled/>
                                     </div>
                                 </div>
                                 <div class="col col-xs-1">
                                     <span uib-dropdown>
                                         <a class="close btn-open-row" id="line-dropdown_{{$index}}" uib-dropdown-toggle><span class="fa fa-ellipsis-h"></span></a>
-                                        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="line-dropdown_{{$index}}">
-                                            <li role="menuitem" ng-class="{'disabled': profileQuestionnaireLine.Type != Constants.ProfileQuestionaireLineTypes[0].Code}"><a ng-click="detailLine(profileQuestionnaireLine)">Detail</a></li>
-                                            <li role="menuitem"><a ng-click="insertLine(profileQuestionnaireLine, $index + 1)">Insert</a></li>
-                                            <li class="divider"></li>
-                                            <li role="menuitem"><a ng-click="removeLine(profileQuestionnaireLine, $index + 1)">Remove</a></li>
-                                        </ul>        
+                                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="line-dropdown_{{$index}}">
+                                        <li role="menuitem" ng-if="profileQuestionnaireLine.Type == Constants.ProfileQuestionaireLineTypes[0].Code"><a ng-click="detailLine(profileQuestionnaireLine)">Detail</a></li>
+                                        <li role="menuitem"><a ng-click="insertLine(profileQuestionnaireLine, $index + 1)">Insert</a></li>
+                                        <li class="divider"></li>
+                                        <li role="menuitem"><a ng-click="removeLine(profileQuestionnaireLine, $index + 1)">Remove</a></li>
+                                    </ul>
                                     </span>
                                 </div>
                             </div>

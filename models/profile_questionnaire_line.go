@@ -32,6 +32,7 @@ type ProfileQuestionnaireLine struct {
 	SortingMethod                  int8            `db:"sorting_method"`
 	FromValue                      decimal.Decimal `db:"from_value" json:",string"`
 	ToValue                        decimal.Decimal `db:"to_value" json:",string"`
+	Ratings                        []Rating        `db:"-"`
 	RecCreatedByID                 int64           `db:"rec_created_by" json:",string"`
 	RecCreatedByUser               string          `db:"rec_created_by_user"`
 	RecCreated                     *Timestamp      `db:"rec_created_at"`
@@ -71,6 +72,45 @@ func (c *ProfileQuestionnaireLine) Validate() map[string]InterfaceArray {
 		validationErrors["Description"] = append(validationErrors["Description"], ErrProfileQuestionnaireLineDescriptionNotSpecified.Error())
 	}
 	return validationErrors
+}
+
+func (c *ProfileQuestionnaireLine) GetRatings() error {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		c.Ratings = []Rating{}
+		return err
+	}
+	defer db.Close()
+
+	sqlString := "SELECT rating.*, " +
+		" user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, " +
+		" organization.name as organization, " +
+		" profile_questionnaire_header.code as profile_questionnaire_header_code, " +
+		" rating_profile_questionnaire_header.code as rating_profile_questionnaire_header_code" +
+		" FROM rating " +
+		" INNER JOIN user_profile as user_created ON rating.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON rating.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON rating.organization_id = organization.id " +
+		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON rating.profile_questionnaire_header_id = profile_questionnaire_header.id " +
+		" INNER JOIN profile_questionnaire_line as profile_questionnaire_line ON rating.profile_questionnaire_line_id = profile_questionnaire_line.id " +
+		" INNER JOIN profile_questionnaire_header as rating_profile_questionnaire_header ON rating.rating_profile_questionnaire_header_id = rating_profile_questionnaire_header.id " +
+		" INNER JOIN profile_questionnaire_line as rating_profile_questionnaire_line ON rating.rating_profile_questionnaire_line_id = rating_profile_questionnaire_line.id " +
+		" WHERE rating.profile_questionnaire_header_id = $1" +
+		" AND rating.profile_questionnaire_line_id = $2" +
+		" ORDER BY profile_questionnaire_header.code, profile_questionnaire_line.line_no, rating_profile_questionnaire_header.code, rating_profile_questionnaire_line.line_no"
+
+	ratings := []Rating{}
+	err = db.Select(&ratings, sqlString, c.ProfileQuestionnaireHeaderID, c.ID)
+
+	if err != nil && err != sql.ErrNoRows {
+		log.Error(err)
+		c.Ratings = []Rating{}
+		return err
+	}
+	c.Ratings = ratings
+	return nil
 }
 
 func GetProfileQuestionnaireLines(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]ProfileQuestionnaireLine, TransactionalInformation) {
@@ -127,42 +167,6 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
 }
 
-func GetRatingsByHeaderID(headerID int64) ([]Rating, TransactionalInformation) {
-	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
-	if err != nil {
-		log.Error(err)
-		return []Rating{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-	}
-	defer db.Close()
-
-	sqlString := "SELECT rating.*, " +
-		" user_created.name as rec_created_by_user, " +
-		" user_modified.name as rec_modified_by_user, " +
-		" organization.name as organization, " +
-		" profile_questionnaire_header.code as profile_questionnaire_header_code, " +
-		" rating_profile_questionnaire_header.code as rating_profile_questionnaire_header_code" +
-		" FROM rating " +
-		" INNER JOIN user_profile as user_created ON rating.rec_created_by = user_created.id " +
-		" INNER JOIN user_profile as user_modified ON rating.rec_modified_by = user_modified.id " +
-		" INNER JOIN organization as organization ON rating.organization_id = organization.id " +
-		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON rating.profile_questionnaire_header_id = profile_questionnaire_header.id " +
-		" INNER JOIN profile_questionnaire_line as profile_questionnaire_line ON rating.profile_questionnaire_line_id = profile_questionnaire_line.id " +
-		" INNER JOIN profile_questionnaire_header as rating_profile_questionnaire_header ON rating.rating_profile_questionnaire_header_id = rating_profile_questionnaire_header.id " +
-		" INNER JOIN profile_questionnaire_line as rating_profile_questionnaire_line ON rating.rating_profile_questionnaire_line_id = rating_profile_questionnaire_line.id " +
-		" WHERE rating.profile_questionnaire_header_id = $1" +
-		" ORDER BY profile_questionnaire_header.code, profile_questionnaire_line.line_no, rating_profile_questionnaire_header.code, rating_profile_questionnaire_line.line_no"
-
-	ratings := []Rating{}
-	err = db.Select(&ratings, sqlString, headerID)
-
-	if err != nil {
-		log.Error(err)
-		return ratings, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-	}
-
-	return ratings, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(ratings)) + " records found"}}
-}
-
 func GetProfileQuestionnaireLinesByHeaderID(headerID int64) ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
@@ -191,6 +195,12 @@ func GetProfileQuestionnaireLinesByHeaderID(headerID int64) ([]ProfileQuestionna
 		log.Error(err)
 		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
+
+	//for _, profileQuestionnaireLine := range profileQuestionnaireLines {
+	//	if err = profileQuestionnaireLine.GetRatings(); err != nil {
+	//		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	//	}
+	//}
 
 	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
 }
@@ -270,7 +280,7 @@ func PostProfileQuestionnaireLine(profileQuestionnaireLine ProfileQuestionnaireL
 	return profileQuestionnaireLine, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 
-func PostProfileQuestionnaireLines(HeaderID int64, profileQuestionnaireLines []ProfileQuestionnaireLine) ([]ProfileQuestionnaireLine, TransactionalInformation) {
+func PostProfileQuestionnaireLines(headerID int64, profileQuestionnaireLines []ProfileQuestionnaireLine) ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	validationErrors := make(map[string]InterfaceArray)
 	_ids := []int64{}
 
@@ -330,22 +340,52 @@ func PostProfileQuestionnaireLines(HeaderID int64, profileQuestionnaireLines []P
 		if err != nil {
 			tx.Rollback()
 			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineNotFound.Error()}}
-		} else {
-			_ids = append(_ids, id)
+		}
+
+		if profileQuestionnaireLine.Ratings != nil {
+			for _, rating := range profileQuestionnaireLine.Ratings {
+				if rating.ProfileQuestionnaireLineID == nil {
+					rating.ProfileQuestionnaireLineID = &id
+				}
+			}
+			_, traninfo := PostRatingsWithLineID(profileQuestionnaireLine.ProfileQuestionnaireHeaderID, *profileQuestionnaireLine.ID, profileQuestionnaireLine.Ratings)
+
+			if !traninfo.ReturnStatus {
+				tx.Rollback()
+				return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: traninfo.ReturnMessage, ValidationErrors: traninfo.ValidationErrors}
+			}
+		}
+		_ids = append(_ids, id)
+	}
+
+	if len(_ids) != 0 {
+		query, args, err := sqlx.In("DELETE FROM profile_questionnaire_line WHERE profile_questionnaire_header_id = ? AND id NOT IN (?)", headerID, _ids)
+		if err != nil {
+			tx.Rollback()
+			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+		query = sqlx.Rebind(sqlx.DOLLAR, query)
+		_, err = tx.Exec(query, args...)
+		if err != nil {
+			tx.Rollback()
+			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+
+		query, args, err = sqlx.In("DELETE FROM rating WHERE profile_questionnaire_header_id = ? AND profile_questionnaire_line_id  NOT IN (?)", headerID, _ids)
+		if err != nil {
+			tx.Rollback()
+			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+		query = sqlx.Rebind(sqlx.DOLLAR, query)
+		_, err = tx.Exec(query, args...)
+		if err != nil {
+			tx.Rollback()
+			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 		}
 	}
-
-	query, args, err := sqlx.In("DELETE FROM profile_questionnaire_line WHERE profile_questionnaire_header_id = ? AND id NOT IN (?)", HeaderID, _ids)
-	if err != nil {
-		tx.Rollback()
-		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-	}
-	query = sqlx.Rebind(sqlx.DOLLAR, query)
-	_ = tx.MustExec(query, args...)
-
 	tx.Commit()
 
-	profileQuestionnaireLines, _ = GetProfileQuestionnaireLinesByHeaderID(HeaderID)
+	profileQuestionnaireLines, _ = GetProfileQuestionnaireLinesByHeaderID(headerID)
 	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Updated/Created successfully"}}
 }
 

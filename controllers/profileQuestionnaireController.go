@@ -109,47 +109,53 @@ func API_ProfileQuestionnaire_Id(w http.ResponseWriter, r *http.Request, next ht
 	}
 }
 
-func API_ProfileQuestionnaireLines_By_HeaderId(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
+func API_ProfileQuestionnaire_By_HeaderId(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	requestUser := context.Get(r, "user").(models.User)
 
 	switch {
 	case r.Method == "GET":
 		params := mux.Vars(r)
-		HeaderID, err := strconv.ParseInt(params["headerid"], 10, 64)
+		headerID, err := strconv.ParseInt(params["headerid"], 10, 64)
 		if err != nil {
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrIDParameterNotFound.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrIDParameterNotFound.Error()}, IsAuthenticated: true}, http.StatusBadRequest)
 			return
 		}
-		profileQuestionnaireLines, tranInfo := models.GetProfileQuestionnaireLinesByHeaderID(HeaderID)
+
+		profileQuestionnaire, tranInfo := models.GetProfileQuestionnaireHeaderByID(headerID)
+		if !tranInfo.ReturnStatus {
+			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true}, http.StatusBadRequest)
+			return
+		}
+
+		profileQuestionnaireLines, tranInfo := models.GetProfileQuestionnaireLinesByHeaderID(headerID)
 
 		if !tranInfo.ReturnStatus {
-			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
+			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true}, http.StatusBadRequest)
 			return
 		}
 
-		ratings, tranInfo := models.GetRatingsByHeaderID(HeaderID)
-
-		if !tranInfo.ReturnStatus {
-			JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}, "Ratings": []models.Rating{}}}, http.StatusBadRequest)
-			return
-		}
-
-		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"ProfileQuestionnaireLines": profileQuestionnaireLines, "Ratings": ratings}, IsAuthenticated: true}, http.StatusOK)
+		JSONResponse(w, models.Response{ReturnStatus: tranInfo.ReturnStatus, ReturnMessage: tranInfo.ReturnMessage, Data: map[string]interface{}{"ProfileQuestionnaire": profileQuestionnaire, "ProfileQuestionnaireLines": profileQuestionnaireLines}, IsAuthenticated: true}, http.StatusOK)
 	case r.Method == "POST":
 		params := mux.Vars(r)
-		HeaderID, err := strconv.ParseInt(params["headerid"], 10, 64)
+		headerID, err := strconv.ParseInt(params["headerid"], 10, 64)
 		if err != nil {
 			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{ErrIDParameterNotFound.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
 			return
 		}
 
-		profileQuestionnaireLines := make([]models.ProfileQuestionnaireLine, 0)
-		err = json.NewDecoder(r.Body).Decode(&profileQuestionnaireLines)
+		var postData struct {
+			ProfileQuestionnaireLines []models.ProfileQuestionnaireLine
+		}
+
+		err = json.NewDecoder(r.Body).Decode(&postData)
 		if err != nil {
 			log.Error(err.Error())
-			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)
+			JSONResponse(w, models.Response{ReturnStatus: false, ReturnMessage: []string{err.Error()}, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}, "Ratings": []models.Rating{}}}, http.StatusBadRequest)
 			return
 		}
+
+		profileQuestionnaireLines := postData.ProfileQuestionnaireLines
+
 		user, err := models.GetUser(*requestUser.ID)
 		if err != nil {
 			log.Error(err.Error())
@@ -158,7 +164,7 @@ func API_ProfileQuestionnaireLines_By_HeaderId(w http.ResponseWriter, r *http.Re
 		}
 
 		//range uses a[i] as its second value for arrays/slices, which effectively means that the value is copied, making the original value untouchable.
-		for index, _ := range profileQuestionnaireLines {
+		for index := range profileQuestionnaireLines {
 			if profileQuestionnaireLines[index].ID == nil {
 				profileQuestionnaireLines[index].Version = 1
 				profileQuestionnaireLines[index].RecCreatedByID = *user.ID
@@ -173,7 +179,7 @@ func API_ProfileQuestionnaireLines_By_HeaderId(w http.ResponseWriter, r *http.Re
 			}
 		}
 
-		profileQuestionnaireLines, tranInfor := models.PostProfileQuestionnaireLines(HeaderID, profileQuestionnaireLines)
+		profileQuestionnaireLines, tranInfor := models.PostProfileQuestionnaireLines(headerID, profileQuestionnaireLines)
 
 		if tranInfor.ReturnStatus == false && len(tranInfor.ValidationErrors) > 0 {
 			JSONResponse(w, models.Response{ReturnStatus: tranInfor.ReturnStatus, ReturnMessage: tranInfor.ReturnMessage, ValidationErrors: tranInfor.ValidationErrors, IsAuthenticated: true, Data: map[string]interface{}{"ProfileQuestionnaireLines": []models.ProfileQuestionnaireLine{}}}, http.StatusBadRequest)

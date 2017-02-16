@@ -3,93 +3,74 @@
 </div>
 <div class="modal-body row" id="modal-body">
     <div class="col-xs-12">
-        <form class="form-horizontal" id="ProfileQuestionnaireLineDetailMaintenanceForm" name="ProfileQuestionnaireLineDetailMaintenanceForm"
-            role="form" ng-validate="validationOptions">
+        <form class="form-horizontal" id="ProfileQuestionnaireLineDetailMaintenanceForm" name="ProfileQuestionnaireLineDetailMaintenanceForm" role="form" ng-validate="validationOptions">
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="Description">Description</label>
                 <div class="col-xs-6">
-                    <input type="text" class="form-control" name="Description" id="Description" ng-model="ProfileQuestionnaireLine.Description"
-                        required/>
+                    <input type="text" class="form-control" name="Description" id="Description" ng-model="ProfileQuestionnaireLine.Description" required/>
                 </div>
             </div>
 
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="MultipleAnswers">Multiple Answers</label>
                 <div class="col-xs-6">
-                    <select class="form-control" id="MultipleAnswers" name="MultipleAnswers" ng-model="ProfileQuestionnaireLine.MultipleAnswers"
-                        ng-options="s.Code as s.Name for s in Constants.BooleanTypes" />
+                    <select class="form-control" id="MultipleAnswers" name="MultipleAnswers" ng-model="ProfileQuestionnaireLine.MultipleAnswers" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="AutoContactClassification">Auto Contact Classification</label>
                 <div class="col-xs-6">
-                    <select class="form-control" id="AutoContactClassification" name="AutoContactClassification" ng-model="ProfileQuestionnaireLine.AutoContactClassification"
-                        ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-change="autoContactClassificationChange()"
+                    <select class="form-control" id="AutoContactClassification" name="AutoContactClassification" ng-model="ProfileQuestionnaireLine.AutoContactClassification" ng-options="s.Code as s.Name for s in Constants.BooleanTypes" ng-change="autoContactClassificationChange()"
                     />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="CustomerClassField">Customer Class. Field</label>
                 <div class="col-xs-6">
-                    <select class="form-control" id="CustomerClassField" name="CustomerClassField" ng-model="ProfileQuestionnaireLine.CustomerClassField"
-                    ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineCustomerClassFieldTypes"
-                    ng-disabled="disableCustomerClassField()"
+                    <select class="form-control" id="CustomerClassField" name="CustomerClassField" ng-model="ProfileQuestionnaireLine.CustomerClassField" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineCustomerClassFieldTypes" ng-disabled="disableCustomerClassField()"
                     />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="VendorClassField">Vendor Class. Field</label>
                 <div class="col-xs-6">
-                    <select class="form-control" id="VendorClassField" name="VendorClassField" ng-model="ProfileQuestionnaireLine.VendorClassField"
-                    ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineVendorClassFieldTypes"
-                    ng-disabled="disableVendorClassField()"
+                    <select class="form-control" id="VendorClassField" name="VendorClassField" ng-model="ProfileQuestionnaireLine.VendorClassField" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineVendorClassFieldTypes" ng-disabled="disableVendorClassField()"
                     />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="ContactClassField">Contact Class Field</label>
                 <div class="col-xs-6">
-                        <select class="form-control col-xs-4" id="ContactClassField" name="ContactClassField" ng-model="ProfileQuestionnaireLine.ContactClassField"
-                        ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineContactClassFieldTypes"
-                        ng-disabled="disableContactClassField()"
-                        />
+                    <select class="form-control col-xs-4" id="ContactClassField" name="ContactClassField" ng-model="ProfileQuestionnaireLine.ContactClassField" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineContactClassFieldTypes" ng-disabled="disableContactClassField()"
+                    />
                 </div>
                 <div class="col-xs-1" style="padding-left:0px">
-                    <button type="button" class="btn btn-default btn-sm" ng-disabled="ProfileQuestionnaireLine.ContactClassField != Constants.ProfileQuestionaireLineContactClassFieldTypes[5].Code">Points</button>
+                    <button type="button" class="btn btn-default btn-sm" ng-disabled="ProfileQuestionnaireLine.ContactClassField != Constants.ProfileQuestionaireLineContactClassFieldTypes[5].Code" ng-click="showRatingPoints()">Points</button>
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="StartingDateFormula">Starting Date Formula</label>
                 <div class="col-xs-6">
-                    <input type="text" class="form-control" name="StartingDateFormula" id="StartingDateFormula" ng-model="ProfileQuestionnaireLine.StartingDateFormula"
-                    ng-disabled="disableStartingDateFormula()"
-                    />
+                    <input type="text" class="form-control" name="StartingDateFormula" id="StartingDateFormula" ng-model="ProfileQuestionnaireLine.StartingDateFormula" ng-disabled="disableStartingDateFormula()" />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="EndingDateFormula">Ending Date Formula</label>
                 <div class="col-xs-6">
-                    <input type="text" class="form-control" name="EndingDateFormula" id="EndingDateFormula" ng-model="ProfileQuestionnaireLine.EndingDateFormula"
-                    ng-disabled="disableEndingDateFormula()"
-                    />
+                    <input type="text" class="form-control" name="EndingDateFormula" id="EndingDateFormula" ng-model="ProfileQuestionnaireLine.EndingDateFormula" ng-disabled="disableEndingDateFormula()" />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="ClassificationMethod">Classification Method</label>
                 <div class="col-xs-6">
-                    <select class="form-control" id="ClassificationMethod" name="ClassificationMethod" ng-model="ProfileQuestionnaireLine.ClassificationMethod"
-                    ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineClassificationMethodTypes"
-                    ng-disabled="disableClassificationMethod()"
+                    <select class="form-control" id="ClassificationMethod" name="ClassificationMethod" ng-model="ProfileQuestionnaireLine.ClassificationMethod" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineClassificationMethodTypes" ng-disabled="disableClassificationMethod()"
                     />
                 </div>
             </div>
             <div class="form-group has-feedback">
                 <label class="control-label col-xs-4" for="SortingMethod">Sorting Method</label>
                 <div class="col-xs-6">
-                    <select class="form-control" id="SortingMethod" name="SortingMethod" ng-model="ProfileQuestionnaireLine.SortingMethod" 
-                    ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineSortingMethodTypes"
-                    ng-disabled="disableSortingMethod()"
-                    />
+                    <select class="form-control" id="SortingMethod" name="SortingMethod" ng-model="ProfileQuestionnaireLine.SortingMethod" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineSortingMethodTypes" ng-disabled="disableSortingMethod()" />
                 </div>
             </div>
         </form>

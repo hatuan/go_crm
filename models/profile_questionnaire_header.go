@@ -241,10 +241,10 @@ func GetProfileQuestionnaireHeaderByID(id int64) (ProfileQuestionnaireHeader, Tr
 		log.Error(err)
 		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
-	errs := profileQuestionnaireHeader.getDetails()
-	if errs != nil {
-		return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: errs}
-	}
+	//errs := profileQuestionnaireHeader.getDetails()
+	//if errs != nil {
+	//	return ProfileQuestionnaireHeader{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: errs}
+	//}
 	return profileQuestionnaireHeader, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Successfully"}}
 }
 

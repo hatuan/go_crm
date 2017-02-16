@@ -3,42 +3,49 @@
  */
 "use strict";
 
-define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManagement/profileQuestionnaireLineDetailMaintenanceController'], function (angularAMD, $) {
+define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManagement/profileQuestionnaireLineDetailMaintenanceController'], function(angularAMD, $) {
     var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModal', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants'];
 
-    var profileQuestionnaireLinesMaintenanceController = function ($scope, $rootScope, $state, $window, moment, $uibModal, alertsService, profileQuestionnairesService, $stateParams, Constants) {
+    var profileQuestionnaireLinesMaintenanceController = function($scope, $rootScope, $state, $window, moment, $uibModal, alertsService, profileQuestionnairesService, $stateParams, Constants) {
 
-        $scope.initializeController = function () {
+        $scope.initializeController = function() {
             $rootScope.applicationModule = "ProfileQuestionnaireLinesMaintenance";
             $rootScope.alerts = [];
 
             $scope.profileQuestionnaireHeaderID = ($stateParams.headerID || "");
+            $scope.profileQuestionnaireHeaderCode = ($stateParams.headerCode || "");
 
+            $scope.ProfileQuestionnaireHeader = {};
             $scope.Constants = Constants;
-
             $scope.ProfileQuestionnaireLines = [];
             $scope.ProfileQuestionnaireLineDeletes = [];
+            $scope.Ratings = [];
 
             var getProfileQuestionnaireLines = new Object();
             getProfileQuestionnaireLines.HeaderID = $scope.profileQuestionnaireHeaderID
-            profileQuestionnairesService.getProfileQuestionnaireLines(getProfileQuestionnaireLines, $scope.getProfileQuestionnaireLinesCompleted, $scope.getProfileQuestionnaireLinesError);
+            profileQuestionnairesService.getProfileQuestionnaireLinesAndRatings(getProfileQuestionnaireLines, $scope.getProfileQuestionnaireLinesAndRatingsCompleted, $scope.getProfileQuestionnaireLinesAndRatingsError);
         };
 
-        $scope.getProfileQuestionnaireLinesCompleted = function (response, status) {
+        $scope.getProfileQuestionnaireLinesAndRatingsCompleted = function(response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
 
+            var profileQuestionnaire = response.Data.ProfileQuestionnaire
+            var ratings = response.Data.Ratings;
             var profileQuestionnaireLines = response.Data.ProfileQuestionnaireLines;
             for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
                 profileQuestionnaireLines[i].RecCreated = new moment.unix(profileQuestionnaireLines[i].RecCreated).toDate();
                 profileQuestionnaireLines[i].RecModified = new moment.unix(profileQuestionnaireLines[i].RecModified).toDate();
             }
 
+            $scope.ProfileQuestionnaireHeader = profileQuestionnaire;
+            $scope.Ratings = ratings;
             $scope.ProfileQuestionnaireLines = profileQuestionnaireLines;
             $scope.ProfileQuestionnaireLineDeletes = [];
             $scope.TotalRows = response.TotalRows;
+
         };
 
-        $scope.getProfileQuestionnaireLinesError = function (response, status) {
+        $scope.getProfileQuestionnaireLinesAndRatingsError = function(response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 
@@ -56,12 +63,12 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             }
         };
 
-        $scope.update = function (form) {
+        $scope.update = function(form) {
             if (form.validate({
-                errorPlacement: function (error, element) {
-                    return true;
-                }
-            })) {
+                    errorPlacement: function(error, element) {
+                        return true;
+                    }
+                })) {
                 var profileQuestionnaire = new Object();
                 profileQuestionnaire.HeaderID = $scope.profileQuestionnaireHeaderID
 
@@ -75,59 +82,64 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                     if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].ToValue) || profileQuestionnaireLines[i].ToValue == "")
                         profileQuestionnaireLines[i].ToValue = "0";
                 }
+                var ratings = $scope.Ratings;
+                var profileQuestionnaireDetail = new Object();
+                profileQuestionnaireDetail.ProfileQuestionnaireLines = profileQuestionnaireLines;
+                profileQuestionnaireDetail.Ratings = ratings;
 
-                profileQuestionnairesService.updateProfileQuestionnaireLines(profileQuestionnaire, profileQuestionnaireLines, $scope.profileQuestionnaireLinesUpdateCompleted, $scope.profileQuestionnaireLinesUpdateError)
+
+                profileQuestionnairesService.updateProfileQuestionnaireLinesAndRatings(profileQuestionnaire, profileQuestionnaireDetail, $scope.profileQuestionnaireLinesAndRatingsUpdateCompleted, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
             }
         };
 
-        $scope.profileQuestionnaireLinesUpdateCompleted = function (response, status) {
+        $scope.profileQuestionnaireLinesAndRatingsUpdateCompleted = function(response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
 
-            setTimeout(function () {
+            setTimeout(function() {
                 $state.go('profileQuestionnaireMaintenance', { ID: $scope.profileQuestionnaireHeaderID });
             }, 1000);
         };
 
-        $scope.profileQuestionnaireLinesUpdateError = function (response, status) {
+        $scope.profileQuestionnaireLinesAndRatingsUpdateError = function(response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 
-        $scope.cancel = function (form) {
-            setTimeout(function () {
+        $scope.cancel = function(form) {
+            setTimeout(function() {
                 $state.go('profileQuestionnaireMaintenance', { ID: $scope.profileQuestionnaireHeaderID });
             }, 10);
         };
 
-        $scope.addLines = function () {
+        $scope.addLines = function() {
             var profileQuestionnaireLine = $scope.createProfileQuestionnaireLineObject();
             $scope.ProfileQuestionnaireLines.push(profileQuestionnaireLine);
         }
 
-        $scope.detailLine = function (_profileQuestionnaireLine, parentSelector) {
+        $scope.detailLine = function(_profileQuestionnaireLine, parentSelector) {
             var parentElem = parentSelector ?
                 angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
 
-                
+
             var modalInstance = $uibModal.open({
                 animation: true,
                 ariaLabelledBy: 'modal-title',
                 ariaDescribedBy: 'modal-body',
                 templateUrl: 'app/contactManagement/profileQuestionnaireLineDetailMaintenance.html',
-                controller: 'profileQuestionnaireLineDetailMaintenanceController',
+                controller: 'ProfileQuestionnaireLineDetailMaintenanceController',
                 resolve: {
-                    profileQuestionnaireLine: function () {
-                        var __profileQuestionnaireLine = $.extend({}, _profileQuestionnaireLine) ;
+                    profileQuestionnaireLine: function() {
+                        var __profileQuestionnaireLine = $.extend({}, _profileQuestionnaireLine);
                         return __profileQuestionnaireLine;
                     }
                 }
             });
-            modalInstance.rendered.then(function (result) {
+            modalInstance.rendered.then(function(result) {
                 $('.modal .modal-body').css('overflow-y', 'auto');
-                $('.modal .modal-body').css('max-height', $(window).height()*0.7);
-                $('.modal .modal-body').css('height', $(window).height()*0.7);
+                $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+                $('.modal .modal-body').css('height', $(window).height() * 0.7);
                 $('.modal .modal-body').css('margin-right', 0);
             });
-            modalInstance.result.then(function (editProfileQuestionnaireLine) {
+            modalInstance.result.then(function(editProfileQuestionnaireLine) {
                 _profileQuestionnaireLine.Description = editProfileQuestionnaireLine.Description;
                 _profileQuestionnaireLine.MultipleAnswers = editProfileQuestionnaireLine.MultipleAnswers;
                 _profileQuestionnaireLine.AutoContactClassification = editProfileQuestionnaireLine.AutoContactClassification;
@@ -139,35 +151,35 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                 _profileQuestionnaireLine.ClassificationMethod = editProfileQuestionnaireLine.ClassificationMethod;
                 _profileQuestionnaireLine.SortingMethod = editProfileQuestionnaireLine.SortingMethod;
 
-            }, function () {
+            }, function() {
                 //dismissed 
-            })['finally'](function () {
-                modalInstance = undefined  // <--- This fixes
+            })['finally'](function() {
+                modalInstance = undefined;
             });
-            
+
         }
 
-        $scope.insertLine = function (_profileQuestionnaireLine, _index) {
+        $scope.insertLine = function(_profileQuestionnaireLine, _index) {
             var _insertProfileQuestionnaireLine = $scope.createProfileQuestionnaireLineObject();
             _insertProfileQuestionnaireLine.LineNo = _index;
 
-            for(var _i = _index; _i <= $scope.ProfileQuestionnaireLines.length; _i++) {
+            for (var _i = _index; _i <= $scope.ProfileQuestionnaireLines.length; _i++) {
                 $scope.ProfileQuestionnaireLines[_i - 1].LineNo = _i + 1;
             }
             $scope.ProfileQuestionnaireLines.splice(_index - 1, 0, _insertProfileQuestionnaireLine);
         }
 
-        $scope.removeLine = function (_profileQuestionnaireLine, _index) {
+        $scope.removeLine = function(_profileQuestionnaireLine, _index) {
             //TODO: Need check Profile Questionnaire Line is used before delete
 
-            for(var _i = _index + 1; _i <= $scope.ProfileQuestionnaireLines.length; _i++) {
+            for (var _i = _index + 1; _i <= $scope.ProfileQuestionnaireLines.length; _i++) {
                 $scope.ProfileQuestionnaireLines[_i - 1].LineNo = _i - 1;
             }
 
             $scope.ProfileQuestionnaireLines.splice(_index - 1, 1);
         }
 
-        $scope.createProfileQuestionnaireLineObject = function () {
+        $scope.createProfileQuestionnaireLineObject = function() {
             var profileQuestionnaireLine = new Object();
             profileQuestionnaireLine.Type = $scope.Constants.ProfileQuestionaireLineTypes[0].Code;
             profileQuestionnaireLine.ProfileQuestionnaireHeaderID = $scope.profileQuestionnaireHeaderID;

@@ -30,7 +30,7 @@ func TestGetIntergerPos(t *testing.T) {
 
 	for i, tt := range tests {
 		numberSequence := NumberSequence{FormatNo: tt.s}
-		s, e := numberSequence.getIntergerPos(numberSequence.FormatNo)
+		s, e := numberSequence.getIntegerPos(numberSequence.FormatNo)
 		if !reflect.DeepEqual(s, tt.startPos) || !reflect.DeepEqual(e, tt.endPos) {
 			t.Errorf("%d. %q: startPos, endPos mismatch:\n   exp=%d,%d\n   got=%d,%d\n", i, tt.s, tt.startPos, tt.endPos, s, e)
 		}

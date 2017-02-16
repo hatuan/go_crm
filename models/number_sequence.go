@@ -109,12 +109,12 @@ func (c *NumberSequence) NextNo() (string, error) {
 		log.Error(err)
 		return "", err
 	}
-	startPos, endPos := c.getIntergerPos(c.FormatNo)
+	startPos, endPos := c.getIntegerPos(c.FormatNo)
 
 	return c.replaceNoText(c.FormatNo, c.CurrentNo, 0, startPos, endPos)
 }
 
-func (c *NumberSequence) getIntergerPos(no string) (startPos, endPos int) {
+func (c *NumberSequence) getIntegerPos(no string) (startPos, endPos int) {
 	isDigit := false
 	startPos = 0
 	endPos = 0
