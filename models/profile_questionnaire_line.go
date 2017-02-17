@@ -5,9 +5,7 @@ import (
 	"erpvietnam/crm/log"
 	"erpvietnam/crm/settings"
 	"errors"
-	"fmt"
 	"strconv"
-	"strings"
 
 	"github.com/jmoiron/sqlx"
 	"github.com/shopspring/decimal"
@@ -113,7 +111,44 @@ func (c *ProfileQuestionnaireLine) GetRatings() error {
 	return nil
 }
 
-func GetProfileQuestionnaireLines(orgID string, searchCondition string, infiniteScrollingInformation InfiniteScrollingInformation) ([]ProfileQuestionnaireLine, TransactionalInformation) {
+func (c *ProfileQuestionnaireLine) GetNextQuestion() (ProfileQuestionnaireLine, TransactionalInformation) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Error(err)
+		return ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	defer db.Close()
+
+	sqlString := "SELECT question_line.*, " +
+		" user_created.name as rec_created_by_user, " +
+		" user_modified.name as rec_modified_by_user, " +
+		" organization.name as organization, " +
+		" profile_questionnaire_header.code as profile_questionnaire_header_code" +
+		" FROM profile_questionnaire_line as question_line" +
+		" INNER JOIN user_profile as user_created ON question_line.rec_created_by = user_created.id " +
+		" INNER JOIN user_profile as user_modified ON question_line.rec_modified_by = user_modified.id " +
+		" INNER JOIN organization as organization ON question_line.organization_id = organization.id " +
+		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON question_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
+		" WHERE question_line.organization_id = $1 " +
+		" 	AND question_line.profile_questionnaire_header_id = $2 " +
+		"	AND question_line.ln > $3 " +
+		"	AND question_line.type = 1 "
+
+	var next_question ProfileQuestionnaireLine
+	err = db.Select(&next_question, sqlString, c.OrganizationID, c.ProfileQuestionnaireHeaderID, c.LineNo)
+
+	if err == sql.ErrNoRows {
+		return ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{err.Error()}}
+	} else if err != nil {
+		log.Error(err)
+		return ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+
+	return next_question, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{"Record Found"}}
+
+}
+
+func (c *ProfileQuestionnaireLine) GetAnswers() ([]ProfileQuestionnaireLine, TransactionalInformation) {
 	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
 	if err != nil {
 		log.Error(err)
@@ -121,43 +156,36 @@ func GetProfileQuestionnaireLines(orgID string, searchCondition string, infinite
 	}
 	defer db.Close()
 
+	nextQuestion, transInfo := c.GetNextQuestion()
+	if !transInfo.ReturnStatus {
+		return []ProfileQuestionnaireLine{}, transInfo
+	}
+
 	sqlString := "SELECT profile_questionnaire_line.*, " +
 		" user_created.name as rec_created_by_user, " +
 		" user_modified.name as rec_modified_by_user, " +
 		" organization.name as organization, " +
 		" profile_questionnaire_header.code as profile_questionnaire_header_code" +
 		" FROM profile_questionnaire_line " +
-		" INNER JOIN user_profile as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
-		" INNER JOIN user_profile as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
-		" INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
-		" INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
-		" ORDER BY profile_questionnaire_line.line_no"
+		" 	INNER JOIN user_profile as user_created ON profile_questionnaire_line.rec_created_by = user_created.id " +
+		" 	INNER JOIN user_profile as user_modified ON profile_questionnaire_line.rec_modified_by = user_modified.id " +
+		" 	INNER JOIN organization as organization ON profile_questionnaire_line.organization_id = organization.id " +
+		" 	INNER JOIN profile_questionnaire_header as profile_questionnaire_header ON profile_questionnaire_line.profile_questionnaire_header_id = profile_questionnaire_header.id " +
+		" WHERE profile_questionnaire_line.organization_id = $1 " +
+		" 	AND profile_questionnaire_line.profile_questionnaire_header_id = $2 " +
+		"	AND profile_questionnaire_line.line_no > $3"
 
-	sqlWhere := " WHERE profile_questionnaire_line.organization_id = $1"
-	if len(searchCondition) > 0 {
-		sqlWhere += fmt.Sprintf(" AND %s", searchCondition)
+	if nextQuestion.ID != nil {
+		sqlString += "	AND profile_questionnaire_line.line_no < $4 "
 	}
-
-	var sqlOrder string
-	if len(infiniteScrollingInformation.SortDirection) == 0 || infiniteScrollingInformation.SortDirection == "ASC" {
-		if len(infiniteScrollingInformation.SortExpression) > 0 {
-			sqlOrder = fmt.Sprintf(" ORDER BY %s ASC", "profile_questionnaire_line."+strings.ToLower(infiniteScrollingInformation.SortExpression))
-		}
-	} else { //sort DESC
-		if len(infiniteScrollingInformation.SortExpression) > 0 {
-			sqlOrder = fmt.Sprintf(" ORDER BY %s DESC", "profile_questionnaire_line."+strings.ToLower(infiniteScrollingInformation.SortExpression))
-		}
-	}
-
-	sqlLimit := ""
-	if len(infiniteScrollingInformation.FetchSize) > 0 {
-		sqlLimit += fmt.Sprintf(" LIMIT %s ", infiniteScrollingInformation.FetchSize)
-	}
-	sqlString += sqlWhere + sqlOrder + sqlLimit
-	log.Debug(sqlString)
+	sqlString += " ORDER BY profile_questionnaire_line.line_no"
 
 	profileQuestionnaireLines := []ProfileQuestionnaireLine{}
-	err = db.Select(&profileQuestionnaireLines, sqlString, orgID)
+	if nextQuestion.ID != nil {
+		err = db.Select(&profileQuestionnaireLines, sqlString, c.OrganizationID, c.ProfileQuestionnaireHeaderID, c.LineNo, nextQuestion.LineNo)
+	} else {
+		err = db.Select(&profileQuestionnaireLines, sqlString, c.OrganizationID, c.ProfileQuestionnaireHeaderID, c.LineNo)
+	}
 
 	if err != nil {
 		log.Error(err)

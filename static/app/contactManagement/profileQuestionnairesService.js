@@ -22,6 +22,19 @@ define(['angularAMD', 'ajaxService'], function(angularAMD) {
             ajaxService.AjaxGetWithData(data, "/api/profilequestionnaire", successFunction, errorFunction);
         };
 
+        this.getProfileQuestionnaireLines = function(dataUrl, successFunction, errorFunction) {
+            var getPath = '/api/profilequestionnaire/{{HeaderID}}';
+            getPath = $interpolate(getPath)(dataUrl);
+            ajaxService.AjaxGet(getPath, successFunction, errorFunction);
+        };
+
+        this.updateProfileQuestionnaireLines = function(dataUrl, data, successFunction, errorFunction) {
+            var getPath = '/api/profilequestionnaire/{{HeaderID}}';
+            getPath = $interpolate(getPath)(dataUrl);
+
+            ajaxService.AjaxPost(data, getPath, successFunction, errorFunction);
+        };
+
         this.getProfileQuestionnaireLinesAndRatings = function(dataUrl, successFunction, errorFunction) {
             var getPath = '/api/profilequestionnaire/{{HeaderID}}';
             getPath = $interpolate(getPath)(dataUrl);

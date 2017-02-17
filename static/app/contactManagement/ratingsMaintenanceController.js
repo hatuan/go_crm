@@ -10,28 +10,58 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         $scope.ProfileQuestionnaireLine = profileQuestionnaireLine;
         $scope.ProfileQuestionnaireLines = [];
+        $scope.ProfileQuestionnaires = [];
 
         $scope.initializeController = function() {
-            $scope.ProfileQuestionnaireHeaderID = $scope.ProfileQuestionnaireLine.HeaderID;
-            $scope.ProfileQuestionnaireHeaderCode = "";
+            $scope.selectProfileQuestionnaireHeaderID = "";
 
-            var dataURL = new Object();
-            dataURL.HeaderID = $scope.ProfileQuestionnaireHeaderID;
-            profileQuestionnairesService.getProfileQuestionnaireLinesAndRatings(dataURL, $scope.getProfileQuestionnaireLinesAndRatingsCompleted, $scope.getProfileQuestionnaireLinesAndRatingsError);
+            $scope.getProfileQuestionnaires();
         };
 
-        $scope.getProfileQuestionnaireLinesAndRatingsCompleted = function(response, status) {
+        $scope.getProfileQuestionnaires = function() {
+            var profileQuestionnaireInquiry = new Object();
+
+            profileQuestionnaireInquiry.Search = "";
+            profileQuestionnaireInquiry.SortExpression = "Code";
+            profileQuestionnaireInquiry.SortDirection = "ASC";
+            profileQuestionnaireInquiry.FetchSize = ""; //get all
+
+            profileQuestionnairesService.getProfileQuestionnaires(profileQuestionnaireInquiry, $scope.profileQuestionnairesInquiryCompleted, $scope.profileQuestionnairesInquiryError);
+        };
+
+        $scope.profileQuestionnairesInquiryCompleted = function(response, status) {
+            $scope.ProfileQuestionnaires = response.Data.ProfileQuestionnaires;
+        };
+
+        $scope.profileQuestionnairesInquiryError = function(response, status) {
+            alertsService.RenderErrorMessage(response.Error);
+        };
+
+        $scope.selectProfileQuestionnaire = function(_profileQuestionnaireHeaderID) {
+            $scope.selectProfileQuestionnaireHeaderID = _profileQuestionnaireHeaderID;
+
+            $scope.getProfileQuestionnaireLines(_profileQuestionnaireHeaderID);
+        };
+
+        $scope.getProfileQuestionnaireLines = function(_profileQuestionnaireHeaderID) {
+            var __profileQuestionnaire = new Object();
+            __profileQuestionnaire.HeaderID = _profileQuestionnaireHeaderID
+            profileQuestionnairesService.getProfileQuestionnaireLines(__profileQuestionnaire, $scope.getProfileQuestionnaireLinesCompleted, $scope.getProfileQuestionnaireLinesError);
+        };
+
+        $scope.getProfileQuestionnaireLinesCompleted = function(response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
 
-            var profileQuestionnaire = response.Data.ProfileQuestionnaire
             var profileQuestionnaireLines = response.Data.ProfileQuestionnaireLines;
+            for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
+                profileQuestionnaireLines[i].RecCreated = new moment.unix(profileQuestionnaireLines[i].RecCreated).toDate();
+                profileQuestionnaireLines[i].RecModified = new moment.unix(profileQuestionnaireLines[i].RecModified).toDate();
+            }
 
-            $scope.ProfileQuestionnaireHeaderCode = profileQuestionnaire.Code
-            $scope.ProfileQuestionnaireHeader = profileQuestionnaire;
             $scope.ProfileQuestionnaireLines = profileQuestionnaireLines;
         };
 
-        $scope.getProfileQuestionnaireLinesAndRatingsError = function(response, status) {
+        $scope.getProfileQuestionnaireLinesError = function(response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 

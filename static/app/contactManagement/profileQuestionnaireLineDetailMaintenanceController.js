@@ -4,9 +4,9 @@
 "use strict";
 
 define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService', 'app/contactManagement/ratingsMaintenanceController'], function(angularAMD, $) {
-    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModal', '$uibModalInstance', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants', 'profileQuestionnaireLine'];
+    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModal', '$uibModalInstance', 'alertsService', 'profileQuestionnairesService', '$stateParams', '$confirm', 'Constants', 'profileQuestionnaireLine'];
 
-    var profileQuestionnaireLineDetailMaintenanceController = function($scope, $rootScope, $state, $window, moment, $uibModal, $uibModalInstance, alertsService, profileQuestionnairesService, $stateParams, Constants, profileQuestionnaireLine) {
+    var profileQuestionnaireLineDetailMaintenanceController = function($scope, $rootScope, $state, $window, moment, $uibModal, $uibModalInstance, alertsService, profileQuestionnairesService, $stateParams, $confirm, Constants, profileQuestionnaireLine) {
         $scope.Constants = Constants;
         $scope.ProfileQuestionnaireLine = profileQuestionnaireLine;
 
@@ -18,9 +18,13 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             }
         };
 
-        $scope.ok = function(form) {
+        $scope.ok = function(form, editRatings) {
             if (form.validate()) {
-                $uibModalInstance.close($scope.ProfileQuestionnaireLine);
+                var _result = new Object();
+                _result.EditProfileQuestionnaireLine = $scope.ProfileQuestionnaireLine;
+                _result.EditRatings = editRatings;
+
+                $uibModalInstance.close(_result);
             }
         };
 
@@ -32,38 +36,15 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         }
 
-        $scope.showRatingPoints = function(parentSelector) {
-            var parentElem = parentSelector ?
-                angular.element($document[0].querySelector('.modal-demo ' + parentSelector)) : undefined;
+        //$scope.showRatingPoints = function(parentSelector) {
+        //    if (!angular.element("[name='ProfileQuestionnaireLineDetailMaintenanceForm']").controller("form").validate())
+        //        return;
 
-
-            var modalInstance = $uibModal.open({
-                animation: true,
-                ariaLabelledBy: 'modal-title',
-                ariaDescribedBy: 'modal-body',
-                templateUrl: 'app/contactManagement/ratingsMaintenance.html',
-                controller: 'RatingsMaintenanceController',
-                resolve: {
-                    profileQuestionnaireLine: function() {
-                        var __profileQuestionnaireLine = $.extend({}, $scope.ProfileQuestionnaireLine);
-                        return __profileQuestionnaireLine;
-                    },
-                }
-            });
-            modalInstance.rendered.then(function(result) {
-                $('.modal .modal-body').css('overflow-y', 'auto');
-                $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
-                $('.modal .modal-body').css('height', $(window).height() * 0.7);
-                $('.modal .modal-body').css('margin-right', 0);
-            });
-            modalInstance.result.then(function(editRatings) {
-
-            }, function() {
-                //dismissed 
-            })['finally'](function() {
-                modalInstance = undefined;
-            });
-        }
+        //    $confirm({ title: 'Save', text: 'Profile Questionnaire Lines must save before edit Ratings. Do you want to save?' })
+        //        .then(function() {
+        //            $uibModalInstance.close($scope.ProfileQuestionnaireLine);
+        //        });
+        //}
 
         $scope.disableSortingMethod = function() {
             return $scope.ProfileQuestionnaireLine.AutoContactClassification == Constants.BooleanTypes[0].Code;

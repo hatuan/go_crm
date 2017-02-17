@@ -35,6 +35,7 @@ require.config({
         'ngInfiniteScroll': "bower_components/ngInfiniteScroll/build/ng-infinite-scroll.min",
         'bootstrap-switch': 'bower_components/bootstrap-switch/dist/js/bootstrap-switch.min',
         'angular-bootstrap-switch': 'bower_components/angular-bootstrap-switch/dist/angular-bootstrap-switch.min',
+        'angular-confirm-modal': 'bower_components/angular-confirm-modal/angular-confirm.min',
         'ajaxService': 'app/common/services/ajaxServices',
         'alertsService': 'app/common/services/alertsServices',
         'stateConfig': 'app/common/config/stateConfig',

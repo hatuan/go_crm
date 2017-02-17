@@ -3,11 +3,11 @@
  */
 "use strict";
 
-define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'ngInfiniteScroll', 'bootstrap-switch', 'angular-bootstrap-switch', 'myApp.navBar', 'myApp.Capitalize', 'myApp.Constants'], function (angularAMD) {
+define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', 'bootstrap', 'ui-bootstrap', 'kendo.all.min', 'kendo.culture.en', 'kendo.culture.us', 'kendo.culture.vi', 'kendo.culture.vn', 'angular-validate', 'angular-globalize-wrapper', 'jquery-validation-globalize', 'ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'stateConfig', 'toastr', 'angular-moment', 'ngInfiniteScroll', 'bootstrap-switch', 'angular-bootstrap-switch', 'angular-confirm-modal', 'myApp.navBar', 'myApp.Capitalize', 'myApp.Constants'], function(angularAMD) {
 
-    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'infinite-scroll', 'frapontillo.bootstrap-switch', 'myApp.NavBar', 'myApp.Capitalize', 'myApp.Constants']);
+    var app = angular.module("myApp", ['ui.router', 'satellizer', 'pascalprecht.translate', 'blockUI', 'toastr', 'angularMoment', 'ui.bootstrap', 'kendo.directives', 'ngValidate', 'globalizeWrapper', 'infinite-scroll', 'frapontillo.bootstrap-switch', 'angular-confirm', 'myApp.NavBar', 'myApp.Capitalize', 'myApp.Constants']);
 
-    app.config(function (blockUIConfig) {
+    app.config(function(blockUIConfig) {
 
         // Change the default overlay message
         blockUIConfig.message = "executing...";
@@ -18,7 +18,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
 
     });
 
-    app.config(['$authProvider', function ($authProvider) {
+    app.config(['$authProvider', function($authProvider) {
         // Satellizer configuration that specifies which API
         // route the JWT should be retrieved from
         $authProvider.loginUrl = '/api/token-auth';
@@ -27,7 +27,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
     }]);
 
     //https://github.com/Foxandxss/angular-toastr
-    app.config(function (toastrConfig) {
+    app.config(function(toastrConfig) {
         angular.extend(toastrConfig, {
             allowHtml: true,
             closeButton: true,
@@ -39,17 +39,17 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
 
     app.config(stateConfig);
 
-    app.config(['$validatorProvider', function ($validatorProvider) {
+    app.config(['$validatorProvider', function($validatorProvider) {
         $validatorProvider.setDefaults({
-            highlight: function (element) {
+            highlight: function(element) {
                 $(element).closest('.form-group').addClass('has-error');
             },
-            unhighlight: function (element) {
+            unhighlight: function(element) {
                 $(element).closest('.form-group').removeClass('has-error');
             },
             errorElement: 'span',
             errorClass: 'has-block',
-            errorPlacement: function (error, element) {
+            errorPlacement: function(error, element) {
                 return true;
 
                 //if (element.parent('.input-group').length) {
@@ -66,7 +66,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
     }]);
 
 
-    app.config(['globalizeWrapperProvider', function (globalizeWrapperProvider) {
+    app.config(['globalizeWrapperProvider', function(globalizeWrapperProvider) {
         // The path to cldr-data
         globalizeWrapperProvider.setCldrBasePath('bower_components/cldr-data');
 
@@ -89,50 +89,49 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
             'timeData.json',
             'weekData.json'
         ]);
-    }]
-    );
+    }]);
 
-    app.controller('indexController', ['$scope', '$rootScope', '$http', 'blockUI', function ($scope, $rootScope, $http, blockUI) {
+    app.controller('indexController', ['$scope', '$rootScope', '$http', 'blockUI', function($scope, $rootScope, $http, blockUI) {
 
-        $scope.initializeController = function () {
+        $scope.initializeController = function() {
             $rootScope.displayContent = false;
             // if ($location.path() != "") {
             $scope.initializeApplication($scope.initializeApplicationComplete, $scope.initializeApplicationError);
             // }
         };
 
-        $scope.initializeApplicationComplete = function (response) {
+        $scope.initializeApplicationComplete = function(response) {
             $rootScope.MenuItems = response.MenuItems;
             $rootScope.displayContent = true;
             $rootScope.IsInitAppCompleted = true;
         };
 
-        $scope.initializeApplicationError = function (response) {
+        $scope.initializeApplicationError = function(response) {
             alert("ERROR : InitializeApplication");
         };
 
-        $scope.initializeApplication = function (successFunction, errorFunction) {
+        $scope.initializeApplication = function(successFunction, errorFunction) {
             blockUI.start();
             $scope.AjaxGet("/api/main/initializeApplication", successFunction, errorFunction);
             blockUI.stop();
         };
 
-        $scope.AjaxGet = function (route, successFunction, errorFunction) {
-            setTimeout(function () {
-                $http({ method: 'GET', url: route }).success(function (response, status, headers, config) {
+        $scope.AjaxGet = function(route, successFunction, errorFunction) {
+            setTimeout(function() {
+                $http({ method: 'GET', url: route }).success(function(response, status, headers, config) {
                     successFunction(response, status);
-                }).error(function (response) {
+                }).error(function(response) {
                     errorFunction(response);
                 });
             }, 1);
 
         };
 
-        $scope.AjaxGetWithData = function (data, route, successFunction, errorFunction) {
-            setTimeout(function () {
-                $http({ method: 'GET', url: route, params: data }).success(function (response, status, headers, config) {
+        $scope.AjaxGetWithData = function(data, route, successFunction, errorFunction) {
+            setTimeout(function() {
+                $http({ method: 'GET', url: route, params: data }).success(function(response, status, headers, config) {
                     successFunction(response, status);
-                }).error(function (response) {
+                }).error(function(response) {
                     errorFunction(response);
                 });
             }, 1);
@@ -141,7 +140,7 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
 
     }]);
 
-    app.run(['$state', '$rootScope', '$auth', 'globalizeWrapper', 'amMoment', function ($state, $rootScope, $auth, globalizeWrapper, amMoment) {
+    app.run(['$state', '$rootScope', '$auth', 'globalizeWrapper', 'amMoment', function($state, $rootScope, $auth, globalizeWrapper, amMoment) {
 
         //kendo.culture("vi-VN");
 
@@ -151,23 +150,23 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
         //   parseFormats: ["yyyy-MM-dd", "dd/MM/yyyy", "yyyy/MM/dd"],
         //};
 
-        $rootScope.isAuthenticated = function () {
+        $rootScope.isAuthenticated = function() {
             return $auth.isAuthenticated();
         };
 
         globalizeWrapper.loadLocales(['vi', 'en']);
 
-        $rootScope.$on('GlobalizeLoadSuccess', function () {
+        $rootScope.$on('GlobalizeLoadSuccess', function() {
             //console.log("GlobalizeLoadSuccess"); 
         });
 
-        $rootScope.$on('GlobalizeLocaleChanged', function () {
+        $rootScope.$on('GlobalizeLocaleChanged', function() {
             //console.log("globalizeWrapper.getLocale() = " + globalizeWrapper.getLocale());
             Globalize.locale(globalizeWrapper.getLocale());
         });
     }]);
 
-    angular.isUndefinedOrNull = function (val) {
+    angular.isUndefinedOrNull = function(val) {
         return angular.isUndefined(val) || val === null;
     }
 
@@ -176,5 +175,3 @@ define(['angularAMD', 'jquery', 'jquery.validate', 'jquery.validation.extend', '
 
     return app;
 });
-
-

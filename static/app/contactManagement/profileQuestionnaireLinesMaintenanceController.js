@@ -63,34 +63,66 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             }
         };
 
-        $scope.update = function(form) {
-            if (form.validate({
-                    errorPlacement: function(error, element) {
-                        return true;
-                    }
-                })) {
-                var profileQuestionnaire = new Object();
-                profileQuestionnaire.HeaderID = $scope.profileQuestionnaireHeaderID
+        var save = function(_showRatings) {
+            var profileQuestionnaire = new Object();
+            profileQuestionnaire.HeaderID = $scope.profileQuestionnaireHeaderID
 
-                var profileQuestionnaireLines = $scope.ProfileQuestionnaireLines;
-                for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
-                    profileQuestionnaireLines[i].RecCreated = new moment(profileQuestionnaireLines[i].RecCreated).unix();
-                    profileQuestionnaireLines[i].RecModified = new moment(profileQuestionnaireLines[i].RecModified).unix();
+            var profileQuestionnaireLines = $scope.ProfileQuestionnaireLines;
+            for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
+                profileQuestionnaireLines[i].RecCreated = new moment(profileQuestionnaireLines[i].RecCreated).unix();
+                profileQuestionnaireLines[i].RecModified = new moment(profileQuestionnaireLines[i].RecModified).unix();
 
-                    if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].FromValue) || profileQuestionnaireLines[i].FromValue == "")
-                        profileQuestionnaireLines[i].FromValue = "0";
-                    if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].ToValue) || profileQuestionnaireLines[i].ToValue == "")
-                        profileQuestionnaireLines[i].ToValue = "0";
-                }
-                var ratings = $scope.Ratings;
-                var profileQuestionnaireDetail = new Object();
-                profileQuestionnaireDetail.ProfileQuestionnaireLines = profileQuestionnaireLines;
-                profileQuestionnaireDetail.Ratings = ratings;
+                if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].FromValue) || profileQuestionnaireLines[i].FromValue == "")
+                    profileQuestionnaireLines[i].FromValue = "0";
+                if (angular.isUndefinedOrNull(profileQuestionnaireLines[i].ToValue) || profileQuestionnaireLines[i].ToValue == "")
+                    profileQuestionnaireLines[i].ToValue = "0";
+            }
+            var ratings = $scope.Ratings;
+            var profileQuestionnaireDetail = new Object();
+            profileQuestionnaireDetail.ProfileQuestionnaireLines = profileQuestionnaireLines;
+            profileQuestionnaireDetail.Ratings = ratings;
 
-
+            if (_showRatings)
+                profileQuestionnairesService.updateProfileQuestionnaireLinesAndRatings(profileQuestionnaire, profileQuestionnaireDetail, $scope.profileQuestionnaireLinesAndRatingsUpdateCompletedAndShowRatings, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
+            else
                 profileQuestionnairesService.updateProfileQuestionnaireLinesAndRatings(profileQuestionnaire, profileQuestionnaireDetail, $scope.profileQuestionnaireLinesAndRatingsUpdateCompleted, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
+        }
+
+        $scope.update = function(form) {
+            if (form.validate()) {
+                save(false);
             }
         };
+
+        $scope.profileQuestionnaireLinesAndRatingsUpdateCompletedAndShowRatings = function(response, status) {
+            var modalRatingsInstance = $uibModal.open({
+                animation: true,
+                ariaLabelledBy: 'modal-title',
+                ariaDescribedBy: 'modal-body',
+                templateUrl: 'app/contactManagement/ratingsMaintenance.html',
+                controller: 'RatingsMaintenanceController',
+                size: 'lg',
+                resolve: {
+                    profileQuestionnaireLine: function() {
+                        var __profileQuestionnaireLine = $.extend({}, $scope.ProfileQuestionnaireLine);
+                        return __profileQuestionnaireLine;
+                    },
+                }
+            });
+            modalRatingsInstance.rendered.then(function(result) {
+                $('.modal .modal-body').css('overflow-y', 'auto');
+                $('.modal .modal-body').css('max-height', $(window).height() * 0.7);
+                $('.modal .modal-body').css('height', $(window).height() * 0.7);
+                $('.modal .modal-body').css('margin-right', 0);
+            });
+            modalRatingsInstance.result.then(function(editRatings) {
+
+            }, function() {
+                //dismissed 
+            })['finally'](function() {
+                modalRatingsInstance = undefined;
+            });
+        }
 
         $scope.profileQuestionnaireLinesAndRatingsUpdateCompleted = function(response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
@@ -139,7 +171,10 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                 $('.modal .modal-body').css('height', $(window).height() * 0.7);
                 $('.modal .modal-body').css('margin-right', 0);
             });
-            modalInstance.result.then(function(editProfileQuestionnaireLine) {
+            modalInstance.result.then(function(_result) {
+                var editProfileQuestionnaireLine = _result.EditProfileQuestionnaireLine;
+                var editRatings = _result.EditRatings;
+
                 _profileQuestionnaireLine.Description = editProfileQuestionnaireLine.Description;
                 _profileQuestionnaireLine.MultipleAnswers = editProfileQuestionnaireLine.MultipleAnswers;
                 _profileQuestionnaireLine.AutoContactClassification = editProfileQuestionnaireLine.AutoContactClassification;
@@ -151,6 +186,13 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                 _profileQuestionnaireLine.ClassificationMethod = editProfileQuestionnaireLine.ClassificationMethod;
                 _profileQuestionnaireLine.SortingMethod = editProfileQuestionnaireLine.SortingMethod;
 
+                if (editRatings) {
+                    if (!angular.element("[name='ProfileQuestionnaireLinesMaintenanceForm']").controller("form").validate()) {
+                        $window.alert("Please check Profile Questionnaire Lines");
+                    } else {
+                        save(editRatings);
+                    }
+                };
             }, function() {
                 //dismissed 
             })['finally'](function() {
