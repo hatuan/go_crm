@@ -4,13 +4,14 @@
 "use strict";
 
 define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoComplete', 'profileQuestionnairesService'], function(angularAMD, $) {
-    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModalInstance', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants', 'profileQuestionnaireLine'];
+    var injectParams = ['$scope', '$rootScope', '$state', '$window', 'moment', '$uibModalInstance', 'alertsService', 'profileQuestionnairesService', '$stateParams', 'Constants', 'profileQuestionnaireLineEditRatings'];
 
-    var ratingsMaintenanceController = function($scope, $rootScope, $state, $window, moment, $uibModalInstance, alertsService, profileQuestionnairesService, $stateParams, Constants, profileQuestionnaireLine) {
+    var ratingsMaintenanceController = function($scope, $rootScope, $state, $window, moment, $uibModalInstance, alertsService, profileQuestionnairesService, $stateParams, Constants, profileQuestionnaireLineEditRatings) {
 
-        $scope.ProfileQuestionnaireLine = profileQuestionnaireLine;
+        $scope.ProfileQuestionnaireLineEditRatings = profileQuestionnaireLineEditRatings;
         $scope.ProfileQuestionnaireLines = [];
         $scope.ProfileQuestionnaires = [];
+        $scope.Constants = Constants;
 
         $scope.initializeController = function() {
             $scope.selectProfileQuestionnaireHeaderID = "";
@@ -53,11 +54,28 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             alertsService.RenderSuccessMessage(response.ReturnMessage);
 
             var profileQuestionnaireLines = response.Data.ProfileQuestionnaireLines;
+            var profileQuestionnaireLineDeletes = [];
+            var found_question = false;
             for (var i = 0, len = profileQuestionnaireLines.length; i < len; i++) {
                 profileQuestionnaireLines[i].RecCreated = new moment.unix(profileQuestionnaireLines[i].RecCreated).toDate();
                 profileQuestionnaireLines[i].RecModified = new moment.unix(profileQuestionnaireLines[i].RecModified).toDate();
-            }
 
+                if (profileQuestionnaireLines[i].ProfileQuestionnaireHeaderID == $scope.ProfileQuestionnaireLineEditRatings.ProfileQuestionnaireHeaderID) {
+                    if (profileQuestionnaireLines[i].LineNo == $scope.ProfileQuestionnaireLineEditRatings.LineNo) {
+                        found_question = true;
+                        profileQuestionnaireLineDeletes.push(profileQuestionnaireLines[i])
+                    } else if (found_question && profileQuestionnaireLines[i].Type == Constants.ProfileQuestionaireLineTypes[1].Code) {
+                        profileQuestionnaireLineDeletes.push(profileQuestionnaireLines[i])
+                    } else if (found_question && profileQuestionnaireLines[i].Type == Constants.ProfileQuestionaireLineTypes[0].Code) {
+                        found_question = false;
+                    }
+                }
+            }
+            profileQuestionnaireLines = profileQuestionnaireLines.filter(function(el, index, array) {
+                return !profileQuestionnaireLineDeletes.find(function(_el) {
+                    return _el.ID === el.ID
+                })
+            })
             $scope.ProfileQuestionnaireLines = profileQuestionnaireLines;
         };
 
@@ -75,7 +93,7 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         $scope.ok = function(form) {
             if (form.validate()) {
-                $uibModalInstance.close($scope.ProfileQuestionnaireLine);
+                $uibModalInstance.close($scope.ProfileQuestionnaireLineEditRatings);
             }
         };
 

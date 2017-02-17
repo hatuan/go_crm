@@ -27,14 +27,14 @@
                     <div class="grid-row">
                         <div class="data-row row sortable-handle">
                             <div class="row-index col col-xs-1">&nbsp;</div>
-                            <div class="col grid-static-col ellipsis col-xs-1">Type</div>
-                            <div class="col grid-static-col ellipsis col-xs-3">
+                            <div class="col grid-static-col ellipsis col-xs-2">Type</div>
+                            <div class="col grid-static-col ellipsis col-xs-5">
                                 Description
                             </div>
-                            <div class="col grid-static-col ellipsis col-xs-1">
+                            <div class="col grid-static-col ellipsis col-xs-2">
                                 No of Contacts
                             </div>
-                            <div class="col grid-static-col ellipsis col-xs-1">
+                            <div class="col grid-static-col ellipsis col-xs-2">
                                 Points
                             </div>
                         </div>
@@ -48,22 +48,22 @@
                                     <div class="row-index col col-xs-1">
                                         {{$index + 1}}
                                     </div>
-                                    <div class="col grid-static-col col-xs-1">
+                                    <div class="col grid-static-col col-xs-2">
                                         <div class="form-group">
                                             <select class="form-control" name="Type[]" id="Type_{{$index + 1}}" ng-model="profileQuestionnaireLine.Type" ng-options="s.Code as s.Name for s in Constants.ProfileQuestionaireLineTypes" disabled/>
                                         </div>
                                     </div>
-                                    <div class="col grid-static-col col-xs-3">
+                                    <div class="col grid-static-col col-xs-5">
                                         <div class="form-group">
                                             <input type="text" class="form-control" name="Description[]" id="Description_{{$index + 1}}" ng-model="profileQuestionnaireLine.Description" disabled/>
                                         </div>
                                     </div>
-                                    <div class="col grid-static-col col-xs-1">
+                                    <div class="col grid-static-col col-xs-2">
                                         <div class="form-group">
                                             <input type="number" class="form-control" name="NoContacts[]" id="NoContacts_{{$index + 1}}" ng-model="profileQuestionnaireLine.NoContacts" disabled/>
                                         </div>
                                     </div>
-                                    <div class="col grid-static-col col-xs-1">
+                                    <div class="col grid-static-col col-xs-2">
                                         <div class="form-group">
                                             <input type="text" class="form-control" name="Point[]" id="Point_{{$index + 1}}" ng-model="profileQuestionnaireLine.Point" />
                                         </div>
