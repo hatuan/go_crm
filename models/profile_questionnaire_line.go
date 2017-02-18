@@ -224,11 +224,11 @@ func GetProfileQuestionnaireLinesByHeaderID(headerID int64) ([]ProfileQuestionna
 		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 
-	//for _, profileQuestionnaireLine := range profileQuestionnaireLines {
-	//	if err = profileQuestionnaireLine.GetRatings(); err != nil {
-	//		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-	//	}
-	//}
+	for _, profileQuestionnaireLine := range profileQuestionnaireLines {
+		if err = profileQuestionnaireLine.GetRatings(); err != nil {
+			return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+		}
+	}
 
 	return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: true, ReturnMessage: []string{strconv.Itoa(len(profileQuestionnaireLines)) + " records found"}}
 }

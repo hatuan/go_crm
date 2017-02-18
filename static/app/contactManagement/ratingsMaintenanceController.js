@@ -9,6 +9,9 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
     var ratingsMaintenanceController = function($scope, $rootScope, $state, $window, moment, $uibModalInstance, alertsService, profileQuestionnairesService, $stateParams, Constants, profileQuestionnaireLineEditRatings) {
 
         $scope.ProfileQuestionnaireLineEditRatings = profileQuestionnaireLineEditRatings;
+        if ($scope.ProfileQuestionnaireLineEditRatings.Ratings === null)
+            $scope.ProfileQuestionnaireLineEditRatings.Ratings = [];
+
         $scope.ProfileQuestionnaireLines = [];
         $scope.ProfileQuestionnaires = [];
         $scope.Constants = Constants;
@@ -45,9 +48,34 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
         };
 
         $scope.getProfileQuestionnaireLines = function(_profileQuestionnaireHeaderID) {
-            var __profileQuestionnaire = new Object();
-            __profileQuestionnaire.HeaderID = _profileQuestionnaireHeaderID
-            profileQuestionnairesService.getProfileQuestionnaireLines(__profileQuestionnaire, $scope.getProfileQuestionnaireLinesCompleted, $scope.getProfileQuestionnaireLinesError);
+            if (!angular.element("[name='ProfileQuestionnaireLinesMaintenanceForm']").controller("form").validate())
+                return;
+
+            //save current point of ProfileQuestionnaireLines to ratings
+            for (var i = 0, len = $scope.ProfileQuestionnaireLines.length; i < len; i++) {
+                var point = parseInt($scope.ProfileQuestionnaireLines[i].Point);
+                if (!isNaN(point)) {
+                    var rating = $scope.ProfileQuestionnaireLineEditRatings.Ratings.find(function(el) {
+                        return el.RatingProfileQuestionnaireLineID == $scope.ProfileQuestionnaireLines[i].ID
+                    })
+
+                    if (rating) { //replace point
+                        rating.Point = point;
+                    } else { //append to ratings
+                        var newRating = new Object();
+                        newRating.ProfileQuestionnaireHeaderID = $scope.ProfileQuestionnaireLineEditRatings.ProfileQuestionnaireHeaderID;
+                        newRating.ProfileQuestionnaireLineID = $scope.ProfileQuestionnaireLineEditRatings.ID;
+                        newRating.RatingProfileQuestionnaireHeaderID = $scope.ProfileQuestionnaireLines[i].ProfileQuestionnaireHeaderID;
+                        newRating.RatingProfileQuestionnaireLineID = $scope.ProfileQuestionnaireLines[i].ID;
+                        newRating.Point = point;
+
+                        $scope.ProfileQuestionnaireLineEditRatings.Ratings.push(newRating);
+                    }
+                }
+            }
+
+            //display ProfileQuestionnaireLines
+            profileQuestionnairesService.getProfileQuestionnaireLines({ HeaderID: _profileQuestionnaireHeaderID }, $scope.getProfileQuestionnaireLinesCompleted, $scope.getProfileQuestionnaireLinesError);
         };
 
         $scope.getProfileQuestionnaireLinesCompleted = function(response, status) {
@@ -70,7 +98,15 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                         found_question = false;
                     }
                 }
+
+                var ratingPoint = $scope.ProfileQuestionnaireLineEditRatings.Ratings.find(function(el) {
+                    return el.RatingProfileQuestionnaireLineID == profileQuestionnaireLines[i].ID
+                })
+                if (ratingPoint) {
+                    profileQuestionnaireLines[i].Point = ratingPoint.Point;
+                }
             }
+
             profileQuestionnaireLines = profileQuestionnaireLines.filter(function(el, index, array) {
                 return !profileQuestionnaireLineDeletes.find(function(_el) {
                     return _el.ID === el.ID

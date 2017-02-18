@@ -33,18 +33,14 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
         };
 
         $scope.autoContactClassificationChange = function() {
-
+            if ($scope.ProfileQuestionnaireLine.AutoContactClassification == Constants.BooleanTypes[0].Code) { //AutoContactClassification == false
+                $scope.ProfileQuestionnaireLine.CustomerClassField = Constants.ProfileQuestionaireLineCustomerClassFieldTypes[0].Code;
+                $scope.ProfileQuestionnaireLine.VendorClassField = Constants.ProfileQuestionaireLineVendorClassFieldTypes[0].Code;
+                $scope.ProfileQuestionnaireLine.ContactClassField = Constants.ProfileQuestionaireLineContactClassFieldTypes[0].Code;
+                $scope.ProfileQuestionnaireLine.ClassificationMethod = Constants.ProfileQuestionaireLineClassificationMethodTypes[0].Code;
+                $scope.ProfileQuestionnaireLine.SortingMethod = Constants.ProfileQuestionaireLineSortingMethodTypes[0].Code;
+            }
         }
-
-        //$scope.showRatingPoints = function(parentSelector) {
-        //    if (!angular.element("[name='ProfileQuestionnaireLineDetailMaintenanceForm']").controller("form").validate())
-        //        return;
-
-        //    $confirm({ title: 'Save', text: 'Profile Questionnaire Lines must save before edit Ratings. Do you want to save?' })
-        //        .then(function() {
-        //            $uibModalInstance.close($scope.ProfileQuestionnaireLine);
-        //        });
-        //}
 
         $scope.disableSortingMethod = function() {
             return $scope.ProfileQuestionnaireLine.AutoContactClassification == Constants.BooleanTypes[0].Code;
