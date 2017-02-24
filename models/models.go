@@ -216,3 +216,19 @@ func AutoComplete(object, term string, orgID int64) ([]AutoCompleteDTO, error) {
 	}
 	return autoCompleteDTOs, nil
 }
+
+func IDGenerator() (int64, error) {
+	db, err := sqlx.Connect(settings.Settings.Database.DriverName, settings.Settings.GetDbConn())
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	var id int64
+	err = db.Get(&id, "SELECT id_generator()")
+	if err != nil {
+		return 0, err
+	}
+
+	return id, nil
+}

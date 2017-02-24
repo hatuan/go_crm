@@ -127,6 +127,12 @@ func InitRoutes() *mux.Router {
 			negroni.HandlerFunc(controllers.API_ProfileQuestionnaire_By_HeaderId),
 		))
 
+	api.Handle("/profilequestionnaireline/ratings",
+		negroni.New(
+			negroni.HandlerFunc(middleware.RequireTokenAuthentication),
+			negroni.HandlerFunc(controllers.API_ProfileQuestionnaireLine_Id_Ratings),
+		))
+
 	// Setup static file serving
 	router.PathPrefix("/").Handler(http.StripPrefix("/", http.FileServer(http.Dir("./static/"))))
 

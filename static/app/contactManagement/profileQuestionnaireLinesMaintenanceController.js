@@ -22,10 +22,10 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
             var getProfileQuestionnaireLines = new Object();
             getProfileQuestionnaireLines.HeaderID = $scope.profileQuestionnaireHeaderID
-            profileQuestionnairesService.getProfileQuestionnaireLinesAndRatings(getProfileQuestionnaireLines, $scope.getProfileQuestionnaireLinesAndRatingsCompleted, $scope.getProfileQuestionnaireLinesAndRatingsError);
+            profileQuestionnairesService.getProfileQuestionnaireLines(getProfileQuestionnaireLines, $scope.getProfileQuestionnaireLinesCompleted, $scope.getProfileQuestionnaireLinesError);
         };
 
-        $scope.getProfileQuestionnaireLinesAndRatingsCompleted = function(response, status) {
+        $scope.getProfileQuestionnaireLinesCompleted = function(response, status) {
             alertsService.RenderSuccessMessage(response.ReturnMessage);
 
             var profileQuestionnaire = response.Data.ProfileQuestionnaire
@@ -42,7 +42,7 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         };
 
-        $scope.getProfileQuestionnaireLinesAndRatingsError = function(response, status) {
+        $scope.getProfileQuestionnaireLinesError = function(response, status) {
             alertsService.RenderErrorMessage(response.Error);
         }
 
@@ -73,9 +73,9 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             }
 
             if ($scope.showRatings)
-                profileQuestionnairesService.updateProfileQuestionnaireLinesAndRatings({ HeaderID: $scope.profileQuestionnaireHeaderID }, { ProfileQuestionnaireLines: profileQuestionnaireLines }, $scope.profileQuestionnaireLinesAndRatingsUpdateCompletedAndShowRatings, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
+                profileQuestionnairesService.updateProfileQuestionnaireLines({ HeaderID: $scope.profileQuestionnaireHeaderID }, { ProfileQuestionnaireLines: profileQuestionnaireLines }, $scope.profileQuestionnaireLinesAndRatingsUpdateCompletedAndShowRatings, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
             else
-                profileQuestionnairesService.updateProfileQuestionnaireLinesAndRatings({ HeaderID: $scope.profileQuestionnaireHeaderID }, { ProfileQuestionnaireLines: profileQuestionnaireLines }, $scope.profileQuestionnaireLinesAndRatingsUpdateCompleted, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
+                profileQuestionnairesService.updateProfileQuestionnaireLines({ HeaderID: $scope.profileQuestionnaireHeaderID }, { ProfileQuestionnaireLines: profileQuestionnaireLines }, $scope.profileQuestionnaireLinesAndRatingsUpdateCompleted, $scope.profileQuestionnaireLinesAndRatingsUpdateError)
         }
 
         $scope.update = function(form) {
@@ -85,8 +85,15 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
         };
 
         $scope.profileQuestionnaireLinesAndRatingsUpdateCompletedAndShowRatings = function(response, status) {
+
+            $scope.ProfileQuestionnaireLines = response.Data.ProfileQuestionnaireLines;
+            for (var i = 0, len = $scope.ProfileQuestionnaireLines.length; i < len; i++) {
+                $scope.ProfileQuestionnaireLines[i].RecCreated = new moment.unix($scope.ProfileQuestionnaireLines[i].RecCreated).toDate();
+                $scope.ProfileQuestionnaireLines[i].RecModified = new moment.unix($scope.ProfileQuestionnaireLines[i].RecModified).toDate();
+            }
+
             //refresh $scope.profileQuestionnaireLineEditRatings after update
-            $scope.profileQuestionnaireLineEditRatings = response.Data.ProfileQuestionnaireLines[$scope.profileQuestionnaireLineEditRatings.LineNo - 1];
+            $scope.profileQuestionnaireLineEditRatings = $scope.ProfileQuestionnaireLines[$scope.profileQuestionnaireLineEditRatings.LineNo - 1];
 
             var modalRatingsInstance = $uibModal.open({
                 animation: true,
@@ -107,8 +114,8 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                 $('.modal .modal-body').css('height', $(window).height() * 0.7);
                 $('.modal .modal-body').css('margin-right', 0);
             });
-            modalRatingsInstance.result.then(function(editRatings) {
-
+            modalRatingsInstance.result.then(function(_result) {
+                $scope.ProfileQuestionnaireLines[_result.LineNo - 1].Ratings = _result.Ratings;
             }, function() {
                 //dismissed 
             })['finally'](function() {

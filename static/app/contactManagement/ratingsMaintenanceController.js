@@ -47,34 +47,45 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
             $scope.getProfileQuestionnaireLines(_profileQuestionnaireHeaderID);
         };
 
-        $scope.getProfileQuestionnaireLines = function(_profileQuestionnaireHeaderID) {
-            if (!angular.element("[name='ProfileQuestionnaireLinesMaintenanceForm']").controller("form").validate())
-                return;
-
-            //save current point of ProfileQuestionnaireLines to ratings
+        var saveCurrentPointsOfProfileQuestionnaireLinesToRatings = function() {
             for (var i = 0, len = $scope.ProfileQuestionnaireLines.length; i < len; i++) {
-                var point = parseInt($scope.ProfileQuestionnaireLines[i].Point);
-                if (!isNaN(point)) {
+                var points = parseInt($scope.ProfileQuestionnaireLines[i].Points);
+                if (!isNaN(points)) {
                     var rating = $scope.ProfileQuestionnaireLineEditRatings.Ratings.find(function(el) {
                         return el.RatingProfileQuestionnaireLineID == $scope.ProfileQuestionnaireLines[i].ID
                     })
 
                     if (rating) { //replace point
-                        rating.Point = point;
+                        rating.Points = points;
                     } else { //append to ratings
                         var newRating = new Object();
                         newRating.ProfileQuestionnaireHeaderID = $scope.ProfileQuestionnaireLineEditRatings.ProfileQuestionnaireHeaderID;
                         newRating.ProfileQuestionnaireLineID = $scope.ProfileQuestionnaireLineEditRatings.ID;
                         newRating.RatingProfileQuestionnaireHeaderID = $scope.ProfileQuestionnaireLines[i].ProfileQuestionnaireHeaderID;
                         newRating.RatingProfileQuestionnaireLineID = $scope.ProfileQuestionnaireLines[i].ID;
-                        newRating.Point = point;
+                        newRating.Points = points;
 
                         $scope.ProfileQuestionnaireLineEditRatings.Ratings.push(newRating);
                     }
+                } else { //clear current Ratings point
+                    var rating = $scope.ProfileQuestionnaireLineEditRatings.Ratings.find(function(el) {
+                        return el.RatingProfileQuestionnaireLineID == $scope.ProfileQuestionnaireLines[i].ID
+                    })
+                    if (rating) {
+                        rating.Points = 0;
+                    }
                 }
             }
+        };
 
-            //display ProfileQuestionnaireLines
+        $scope.getProfileQuestionnaireLines = function(_profileQuestionnaireHeaderID) {
+            if (!angular.element("[name='ProfileQuestionnaireLinesMaintenanceForm']").controller("form").validate())
+                return;
+
+            //save current points of ProfileQuestionnaireLines to ratings
+            saveCurrentPointsOfProfileQuestionnaireLinesToRatings();
+
+            //display new ProfileQuestionnaireLines
             profileQuestionnairesService.getProfileQuestionnaireLines({ HeaderID: _profileQuestionnaireHeaderID }, $scope.getProfileQuestionnaireLinesCompleted, $scope.getProfileQuestionnaireLinesError);
         };
 
@@ -99,11 +110,11 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
                     }
                 }
 
-                var ratingPoint = $scope.ProfileQuestionnaireLineEditRatings.Ratings.find(function(el) {
+                var ratingPoints = $scope.ProfileQuestionnaireLineEditRatings.Ratings.find(function(el) {
                     return el.RatingProfileQuestionnaireLineID == profileQuestionnaireLines[i].ID
                 })
-                if (ratingPoint) {
-                    profileQuestionnaireLines[i].Point = ratingPoint.Point;
+                if (ratingPoints) {
+                    profileQuestionnaireLines[i].Points = ratingPoints.Points;
                 }
             }
 
@@ -121,7 +132,7 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         $scope.validationOptions = {
             rules: {
-                "Point[]": {
+                "Points[]": {
                     number: true
                 }
             }
@@ -129,8 +140,31 @@ define(['angularAMD', 'jquery', 'ajaxService', 'alertsService', 'myApp.autoCompl
 
         $scope.ok = function(form) {
             if (form.validate()) {
-                $uibModalInstance.close($scope.ProfileQuestionnaireLineEditRatings);
+                //save current points of ProfileQuestionnaireLines to ratings
+                saveCurrentPointsOfProfileQuestionnaireLinesToRatings();
+                var profileQuestionnaireLineEditRatings = $scope.ProfileQuestionnaireLineEditRatings;
+                profileQuestionnaireLineEditRatings.RecCreatedByUser = $scope.RecCreatedByUser;
+                profileQuestionnaireLineEditRatings.RecCreated = new moment($scope.RecCreated).unix();
+                profileQuestionnaireLineEditRatings.RecModifiedByID = $rootScope.currentUser.ID;
+                profileQuestionnaireLineEditRatings.RecModifiedByUser = $rootScope.currentUser.Name;
+                profileQuestionnaireLineEditRatings.RecModified = new moment($scope.RecModified).unix();
+
+                profileQuestionnairesService.updateProfileQuestionnaireLineRatings({
+                        ProfileQuestionnaireLine: profileQuestionnaireLineEditRatings
+                    },
+                    $scope.updateProfileQuestionnaireLineRatingsCompleted,
+                    $scope.updateProfileQuestionnaireLineRatingsError);
             }
+        };
+
+        $scope.updateProfileQuestionnaireLineRatingsCompleted = function(response, status) {
+            $scope.ProfileQuestionnaireLineEditRatings.Ratings = response.Data.Ratings;
+
+            $uibModalInstance.close($scope.ProfileQuestionnaireLineEditRatings);
+        };
+
+        $scope.updateProfileQuestionnaireLineRatingsError = function(response, status) {
+
         };
 
         $scope.cancel = function(form) {

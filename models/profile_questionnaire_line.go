@@ -224,9 +224,9 @@ func GetProfileQuestionnaireLinesByHeaderID(headerID int64) ([]ProfileQuestionna
 		return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 
-	for _, profileQuestionnaireLine := range profileQuestionnaireLines {
-		if err = profileQuestionnaireLine.GetRatings(); err != nil {
-			return profileQuestionnaireLines, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	for index := range profileQuestionnaireLines {
+		if err = profileQuestionnaireLines[index].GetRatings(); err != nil {
+			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 		}
 	}
 
@@ -330,12 +330,12 @@ func PostProfileQuestionnaireLines(headerID int64, profileQuestionnaireLines []P
 	tx := db.MustBegin()
 
 	for _, profileQuestionnaireLine := range profileQuestionnaireLines {
-		stmt, _ := tx.PrepareNamed("INSERT INTO profile_questionnaire_line AS profile(type, profile_questionnaire_header_id, line_no," +
+		stmt, _ := tx.PrepareNamed("INSERT INTO profile_questionnaire_line AS profile(id, type, profile_questionnaire_header_id, line_no," +
 			" description, multiple_answers, auto_contact_classification, priority," +
 			" customer_class_field, vendor_class_field, contact_class_field," +
 			" starting_date_formula, ending_date_formula, classification_method, sorting_method, from_value, to_value," +
 			" rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:type, :profile_questionnaire_header_id, :line_no," +
+			" VALUES (:id, :type, :profile_questionnaire_header_id, :line_no," +
 			" :description, :multiple_answers, :auto_contact_classification, :priority," +
 			" :customer_class_field, :vendor_class_field, :contact_class_field," +
 			" :starting_date_formula, :ending_date_formula, :classification_method, :sorting_method, :from_value, :to_value, " +
@@ -370,12 +370,7 @@ func PostProfileQuestionnaireLines(headerID int64, profileQuestionnaireLines []P
 			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{ErrProfileQuestionnaireLineNotFound.Error()}}
 		}
 
-		if profileQuestionnaireLine.Ratings != nil {
-			for _, rating := range profileQuestionnaireLine.Ratings {
-				if rating.ProfileQuestionnaireLineID == nil {
-					rating.ProfileQuestionnaireLineID = &id
-				}
-			}
+		if profileQuestionnaireLine.Ratings != nil && len(profileQuestionnaireLine.Ratings) > 0 {
 			_, traninfo := PostRatingsWithLineID(profileQuestionnaireLine.ProfileQuestionnaireHeaderID, *profileQuestionnaireLine.ID, profileQuestionnaireLine.Ratings)
 
 			if !traninfo.ReturnStatus {
@@ -383,34 +378,37 @@ func PostProfileQuestionnaireLines(headerID int64, profileQuestionnaireLines []P
 				return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: traninfo.ReturnMessage, ValidationErrors: traninfo.ValidationErrors}
 			}
 		}
+
 		_ids = append(_ids, id)
 	}
-
-	if len(_ids) != 0 {
-		query, args, err := sqlx.In("DELETE FROM profile_questionnaire_line WHERE profile_questionnaire_header_id = ? AND id NOT IN (?)", headerID, _ids)
-		if err != nil {
-			tx.Rollback()
-			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-		}
-		query = sqlx.Rebind(sqlx.DOLLAR, query)
-		_, err = tx.Exec(query, args...)
-		if err != nil {
-			tx.Rollback()
-			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-		}
-
-		query, args, err = sqlx.In("DELETE FROM rating WHERE profile_questionnaire_header_id = ? AND profile_questionnaire_line_id  NOT IN (?)", headerID, _ids)
-		if err != nil {
-			tx.Rollback()
-			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-		}
-		query = sqlx.Rebind(sqlx.DOLLAR, query)
-		_, err = tx.Exec(query, args...)
-		if err != nil {
-			tx.Rollback()
-			return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-		}
+	if len(_ids) == 0 { //neu xoa het profile questionnaire line thi phai gan gia tri mac dinh cho _ids => xoa het trong bang profile_questionnaire_line, rating
+		_ids = append(_ids, 0)
 	}
+
+	query, args, err := sqlx.In("DELETE FROM profile_questionnaire_line WHERE profile_questionnaire_header_id = ? AND id NOT IN (?)", headerID, _ids)
+	if err != nil {
+		tx.Rollback()
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+	_, err = tx.Exec(query, args...)
+	if err != nil {
+		tx.Rollback()
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+
+	query, args, err = sqlx.In("DELETE FROM rating WHERE profile_questionnaire_header_id = ? AND profile_questionnaire_line_id  NOT IN (?)", headerID, _ids)
+	if err != nil {
+		tx.Rollback()
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+	_, err = tx.Exec(query, args...)
+	if err != nil {
+		tx.Rollback()
+		return []ProfileQuestionnaireLine{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+
 	tx.Commit()
 
 	profileQuestionnaireLines, _ = GetProfileQuestionnaireLinesByHeaderID(headerID)

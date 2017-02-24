@@ -19,7 +19,7 @@ type Rating struct {
 	RatingProfileQuestionnaireHeaderID   int64           `db:"rating_profile_questionnaire_header_id" json:",string"`
 	RatingProfileQuestionnaireHeaderCode string          `db:"rating_profile_questionnaire_header_code"`
 	RatingProfileQuestionnaireLineID     int64           `db:"rating_profile_questionnaire_line_id" json:",string"`
-	Points                               decimal.Decimal `db:"points" json:",string"`
+	Points                               decimal.Decimal `db:"points"`
 	RecCreatedByID                       int64           `db:"rec_created_by" json:",string"`
 	RecCreatedByUser                     string          `db:"rec_created_by_user"`
 	RecCreated                           *Timestamp      `db:"rec_created_at"`
@@ -43,9 +43,9 @@ var ErrRatingValidate = errors.New("Rating has validate error")
 func (c *Rating) Validate() map[string]InterfaceArray {
 	validationErrors := make(map[string]InterfaceArray)
 
-	if c.Points.Cmp(decimal.Zero) < 0 {
-		validationErrors["Points"] = append(validationErrors["Points"], ErrRatingValidate.Error())
-	}
+	//if c.Points.Cmp(decimal.Zero) < 0 {
+	//	validationErrors["Points"] = append(validationErrors["Points"], ErrRatingValidate.Error())
+	//}
 	return validationErrors
 }
 
@@ -144,13 +144,15 @@ func PostRatingsWithLineID(headerID int64, lineID int64, ratings []Rating) ([]Ra
 	tx := db.MustBegin()
 
 	for _, rating := range ratings {
-		stmt, _ := tx.PrepareNamed("INSERT INTO rating AS rating(profile_questionnaire_header_id, " +
+		stmt, _ := tx.PrepareNamed("INSERT INTO rating AS rating(id, " +
+			" profile_questionnaire_header_id, " +
 			" profile_questionnaire_line_id," +
 			" rating_profile_questionnaire_header_id," +
 			" rating_profile_questionnaire_line_id," +
 			" points," +
 			" rec_created_by, rec_created_at, rec_modified_by, rec_modified_at, status, version, client_id, organization_id)" +
-			" VALUES (:profile_questionnaire_header_id, " +
+			" VALUES (:id, " +
+			" :profile_questionnaire_header_id, " +
 			" :profile_questionnaire_line_id," +
 			" :rating_profile_questionnaire_header_id," +
 			" :rating_profile_questionnaire_line_id," +
@@ -177,14 +179,19 @@ func PostRatingsWithLineID(headerID int64, lineID int64, ratings []Rating) ([]Ra
 		_ids = append(_ids, id)
 
 	}
-	if len(_ids) != 0 {
-		query, args, err := sqlx.In("DELETE FROM rating WHERE profile_questionnaire_header_id = ? AND profile_questionnaire_line_id = ? AND id NOT IN (?)", headerID, lineID, _ids)
-		if err != nil {
-			tx.Rollback()
-			return []Rating{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
-		}
-		query = sqlx.Rebind(sqlx.DOLLAR, query)
-		_ = tx.MustExec(query, args...)
+	if len(_ids) == 0 { // neu xoa het point phai gan gia tri mac dinh cho _ids => xoa het trong bang rating
+		_ids = append(_ids, 0)
+	}
+	query, args, err := sqlx.In("DELETE FROM rating WHERE profile_questionnaire_header_id = ? AND profile_questionnaire_line_id = ? AND id NOT IN (?)", headerID, lineID, _ids)
+	if err != nil {
+		tx.Rollback()
+		return []Rating{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
+	}
+	query = sqlx.Rebind(sqlx.DOLLAR, query)
+	_, err = tx.Exec(query, args...)
+	if err != nil {
+		tx.Rollback()
+		return []Rating{}, TransactionalInformation{ReturnStatus: false, ReturnMessage: []string{err.Error()}}
 	}
 	tx.Commit()
 
