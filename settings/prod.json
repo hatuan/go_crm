@@ -1,5 +1,5 @@
 {
-	"listen_url":"0.0.0.0:443",
+	"listen_url":"0.0.0.0:8443",
 	"privatekey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\crm\\settings\\keys\\server.key",
 	"publickey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\crm\\settings\\keys\\server.key.pub",
 	"certkey_path": "c:\\Projects\\GoWork\\src\\erpvietnam\\crm\\settings\\keys\\server.crt",
