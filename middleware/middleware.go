@@ -1,12 +1,14 @@
 package middleware
 
 import (
-	"erpvietnam/crm/auth"
 	"fmt"
 	"net/http"
 
+	"github.com/hatuan/go_crm/auth"
+
 	"encoding/json"
-	"erpvietnam/crm/models"
+
+	"github.com/hatuan/go_crm/models"
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/dgrijalva/jwt-go/request"

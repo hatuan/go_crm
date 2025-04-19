@@ -1,9 +1,10 @@
 package routers
 
 import (
-	"erpvietnam/crm/controllers"
-	"erpvietnam/crm/middleware"
 	"net/http"
+
+	"github.com/hatuan/go_crm/controllers"
+	"github.com/hatuan/go_crm/middleware"
 
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"

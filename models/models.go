@@ -1,12 +1,13 @@
 package models
 
 import (
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/settings"
 	"fmt"
 	"strconv"
 	"strings"
 	"text/template"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/settings"
 
 	"database/sql"
 	"database/sql/driver"
@@ -74,7 +75,7 @@ type ApplicationMenuDTO struct {
 	RequiresAuthentication bool   `json:"requires_authentication"`
 }
 
-//ApplicationModelDTO user for return from  controllers.InitializeApplication
+// ApplicationModelDTO user for return from  controllers.InitializeApplication
 type ApplicationModelDTO struct {
 	TransactionalInformation
 	MenuItems []ApplicationMenuDTO `json:"menu_items"`

@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/models"
-	ctx "github.com/gorilla/context"
 	"net/http"
+
+	ctx "github.com/gorilla/context"
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/models"
 )
 
 func API_Organizations(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {

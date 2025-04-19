@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"erpvietnam/crm/log"
+	"github.com/hatuan/go_crm/log"
 )
 
 var environments = map[string]string{

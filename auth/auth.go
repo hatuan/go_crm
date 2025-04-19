@@ -1,10 +1,11 @@
 package auth
 
 import (
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/models"
 	"errors"
 	"net/http"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/models"
 )
 
 // ErrLoginInvalid is thrown when a user attempts to register a username that is taken.
@@ -20,24 +21,24 @@ func TokenLogin(requestLogin *models.LoginDTO) (int, models.Token) {
 			log.Error(err)
 			token := models.Token{
 				TransactionalInformation: models.TransactionalInformation{ReturnMessage: []string{err.Error()}, ReturnStatus: false},
-				Token: "",
+				Token:                    "",
 			}
 			return http.StatusInternalServerError, token
 		}
 		response := models.Token{
 			TransactionalInformation: models.TransactionalInformation{ReturnStatus: true, IsAuthenticated: true},
-			Token: token,
+			Token:                    token,
 		}
 		return http.StatusOK, response
 	}
 
 	return http.StatusUnauthorized, models.Token{
 		TransactionalInformation: models.TransactionalInformation{ReturnMessage: []string{ErrLoginInvalid.Error()}, ReturnStatus: false},
-		Token: "",
+		Token:                    "",
 	}
 }
 
-//TokenRefresh get new JWT Token
+// TokenRefresh get new JWT Token
 func TokenRefresh(username string) (int, models.Token) {
 	authBackend := InitJWTAuthenticationBackend()
 	token, err := authBackend.GenerateToken(username)
@@ -45,12 +46,12 @@ func TokenRefresh(username string) (int, models.Token) {
 		log.Error(err)
 		return http.StatusInternalServerError, models.Token{
 			TransactionalInformation: models.TransactionalInformation{ReturnMessage: []string{err.Error()}, ReturnStatus: false},
-			Token: "",
+			Token:                    "",
 		}
 	}
 	response := models.Token{
 		TransactionalInformation: models.TransactionalInformation{ReturnStatus: true},
-		Token: token,
+		Token:                    token,
 	}
 	return http.StatusOK, response
 }

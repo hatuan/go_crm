@@ -1,10 +1,11 @@
 package controllers
 
 import (
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/models"
 	"net/http"
 	"strconv"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/models"
 
 	"github.com/gorilla/context"
 )

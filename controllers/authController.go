@@ -2,10 +2,11 @@ package controllers
 
 import (
 	"encoding/json"
-	"erpvietnam/crm/auth"
-	"erpvietnam/crm/models"
 	"errors"
 	"net/http"
+
+	"github.com/hatuan/go_crm/auth"
+	"github.com/hatuan/go_crm/models"
 
 	ctx "github.com/gorilla/context"
 )

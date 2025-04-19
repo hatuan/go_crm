@@ -2,9 +2,10 @@ package controllers
 
 import (
 	"encoding/json"
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/models"
 	"strconv"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/models"
 
 	"net/http"
 	"strings"

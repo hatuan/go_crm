@@ -1,11 +1,11 @@
 package models
 
 import (
-	"biovegi/log"
-	"biovegi/settings"
 	"errors"
 	"strconv"
 
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/settings"
 	"github.com/jmoiron/sqlx"
 	"github.com/shopspring/decimal"
 )

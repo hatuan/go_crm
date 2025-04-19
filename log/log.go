@@ -3,8 +3,8 @@ package log
 import (
 	"os"
 
-	"github.com/Gurpartap/logrus-stack"
-	log "github.com/Sirupsen/logrus"
+	logrus_stack "github.com/Gurpartap/logrus-stack"
+	log "github.com/sirupsen/logrus"
 )
 
 var logger = log.New()

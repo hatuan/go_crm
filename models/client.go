@@ -2,12 +2,14 @@ package models
 
 import (
 	"database/sql"
-	"erpvietnam/crm/log"
+
+	"github.com/hatuan/go_crm/log"
 
 	"github.com/shopspring/decimal"
 
-	"erpvietnam/crm/settings"
 	"errors"
+
+	"github.com/hatuan/go_crm/settings"
 
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"

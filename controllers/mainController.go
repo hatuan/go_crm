@@ -2,16 +2,17 @@ package controllers
 
 import (
 	"encoding/json"
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/models"
-	"erpvietnam/sql-parser/dynamic-where"
 	"errors"
 	"fmt"
 	"net/http"
 	"strings"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/models"
+	where "github.com/hatuan/go_crm/sql-parser/dynamic-where"
 )
 
-//InitializeApplication run init menu ... before login
+// InitializeApplication run init menu ... before login
 func InitializeApplication(w http.ResponseWriter, r *http.Request) {
 	applicationModel := new(models.ApplicationModelDTO)
 

@@ -2,12 +2,13 @@ package models
 
 import (
 	"database/sql"
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/settings"
 	"errors"
 	"fmt"
 	"strconv"
 	"strings"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/settings"
 
 	"github.com/jmoiron/sqlx"
 )

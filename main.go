@@ -1,12 +1,13 @@
 package main
 
 import (
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/routers"
-	"erpvietnam/crm/settings"
 	"net/http"
 
-	"erpvietnam/crm/middleware"
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/routers"
+	"github.com/hatuan/go_crm/settings"
+
+	"github.com/hatuan/go_crm/middleware"
 
 	"github.com/codegangsta/negroni"
 )

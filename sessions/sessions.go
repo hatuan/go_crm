@@ -2,12 +2,13 @@ package sessions
 
 import (
 	"encoding/gob"
-	"erpvietnam/crm/models"
+
 	"github.com/gorilla/securecookie"
 	"github.com/gorilla/sessions"
+	"github.com/hatuan/go_crm/models"
 )
 
-//init registers the necessary models to be saved in the session later
+// init registers the necessary models to be saved in the session later
 func init() {
 	gob.Register(&models.User{})
 	gob.Register(&models.Flash{})

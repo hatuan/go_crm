@@ -2,16 +2,17 @@ package controllers
 
 import (
 	"encoding/json"
-	"erpvietnam/crm/log"
-	"erpvietnam/crm/models"
 	"net/http"
 	"strconv"
+
+	"github.com/hatuan/go_crm/log"
+	"github.com/hatuan/go_crm/models"
 
 	ctx "github.com/gorilla/context"
 	"github.com/gorilla/mux"
 )
 
-//API_Users_Id Get & Update User
+// API_Users_Id Get & Update User
 func API_Users_Id(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	vars := mux.Vars(r)
 	id, err := strconv.ParseInt(vars["id"], 10, 64)
@@ -34,7 +35,7 @@ func API_Users_Id(w http.ResponseWriter, r *http.Request, next http.HandlerFunc)
 	}
 }
 
-//API_User_Preference Get & Set User's Preference
+// API_User_Preference Get & Set User's Preference
 func API_User_Preference(w http.ResponseWriter, r *http.Request, next http.HandlerFunc) {
 	requestUser := ctx.Get(r, "user").(models.User)
 
