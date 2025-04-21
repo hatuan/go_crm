@@ -28,5 +28,8 @@
     "awesome-bootstrap-checkbox.scss",
     "awesome-bootstrap-checkbox.less",
     "bower.json"
-  ]
+  ],
+  "dependencies": {
+    "awesome-bootstrap-checkbox": "file:"
+  }
 }

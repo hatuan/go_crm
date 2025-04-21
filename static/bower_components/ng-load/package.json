@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/andrefarzat/ng-load/issues"
   },
-  "homepage": "https://github.com/andrefarzat/ng-load"
+  "homepage": "https://github.com/andrefarzat/ng-load",
+  "dependencies": {
+    "ng-load": "file:"
+  }
 }

@@ -1,7 +1,7 @@
 package where_test
 
 import (
-	"erpvietnam/sql-parser/dynamic-where"
+	"github.com/hatuan/go_crm/sql-parser/dynamic-where"
 	"reflect"
 	"strings"
 	"testing"

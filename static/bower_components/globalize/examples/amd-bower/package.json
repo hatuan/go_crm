@@ -6,5 +6,8 @@
     "installed on Globalize's root.",
     "",
     "It's analogous to `chroot .` for npm. [:P]"
-  ]
+  ],
+  "dependencies": {
+    "globalize-hello-world-amd-bower": "file:"
+  }
 }

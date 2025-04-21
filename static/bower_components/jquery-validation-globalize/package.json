@@ -35,5 +35,8 @@
     "gulp": "^3.9.0",
     "gulp-qunit": "^1.2.1",
     "gulp-util": "^3.0.6"
+  },
+  "dependencies": {
+    "jquery-validation-globalize": "file:"
   }
 }

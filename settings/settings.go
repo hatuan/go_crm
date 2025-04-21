@@ -52,7 +52,7 @@ func init() {
 }
 
 func LoadSettingsByEnv(env string) {
-	content, err := ioutil.ReadFile(os.Getenv("GOPATH") + "/src/erpvietnam/crm/" + environments[env])
+	content, err := ioutil.ReadFile(environments[env])
 	if err != nil {
 		log.Panic("Error while reading config file ", err)
 		panic(err)

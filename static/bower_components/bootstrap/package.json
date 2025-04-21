@@ -85,5 +85,8 @@
       "fonts",
       "js"
     ]
+  },
+  "dependencies": {
+    "bootstrap": "file:"
   }
 }

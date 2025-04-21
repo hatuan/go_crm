@@ -5,11 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ac1bd661-dc60-47e8-bf73-bb1d6137e015" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/crm.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/crm.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql-parser/dynamic-where/parser_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sql-parser/dynamic-where/parser_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sql-parser/dynamic-where/scanner_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/sql-parser/dynamic-where/scanner_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/angular-animate/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/angular-animate/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/angular-bootstrap-switch/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/angular-bootstrap-switch/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/angular-bootstrap/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/angular-bootstrap/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/angular-globalize-wrapper/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/angular-globalize-wrapper/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/angular-messages/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/angular-messages/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/angular-moment/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/angular-moment/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/awesome-bootstrap-checkbox/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/awesome-bootstrap-checkbox/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/bootstrap/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/bootstrap/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/cldrjs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/cldrjs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/globalize/examples/amd-bower/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/globalize/examples/amd-bower/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/globalize/examples/node-npm/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/globalize/examples/node-npm/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/globalize/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/globalize/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/jquery-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/jquery-ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/jquery-validation-globalize/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/jquery-validation-globalize/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/jquery-validation/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/jquery-validation/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/ng-load/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/ng-load/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/static/bower_components/ngInfiniteScroll/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/static/bower_components/ngInfiniteScroll/package.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +120,7 @@
       </list>
     </option>
   </component>
-  <component name="GOROOT" url="file://$PROJECT_DIR$/../../../../../Go" />
+  <component name="GOROOT" url="file://$PROJECT_DIR$/../../Go" />
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
@@ -289,6 +303,8 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "Go Build.run.executor": "Run",
+    "JavaScript Debug.localhost.executor": "Run",
     "RunOnceActivity.GoLinterPluginOnboarding": "true",
     "RunOnceActivity.GoLinterPluginStorageMigration": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
@@ -310,7 +326,7 @@
       <recent name="C:\Projects\GoWork\src\erpvietnam\crm\static\app\common\config" />
     </key>
   </component>
-  <component name="RunManager" selected="JavaScript Debug.localhost">
+  <component name="RunManager" selected="Go Build.run">
     <configuration default="true" type="BashConfigurationType" factoryName="Bash">
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="INTERPRETER_PATH" value="" />
